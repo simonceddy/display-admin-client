@@ -1,0 +1,5 @@
+@tailwind base;
+
+/* put components here */
+@tailwind components;
+@tailwind utilities;
