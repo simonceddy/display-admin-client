@@ -1,10 +1,11 @@
 function LgTextInput({
-  label, id, value, onChange, className, style
+  label, id, value, onChange, className, style, required = false
 }) {
   return (
     <label htmlFor={id} className="flex fle-row justify-between items-center">
       {label ? <span className="mr-2 text-lg font-bold">{label}:</span> : null}
       <input
+        required={required}
         id={id}
         type="text"
         value={value}
