@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { LgTextInput } from '../components/Layout/Forms';
+import { LgTextInput } from '../components/Forms';
 import TextEditor from './TextEditor';
 
 function ManageItem({ values }) {
