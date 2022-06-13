@@ -1,8 +1,10 @@
+import { OuterContainer } from './components/Layout';
+
 function App() {
   return (
-    <div className="flex flex-col w-full h-full">
+    <OuterContainer>
       {}
-    </div>
+    </OuterContainer>
   );
 }
 

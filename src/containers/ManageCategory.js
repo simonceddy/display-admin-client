@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import LgTextInput from '../components/forms/LgTextInput';
+import LgTextInput from '../components/Layout/Forms/LgTextInput';
 import TextEditor from './TextEditor';
 
 function ManageCategory({ values = {} }) {
