@@ -1,5 +1,6 @@
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
+import { EditorContainer } from '../components/TextEditor';
 
 function TextEditor({ content = '', onUpdate }) {
   const editor = useEditor({
@@ -13,7 +14,9 @@ function TextEditor({ content = '', onUpdate }) {
   });
 
   return (
-    <EditorContent editor={editor} />
+    <EditorContainer>
+      <EditorContent editor={editor} />
+    </EditorContainer>
   );
 }
 

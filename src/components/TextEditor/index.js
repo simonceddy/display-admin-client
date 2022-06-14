@@ -1,3 +1,5 @@
+export { default as EditorContainer } from './EditorContainer';
+
 export function EditorToolbarButton({
   children, onClick, className, id
 }) {

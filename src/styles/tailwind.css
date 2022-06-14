@@ -610,12 +610,12 @@ video {
   border-radius: 0.125rem;
 }
 
-.border {
-  border-width: 1px;
-}
-
 .border-2 {
   border-width: 2px;
+}
+
+.border {
+  border-width: 1px;
 }
 
 .border-gray-500 {
@@ -627,16 +627,16 @@ video {
   padding: 0.5rem;
 }
 
+.p-1 {
+  padding: 0.25rem;
+}
+
 .p-0\.5 {
   padding: 0.125rem;
 }
 
 .p-0 {
   padding: 0px;
-}
-
-.p-1 {
-  padding: 0.25rem;
 }
 
 .text-lg {

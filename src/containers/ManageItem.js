@@ -7,7 +7,7 @@ function ManageItem({ values }) {
     title: '',
     body: '',
     media: [],
-    frontImg: null,
+    thumbnail: null,
     ...values,
   });
   return (
