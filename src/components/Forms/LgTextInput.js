@@ -10,7 +10,7 @@ function LgTextInput({
         type="text"
         value={value}
         onChange={onChange}
-        className={`p-1 text-lg flex-1 border-2 ${className}`}
+        className={`p-1 text-lg flex-1 border-2 bg-blue-100 dark:bg-blue-700 text-cyan-900 dark:text-lime-300 ${className}`}
         style={style}
       />
     </label>

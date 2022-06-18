@@ -2,11 +2,13 @@ import { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Route, Routes } from 'react-router-dom';
 import { OuterContainer } from './components/Layout';
-import DisplaySummary from './containers/DisplaySummary';
+import CreateCategory from './containers/CreateCategory';
+import Dashboard from './containers/Dashboard';
 import ManageCategory from './containers/ManageCategory';
 import { fetchData } from './store/actions';
+import NavbarLink from './components/Navbar/NavbarLink';
 
-function App({ data, fetch, fetched }) {
+function App({ fetch, fetched }) {
   useEffect(() => {
     if (!fetched) {
       fetch();
@@ -16,10 +18,19 @@ function App({ data, fetch, fetched }) {
   return (
     <OuterContainer>
       {fetched ? (
-        <Routes>
-          <Route path="/" element={<DisplaySummary data={data} />} />
-          <Route path="/create" element={<ManageCategory />} />
-        </Routes>
+        <>
+          <div className="border-b-2 border-blue-600 dark:border-blue-200 py-2 px-3 w-full flex flex-row justify-start items-center">
+            <NavbarLink to="/">Dashboard</NavbarLink>
+            <NavbarLink to="/create">Create New Category</NavbarLink>
+          </div>
+          <div className="w-full flex-1 flex flex-col justify-start items-center overflow-y-scroll">
+            <Routes>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/create" element={<CreateCategory />} />
+              <Route path="/category/:key" element={<ManageCategory />} />
+            </Routes>
+          </div>
+        </>
       ) : (
         <div>Fetching data</div>
       )}
@@ -28,7 +39,6 @@ function App({ data, fetch, fetched }) {
 }
 
 const mapStateToProps = (state) => ({
-  data: state.data.all,
   fetched: state.data.fetched,
 });
 

@@ -4,7 +4,9 @@ const defaultState = {
   values: {
     title: '',
     body: '',
-  }
+  },
+  categories: [],
+  items: []
 };
 
 export default function createCategoryReducer(state = defaultState, action = {}) {

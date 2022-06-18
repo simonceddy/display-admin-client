@@ -4,6 +4,7 @@ const defaultState = {
   all: [],
   filter: false,
   fetched: false,
+  current: null
 };
 
 export default function dataReducer(state = defaultState, action = {}) {
