@@ -1,21 +1,6 @@
-import { useEffect, useState } from 'react';
-import client from '../util/client';
+// import { useEffect, useState } from 'react';
 
-function DisplaySummary() {
-  const [data, setData] = useState([]);
-
-  useEffect(() => {
-    let dataRequested = false;
-    if (!dataRequested) {
-      client.get('/api/category')
-        .then((r) => {
-          setData(r.data);
-        })
-        .catch(console.error);
-    }
-    return () => { dataRequested = true; };
-  });
-
+function DisplaySummary({ data = [] }) {
   return (
     <div>
       {data.map((c) => (
