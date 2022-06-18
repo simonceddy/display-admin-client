@@ -3,6 +3,7 @@ import LgTextInput from '../components/Forms/LgTextInput';
 import TextEditor from './TextEditor';
 
 function ManageCategory({ values = {} }) {
+  console.log(values);
   const [vals, setVals] = useState({
     title: '',
     body: '',
