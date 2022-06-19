@@ -2,7 +2,7 @@ import { DATA_SET_ALL, DATA_SET_FETCHED, DATA_SET_FILTER } from '../actions';
 
 const defaultState = {
   all: [],
-  filter: false,
+  filter: 'current',
   fetched: false,
   current: null
 };

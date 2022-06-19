@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import ReactTooltip from 'react-tooltip';
 import { useNavigate } from 'react-router-dom';
-import { MEDIA_BASE_URI } from '../support/consts';
 import StdButton from '../components/Interactive/StdButton';
+import ThumbnailRow from '../components/Category/ThumbnailRow';
+import SubCategoryList from '../components/Category/SubCategoryList';
 
 function countSubCategoryItems(subs = []) {
   let totalItems = 0;
@@ -20,6 +20,7 @@ function CategorySummary({ category = {} }) {
   const [showSummary, setShowSummary] = useState(false);
   const totalItems = category.items ? category.items.length : 0;
   const totalSubs = category.categories ? category.categories.length : 0;
+  const [showSubs, setShowSubs] = useState(false);
 
   const totalSubItems = totalSubs > 0
     ? countSubCategoryItems(category.categories)
@@ -45,38 +46,48 @@ function CategorySummary({ category = {} }) {
         <div
           className="flex flex-col justify-start items-start border-t-2 w-full border-blue-600 dark:border-blue-200 pt-3"
         >
-          <div className="my-1 bg-green-500 bg-opacity-25 flex flex-col justify-start items-start">
+          <div className="my-1 p-2 bg-green-500 bg-opacity-25 flex flex-col justify-start items-start w-full rounded">
             <span>
               {totalItems} item{totalItems === 1 ? null : 's'} in category
             </span>
             {totalItems > 0 ? (
-              <div className="flex flex-row justify-start items-center rounded p-2">
-                {category.items.map((i) => {
-                  if (!i.thumbnail) return null;
-                  return (
-                    <>
-                      <img
-                        data-tip={i.title}
-                        key={`${category.key}-summary-${i.key}-thumbnail`}
-                        className="mx-1 rounded p-1"
-                        height="auto"
-                        width={60}
-                        src={`${MEDIA_BASE_URI}thumbs/${i.thumbnail.src}`}
-                        alt={i.thumbnail.alt}
-                      />
-                      <ReactTooltip />
-                    </>
-                  );
-                })}
-              </div>
+              <ThumbnailRow items={category.items} categoryKey={category.key} />
             ) : null}
           </div>
-          <div className="my-1 bg-green-500 bg-opacity-25">
-            {totalSubs} sub-categor{totalSubs === 1 ? 'y' : 'ies'} in category
-            {totalSubItems ? ` containing ${totalSubItems} total item${totalSubItems === 1 ? null : 's'}` : null}
+          <div className="my-1 p-2a flex flex-col justify-start items-start bg-green-500 bg-opacity-25 w-full p-2 rounded">
+            <div
+              role="presentation"
+              onClick={() => { if (totalSubItems) setShowSubs(!showSubs); }}
+              className={`w-full flex flex-row ${totalSubItems ? 'justify-between' : 'justify-start'} items-center`}
+            >
+              <span>
+                {totalSubs} sub-categor{totalSubs === 1 ? 'y' : 'ies'} in category
+                {totalSubItems ? ` containing ${totalSubItems} total item${totalSubItems === 1 ? null : 's'}` : null}
+              </span>
+              {totalSubItems ? (
+                <div className="text-lg pr-3">{showSubs ? '△' : '▽'}</div>
+              ) : null}
+            </div>
+            {totalSubItems && showSubs ? (
+              <SubCategoryList subs={category.categories} />
+            ) : null}
           </div>
           <div>
-            <StdButton onClick={() => navigate(`/category/${category.key}`)}>Edit</StdButton>
+            <StdButton
+              onClick={() => navigate(`/category/${category.key}`)}
+            >
+              Edit
+            </StdButton>
+            <StdButton
+              onClick={() => console.log('add item')}
+            >
+              Add Item
+            </StdButton>
+            <StdButton
+              onClick={() => console.log('add sub-category')}
+            >
+              Add Sub-Category
+            </StdButton>
           </div>
         </div>
       ) : null}

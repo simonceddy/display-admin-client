@@ -1,13 +1,11 @@
 import client from '../../util/client';
 
-export * from './formActions';
+import { pushError } from './errors';
 
 export const DATA_SET_FILTER = 'DATA_SET_FILTER';
 export const DATA_SET_ALL = 'DATA_SET_ALL';
 export const DATA_SET_FETCHED = 'DATA_SET_FETCHED';
 export const DATA_SET_CURRENT = 'DATA_SET_CURRENT';
-export const PUSH_ERROR = 'PUSH_ERROR';
-export const CLEAR_FIRST_ERROR = 'CLEAR_FIRST_ERROR';
 
 export const setFilter = (filter) => ({
   type: DATA_SET_FILTER,
@@ -24,15 +22,6 @@ export const setCurrentData = (current) => ({
   payload: { current }
 });
 
-export const pushError = (error) => ({
-  type: PUSH_ERROR,
-  payload: { error }
-});
-
-export const clearFirstError = () => ({
-  type: CLEAR_FIRST_ERROR,
-});
-
 export const setFetched = () => ({
   type: DATA_SET_FETCHED,
 });
@@ -40,12 +29,28 @@ export const setFetched = () => ({
 export const fetchData = () => (dispatch) => client.get('/api/category')
   .then((r) => dispatch(setData(r.data)))
   .then(() => dispatch(setFetched()))
-  .catch(console.error);
+  .catch((e) => {
+    console.error(e);
+    dispatch(pushError(e));
+  });
 
-export const fetchCategory = (key) => async (dispatch, state) => {
-  if (!state.data.fetched) await dispatch(fetchData());
-  const category = state.data.all.find((c) => c.key && c.key === key);
-  if (category) return dispatch(setCurrentData(category));
+export const CATEGORY_FORM_SET_VALUES = 'CATEGORY_FORM_SET_VALUES';
+export const CATEGORY_FORM_RESET = 'CATEGORY_FORM_RESET';
+
+export const setValues = (values = {}) => ({
+  type: CATEGORY_FORM_SET_VALUES,
+  payload: { values }
+});
+
+export const resetForm = () => ({
+  type: CATEGORY_FORM_RESET
+});
+
+export const fetchCategory = (key) => async (dispatch, getState) => {
+  const { data } = getState();
+  if (!data.fetched) await dispatch(fetchData());
+  const category = data.all.find((c) => c.key && c.key === key);
+  if (category) return dispatch(setValues(category));
   return dispatch(pushError({
     message: 'Category not found.'
   }));

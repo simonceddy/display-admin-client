@@ -1,4 +1,4 @@
-import { CATEGORY_FORM_RESET, CATEGORY_FORM_SET_VALUES } from '../../actions/formActions';
+import { CATEGORY_FORM_RESET, CATEGORY_FORM_SET_VALUES } from '../../actions';
 
 const defaultState = {
   values: {

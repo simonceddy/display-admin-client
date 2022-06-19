@@ -1,9 +1,16 @@
 import LgTextInput from './LgTextInput';
 import TextEditor from '../../containers/TextEditor';
+import StdButton from '../Interactive/StdButton';
 
-function CategoryForm({ values = {}, setValues }) {
+function CategoryForm({ values = {}, setValues, onSubmit }) {
   return (
-    <div className="flex flex-col justify-start items-start p-2">
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        if (onSubmit) onSubmit();
+      }}
+      className="flex flex-col justify-start items-start p-2"
+    >
       {/* Category form */}
       {/* title */}
       <LgTextInput
@@ -29,7 +36,8 @@ function CategoryForm({ values = {}, setValues }) {
       {/* media */}
 
       {/* subcategories */}
-    </div>
+      <StdButton submits>Save</StdButton>
+    </form>
   );
 }
 

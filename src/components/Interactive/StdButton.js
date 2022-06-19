@@ -6,7 +6,7 @@ function StdButton({
       id={id}
       type={submits ? 'submit' : 'button'}
       onClick={onClick}
-      className={`${className} p-2 text-lg rounded border-2 m-1 hover:underline`}
+      className={`${className} py-1 px-3 text-lg font-bold rounded-md border-2 m-1 hover:underline`}
     >
       {children}
     </button>
