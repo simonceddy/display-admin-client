@@ -7,6 +7,19 @@ export const DATA_SET_ALL = 'DATA_SET_ALL';
 export const DATA_SET_FETCHED = 'DATA_SET_FETCHED';
 export const DATA_SET_CURRENT = 'DATA_SET_CURRENT';
 
+export const ITEM_SET_VALUES = 'ITEM_SET_VALUES';
+export const ITEM_SET_MEDIA = 'ITEM_SET_MEDIA';
+
+export const setItemValues = (values = {}) => ({
+  type: ITEM_SET_VALUES,
+  payload: { values }
+});
+
+export const setItemMedia = (media = []) => ({
+  type: ITEM_SET_MEDIA,
+  payload: { media }
+});
+
 export const setFilter = (filter) => ({
   type: DATA_SET_FILTER,
   payload: { filter }

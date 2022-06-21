@@ -72,22 +72,31 @@ function CategorySummary({ category = {} }) {
               <SubCategoryList subs={category.categories} />
             ) : null}
           </div>
-          <div>
-            <StdButton
-              onClick={() => navigate(`/category/${category.key}`)}
-            >
-              Edit
-            </StdButton>
-            <StdButton
-              onClick={() => console.log('add item')}
-            >
-              Add Item
-            </StdButton>
-            <StdButton
-              onClick={() => console.log('add sub-category')}
-            >
-              Add Sub-Category
-            </StdButton>
+          <div className="flex flex-row justify-between items-center w-full">
+            <div>
+              <StdButton
+                onClick={() => navigate(`/category/${category.key}`)}
+              >
+                Edit
+              </StdButton>
+              <StdButton
+                onClick={() => console.log('add item')}
+              >
+                Add Item
+              </StdButton>
+              <StdButton
+                onClick={() => console.log('add sub-category')}
+              >
+                Add Sub-Category
+              </StdButton>
+            </div>
+            <div>
+              <StdButton
+                onClick={() => console.log('hide category')}
+              >
+                {category.archived ? 'Unarchive' : 'Archive'}
+              </StdButton>
+            </div>
           </div>
         </div>
       ) : null}
