@@ -7,6 +7,7 @@ import Dashboard from './containers/Dashboard';
 import ManageCategory from './containers/ManageCategory';
 import { fetchData } from './store/actions';
 import NavbarLink from './components/Navbar/NavbarLink';
+import CreateItem from './containers/CreateItem';
 
 function App({ fetch, fetched, hasErrors }) {
   useEffect(() => {
@@ -33,6 +34,7 @@ function App({ fetch, fetched, hasErrors }) {
               <Route path="/" element={<Dashboard />} />
               <Route path="/create" element={<CreateCategory />} />
               <Route path="/category/:key" element={<ManageCategory />} />
+              <Route path="/category/:key/createItem" element={<CreateItem />} />
             </Routes>
           </div>
         </>

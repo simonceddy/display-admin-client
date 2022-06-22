@@ -80,7 +80,7 @@ function CategorySummary({ category = {} }) {
                 Edit
               </StdButton>
               <StdButton
-                onClick={() => console.log('add item')}
+                onClick={() => navigate(`/category/${category.key}/createItem`)}
               >
                 Add Item
               </StdButton>

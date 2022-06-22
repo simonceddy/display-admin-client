@@ -1,7 +1,10 @@
-import { applyMiddleware, createStore } from 'redux';
-import thunk from 'redux-thunk';
-import rootReducer from './reducers';
+import { configureStore } from '@reduxjs/toolkit';
+import createCategory from './createCategory';
+import createItem from './createItem';
 
-const store = createStore(rootReducer, applyMiddleware(thunk));
-
-export default store;
+export const store = configureStore({
+  reducer: {
+    createCategory,
+    createItem
+  },
+});

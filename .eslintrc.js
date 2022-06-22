@@ -29,5 +29,6 @@ module.exports = {
     'react/no-array-index-key': 'off',
     'react/react-in-jsx-scope': 'off',
     'react/jsx-props-no-spreading': 'off',
+    'no-param-reassign': 'off',
   },
 };
