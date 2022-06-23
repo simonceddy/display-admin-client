@@ -1,11 +1,11 @@
-// import { useSelector } from 'react-redux';
+/* eslint-disable no-unused-vars */
 import FilterButton from '../components/Interactive/FilterButton';
-// import { displayApi } from '../services/api';
-// import { Link } from 'react-router-dom';
+import { useFetchDataQuery } from '../services/api';
 import CategorySummary from './CategorySummary';
 
-function Dashboard({ data = [], filter, filterBy = () => {} }) {
-  // const data = useSelector((state) => state[displayApi.reducerPath].data);
+function Dashboard({ filter, filterBy = () => {} }) {
+  const { data, error, isLoading } = useFetchDataQuery();
+
   return (
     <div className="flex flex-col justify-start items-start w-full p-3">
       <h1 className="font-bold text-4xl underline mb-3 mt-1 rounded w-full">

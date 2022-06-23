@@ -1,5 +1,3 @@
-// import { useEffect } from 'react';
-// import { useSelector } from 'react-redux';
 import { Route, Routes } from 'react-router-dom';
 import { OuterContainer } from './components/Layout';
 import CreateCategory from './containers/CreateCategory';
@@ -10,8 +8,9 @@ import CreateItem from './containers/CreateItem';
 import { useFetchDataQuery } from './services/api';
 
 function App() {
-  const { data, error, isLoading } = useFetchDataQuery();
-  // console.log(data);
+  // TODO this isn't used here beyond preloading
+  const { error, isLoading } = useFetchDataQuery();
+
   return (
     <OuterContainer>
       {!isLoading ? (
@@ -27,10 +26,11 @@ function App() {
           </div>
           <div className="w-full flex-1 flex flex-col justify-start items-center overflow-y-scroll">
             <Routes>
-              <Route path="/" element={<Dashboard data={data} />} />
+              <Route path="/" element={<Dashboard />} />
               <Route path="/create" element={<CreateCategory />} />
               <Route path="/category/:key" element={<ManageCategory />} />
               <Route path="/category/:key/createItem" element={<CreateItem />} />
+              <Route path="/category/:key/createSubCategory" element={<CreateItem />} />
             </Routes>
           </div>
         </>
