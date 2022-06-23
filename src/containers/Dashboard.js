@@ -1,10 +1,11 @@
-import { connect } from 'react-redux';
+// import { useSelector } from 'react-redux';
 import FilterButton from '../components/Interactive/FilterButton';
+// import { displayApi } from '../services/api';
 // import { Link } from 'react-router-dom';
-import { setFilter } from '../store/actions';
 import CategorySummary from './CategorySummary';
 
-function Dashboard({ data = [], filter, filterBy }) {
+function Dashboard({ data = [], filter, filterBy = () => {} }) {
+  // const data = useSelector((state) => state[displayApi.reducerPath].data);
   return (
     <div className="flex flex-col justify-start items-start w-full p-3">
       <h1 className="font-bold text-4xl underline mb-3 mt-1 rounded w-full">
@@ -52,13 +53,4 @@ function Dashboard({ data = [], filter, filterBy }) {
   );
 }
 
-const mapStateToProps = (state) => ({
-  data: state.data.all,
-  filter: state.data.filter
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  filterBy: (filter) => dispatch(setFilter(filter))
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);
+export default Dashboard;

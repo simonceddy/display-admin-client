@@ -5,7 +5,7 @@ import './styles/index.css';
 import './styles/tailwind.css';
 import { Provider } from 'react-redux';
 import App from './App';
-import store from './store';
+import { store } from './store';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

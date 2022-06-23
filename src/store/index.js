@@ -1,10 +1,17 @@
 import { configureStore } from '@reduxjs/toolkit';
-import createCategory from './createCategory';
-import createItem from './createItem';
+import { displayApi } from '../services/api';
+import categoryReducer from './cagtegorySlice';
+import errorsReducer from './errorsSlice';
+import itemReducer from './itemSlice';
 
 export const store = configureStore({
   reducer: {
-    createCategory,
-    createItem
+    category: categoryReducer,
+    item: itemReducer,
+    errors: errorsReducer,
+    [displayApi.reducerPath]: displayApi.reducer
   },
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(
+    displayApi.middleware
+  )
 });

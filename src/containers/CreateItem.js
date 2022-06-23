@@ -1,22 +1,25 @@
 /* eslint-disable no-unused-vars */
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { LgTextInput } from '../components/Forms';
 import MediaUploadForm from '../components/Forms/MediaUploadForm';
-import { setItemMedia, setItemValues } from '../store/actions';
+import { setItemMedia, setItemValues } from '../store/itemSlice';
 import { MEDIA_BASE_URI } from '../support/consts';
 import client from '../util/client';
 import TextEditor from './TextEditor';
 
-function CreateItem({
-  values, setValues, media = [], setMedia
-}) {
+function CreateItem() {
+  const values = useSelector((state) => state.item.values);
+  const media = useSelector((state) => state.item.media);
+  const dispatch = useDispatch();
   return (
     <div>
       <LgTextInput
         label="Title"
         id="item-title-input"
         value={values.title}
-        onChange={(e) => setValues({ ...values, title: e.target.value })}
+        onChange={(e) => dispatch(setItemValues(
+          { ...values, title: e.target.value }
+        ))}
       />
       {/* TODO how to handle state cycle with editor */}
       {/* TODO unwrap editor and use directly? */}
@@ -65,14 +68,4 @@ function CreateItem({
   );
 }
 
-const mapStateToProps = (state) => ({
-  values: state.createItem.values,
-  media: state.createItem.media,
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  setValues: (values) => dispatch(setItemValues(values)),
-  setMedia: (media) => dispatch(setItemMedia(media)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(CreateItem);
+export default CreateItem;
