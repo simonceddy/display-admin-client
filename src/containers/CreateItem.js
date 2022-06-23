@@ -26,25 +26,29 @@ function CreateItem() {
       <TextEditor content={values.body} />
       {/* TODO media - uploads and displaying for admin */}
       <MediaUploadForm handleFiles={(files = []) => {
-        files.forEach((file) => {
-          console.log(file);
-          const reader = new FileReader();
+        console.log(files);
+        const formData = new FormData();
+        formData.append('files', files);
+        client.post('/media/upload', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        })
+          .then((r) => console.log(r.data))
+          .catch(console.error);
+        // files.forEach((file) => {
+        //   // console.log(file);
+        //   const reader = new FileReader();
 
-          reader.onabort = () => console.log('file reading was aborted');
-          reader.onerror = () => console.log('file reading has failed');
-          reader.onload = () => {
-          // Do whatever you want with the file contents
-            const binaryStr = reader.result;
-            client.post('/media/upload', { files: { [file.name]: binaryStr } }, {
-              headers: {
-                'content-type': 'multipart/form-data'
-              }
-            })
-              .then((r) => console.log(r.data))
-              .catch(console.error);
-          };
-          reader.readAsArrayBuffer(file);
-        });
+        //   reader.onabort = () => console.log('file reading was aborted');
+        //   reader.onerror = () => console.log('file reading has failed');
+        //   reader.onload = () => {
+        //     // Do whatever you want with the file contents
+        //     const binaryStr = reader.result;
+        //     formData.append('files', binaryStr);
+
+        //   reader.readAsArrayBuffer(file);
+        // });
       }}
       />
       {/* TODO layout of thumbnails */}
