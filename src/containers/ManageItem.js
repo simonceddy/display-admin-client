@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { LgTextInput } from '../components/Forms';
 import TextEditor from './TextEditor';
 
+// TODO refactor to redux toolkit
 function ManageItem({ values }) {
   const [vals, setVals] = useState({
     title: '',

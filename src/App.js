@@ -6,6 +6,7 @@ import ManageCategory from './containers/ManageCategory';
 import NavbarLink from './components/Navbar/NavbarLink';
 import CreateItem from './containers/CreateItem';
 import { useFetchDataQuery } from './services/api';
+import DisplaySettings from './containers/DisplaySettings';
 
 function App() {
   // TODO this isn't used here beyond preloading
@@ -19,6 +20,7 @@ function App() {
             <div className="flex flex-row justify-start items-center">
               <NavbarLink to="/">Dashboard</NavbarLink>
               <NavbarLink to="/create">Create New Category</NavbarLink>
+              <NavbarLink to="/settings">Settings</NavbarLink>
             </div>
             <div>
               {error ? 'Errors' : 'No errors!'}
@@ -31,6 +33,7 @@ function App() {
               <Route path="/category/:key" element={<ManageCategory />} />
               <Route path="/category/:key/createItem" element={<CreateItem />} />
               <Route path="/category/:key/createSubCategory" element={<CreateItem />} />
+              <Route path="/settings" element={<DisplaySettings />} />
             </Routes>
           </div>
         </>

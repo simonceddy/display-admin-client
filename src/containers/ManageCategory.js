@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import CategoryForm from '../components/Forms/CategoryForm';
 import { fetchCategory, setValues } from '../store/actions';
 
+// TODO refactor to use redux toolkit
 function ManageCategory({ values, fetchData, setVals }) {
   const { key } = useParams();
   useEffect(() => {

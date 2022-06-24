@@ -10,6 +10,9 @@ export const displayApi = createApi({
     fetchCategory: builder.query({
       query: (key) => `/category/${key}`
     }),
+    saveNewCategory: builder.mutation({
+      query: () => ({})
+    }),
   })
 });
 
