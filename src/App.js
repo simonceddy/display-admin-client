@@ -7,6 +7,8 @@ import NavbarLink from './components/Navbar/NavbarLink';
 import CreateItem from './containers/CreateItem';
 import { useFetchDataQuery } from './services/api';
 import DisplaySettings from './containers/DisplaySettings';
+import Testing from './containers/Testing';
+import TestingItem from './containers/TestingItem';
 
 function App() {
   // TODO this isn't used here beyond preloading
@@ -21,6 +23,7 @@ function App() {
               <NavbarLink to="/">Dashboard</NavbarLink>
               <NavbarLink to="/create">Create New Category</NavbarLink>
               <NavbarLink to="/settings">Settings</NavbarLink>
+              <NavbarLink to="/tests">Tests</NavbarLink>
             </div>
             <div>
               {error ? 'Errors' : 'No errors!'}
@@ -34,6 +37,8 @@ function App() {
               <Route path="/category/:key/createItem" element={<CreateItem />} />
               <Route path="/category/:key/createSubCategory" element={<CreateItem />} />
               <Route path="/settings" element={<DisplaySettings />} />
+              <Route path="/tests" element={<Testing />} />
+              <Route path="/tests/item/:key" element={<TestingItem />} />
             </Routes>
           </div>
         </>
