@@ -5,6 +5,7 @@ import categoryReducer from './cagtegorySlice';
 import errorsReducer from './errorsSlice';
 import itemReducer from './itemSlice';
 import newCategoryReducer from './newCategorySlice';
+import editCategory from '../features/categories/editCategorySlice';
 
 export const store = configureStore({
   reducer: {
@@ -14,6 +15,7 @@ export const store = configureStore({
     [displayApi.reducerPath]: displayApi.reducer,
     newCategory: newCategoryReducer,
     [testApi.reducerPath]: testApi.reducer,
+    editCategory,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(
     displayApi.middleware

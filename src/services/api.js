@@ -11,9 +11,34 @@ export const displayApi = createApi({
       query: (key) => `/category/${key}`
     }),
     saveNewCategory: builder.mutation({
-      query: () => ({})
+      query: (body) => ({
+        url: '/category/create',
+        body,
+        method: 'POST'
+      }),
+      transformResponse: (r) => r.data
     }),
+    updateArticle: builder.mutation({
+      query: ({ key, ...body }) => ({
+        url: `/category/update/${key}`,
+        body,
+        method: 'PUT'
+      }),
+      transformResponse: (r) => r.data
+    }),
+    deleteArticle: builder.mutation({
+      query: (key) => ({
+        url: `/category/destroy/${key}`,
+        method: 'DELETE'
+      })
+    })
   })
 });
 
-export const { useFetchDataQuery, useFetchCategoryQuery } = displayApi;
+export const {
+  useFetchDataQuery,
+  useFetchCategoryQuery,
+  useDeleteArticleMutation,
+  useUpdateArticleMutation,
+  useSaveNewCategoryMutation
+} = displayApi;
