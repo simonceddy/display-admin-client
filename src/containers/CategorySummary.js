@@ -15,7 +15,7 @@ function countSubCategoryItems(subs = []) {
   return totalItems;
 }
 
-function CategorySummary({ category = {} }) {
+function CategorySummary({ category = {}, handleArchive }) {
   const navigate = useNavigate();
   const [showSummary, setShowSummary] = useState(false);
   const totalItems = category.items ? category.items.length : 0;
@@ -40,6 +40,9 @@ function CategorySummary({ category = {} }) {
         >
           {category.title}
         </h3>
+        <div>
+          {category.archived ? 'Archived' : ''}
+        </div>
         <div className="text-lg pr-3">{showSummary ? '△' : '▽'}</div>
       </div>
       {showSummary ? (
@@ -92,7 +95,7 @@ function CategorySummary({ category = {} }) {
             </div>
             <div>
               <StdButton
-                onClick={() => console.log('hide category')}
+                onClick={handleArchive}
               >
                 {category.archived ? 'Unarchive' : 'Archive'}
               </StdButton>

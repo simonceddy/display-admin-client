@@ -31,7 +31,19 @@ export const displayApi = createApi({
         url: `/category/destroy/${key}`,
         method: 'DELETE'
       })
-    })
+    }),
+    archiveCategory: builder.mutation({
+      query: (key) => ({
+        url: `/category/archive/${key}`,
+        method: 'PUT'
+      })
+    }),
+    unarchiveCategory: builder.mutation({
+      query: (key) => ({
+        url: `/category/unarchive/${key}`,
+        method: 'PUT'
+      })
+    }),
   })
 });
 
@@ -40,5 +52,7 @@ export const {
   useFetchCategoryQuery,
   useDeleteArticleMutation,
   useUpdateArticleMutation,
-  useSaveNewCategoryMutation
+  useSaveNewCategoryMutation,
+  useArchiveCategoryMutation,
+  useUnarchiveCategoryMutation,
 } = displayApi;

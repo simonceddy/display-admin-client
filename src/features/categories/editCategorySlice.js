@@ -1,22 +1,19 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { emptyCategoryVals } from './support';
 
 export const editCategorySlice = createSlice({
   name: 'editCategory',
   initialState: {
-    values: {
-      title: '',
-      subCategories: [],
-      items: [],
-    },
+    values: emptyCategoryVals,
     original: {}
   },
   reducers: {
     setFormValues: (state, action) => {
-      state.values = action.payload;
+      state.articles.values = action.payload;
     },
     setOriginalData: (state, action) => {
       state.original = action.payload;
-    }
+    },
   },
 });
 

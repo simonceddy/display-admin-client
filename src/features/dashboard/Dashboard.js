@@ -1,10 +1,20 @@
 /* eslint-disable no-unused-vars */
+import { useDispatch, useSelector } from 'react-redux';
 import FilterButton from '../../components/Interactive/FilterButton';
-import { useFetchDataQuery } from '../../services/api';
+import { useArchiveCategoryMutation, useFetchDataQuery, useUnarchiveCategoryMutation } from '../../services/api';
 import CategorySummary from '../../containers/CategorySummary';
+import {
+  FILTER_ARCHIVED, FILTER_CURRENT, FILTER_NONE, FILTER_UNPUBLISHED, setFilter
+} from './dashboardSlice';
 
-function Dashboard({ filter, filterBy = () => {} }) {
-  const { data, error, isLoading } = useFetchDataQuery();
+function Dashboard({ filter }) {
+  const {
+    data, error, isLoading, refetch
+  } = useFetchDataQuery();
+  const [archiveCategory, { isSuccess: archiveIsSuccess }] = useArchiveCategoryMutation();
+  const [unarchiveCategory, { isSuccess: unarchiveIsSuccess }] = useUnarchiveCategoryMutation();
+  const { filterBy } = useSelector((state) => state.dashboard);
+  const dispatch = useDispatch();
 
   return (
     <div className="flex flex-col justify-start items-start w-full p-3">
@@ -18,26 +28,26 @@ function Dashboard({ filter, filterBy = () => {} }) {
             Show:
           </span>
           <FilterButton
-            disabled={filter === 'current'}
-            onClick={() => filterBy('current')}
+            disabled={filterBy === FILTER_CURRENT}
+            onClick={() => dispatch(setFilter(FILTER_CURRENT))}
           >
             Current
           </FilterButton>
           <FilterButton
-            disabled={filter === 'archived'}
-            onClick={() => filterBy('archived')}
+            disabled={filterBy === FILTER_ARCHIVED}
+            onClick={() => dispatch(setFilter(FILTER_ARCHIVED))}
           >
             archived
           </FilterButton>
           <FilterButton
-            disabled={filter === 'unpublished'}
-            onClick={() => filterBy('unpublished')}
+            disabled={filterBy === FILTER_UNPUBLISHED}
+            onClick={() => dispatch(setFilter(FILTER_UNPUBLISHED))}
           >
             unpublished
           </FilterButton>
           <FilterButton
-            disabled={filter === 'all'}
-            onClick={() => filterBy('all')}
+            disabled={filterBy === FILTER_NONE}
+            onClick={() => dispatch(setFilter(FILTER_NONE))}
           >
             all
           </FilterButton>
@@ -46,6 +56,14 @@ function Dashboard({ filter, filterBy = () => {} }) {
           <CategorySummary
             key={`category-row-${c.key}`}
             category={c}
+            handleArchive={async () => {
+              if (c.archived) {
+                await unarchiveCategory(c.key).unwrap();
+              } else {
+                await archiveCategory(c.key).unwrap();
+              }
+              refetch();
+            }}
           />
         ))}
       </div>

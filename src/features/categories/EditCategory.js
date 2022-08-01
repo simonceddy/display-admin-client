@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 import CategoryForm from '../../components/Forms/CategoryForm';
 import { useFetchCategoryQuery } from '../../services/api';
 import { setFormValues } from './editCategorySlice';
+import { emptyCategoryVals } from './support';
 
 function EditCategory() {
   const { key } = useParams();
@@ -12,7 +13,7 @@ function EditCategory() {
     data, isLoading, error, isSuccess, refetch
   } = useFetchCategoryQuery(key);
   const dispatch = useDispatch();
-  const { values } = useSelector((state) => state.editCategory);
+  const { values } = useSelector((state) => (state.editCategory));
   useEffect(() => {
     if (isSuccess) {
       dispatch(setFormValues(data));
