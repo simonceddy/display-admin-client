@@ -7,14 +7,31 @@ import {
   FILTER_ARCHIVED, FILTER_CURRENT, FILTER_NONE, FILTER_UNPUBLISHED, setFilter
 } from './dashboardSlice';
 
+function filterData(filterBy = FILTER_NONE, data = []) {
+  switch (filterBy) {
+    case FILTER_ARCHIVED:
+      return data.filter((v) => v.archived === true);
+    case FILTER_UNPUBLISHED:
+      return data.filter((v) => v.published === false);
+    case FILTER_CURRENT:
+      return data.filter((v) => v.archived === false && v.published !== false);
+    default:
+      return data;
+  }
+}
+
 function Dashboard({ filter }) {
   const {
     data, error, isLoading, refetch
   } = useFetchDataQuery();
-  const [archiveCategory, { isSuccess: archiveIsSuccess }] = useArchiveCategoryMutation();
-  const [unarchiveCategory, { isSuccess: unarchiveIsSuccess }] = useUnarchiveCategoryMutation();
+  const [archiveCategory, { isLoading: archiving }] = useArchiveCategoryMutation();
+  const [unarchiveCategory, { isLoading: unarchiving }] = useUnarchiveCategoryMutation();
   const { filterBy } = useSelector((state) => state.dashboard);
   const dispatch = useDispatch();
+
+  if (isLoading) return <div>loading...</div>;
+
+  const dataList = filterData(filterBy, data);
 
   return (
     <div className="flex flex-col justify-start items-start w-full p-3">
@@ -52,7 +69,7 @@ function Dashboard({ filter }) {
             all
           </FilterButton>
         </div>
-        {data.map((c) => (
+        {dataList.map((c) => (
           <CategorySummary
             key={`category-row-${c.key}`}
             category={c}

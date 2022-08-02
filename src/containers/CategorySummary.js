@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import StdButton from '../components/Interactive/StdButton';
 import ThumbnailRow from '../components/Category/ThumbnailRow';
 import SubCategoryList from '../components/Category/SubCategoryList';
+import DebouncedButton from '../components/Interactive/DebouncedButton';
 
 function countSubCategoryItems(subs = []) {
   let totalItems = 0;
@@ -38,11 +39,8 @@ function CategorySummary({ category = {}, handleArchive }) {
         <h3
           className="hover:underline text-xl capitalize font-bold flex-1"
         >
-          {category.title}
+          {category.archived ? 'Archived - ' : ''}{category.title}
         </h3>
-        <div>
-          {category.archived ? 'Archived' : ''}
-        </div>
         <div className="text-lg pr-3">{showSummary ? '△' : '▽'}</div>
       </div>
       {showSummary ? (
@@ -94,11 +92,12 @@ function CategorySummary({ category = {}, handleArchive }) {
               </StdButton>
             </div>
             <div>
-              <StdButton
+              <DebouncedButton
+                wait={300}
                 onClick={handleArchive}
               >
                 {category.archived ? 'Unarchive' : 'Archive'}
-              </StdButton>
+              </DebouncedButton>
             </div>
           </div>
         </div>

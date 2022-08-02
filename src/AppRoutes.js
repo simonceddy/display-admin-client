@@ -1,6 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 
-import CreateCategory from './containers/CreateCategory';
+import CreateCategory from './features/categories/CreateCategory';
 import Dashboard from './features/dashboard/Dashboard';
 import CreateItem from './containers/CreateItem';
 
