@@ -9,7 +9,7 @@ export const editCategorySlice = createSlice({
   },
   reducers: {
     setFormValues: (state, action) => {
-      state.articles.values = action.payload;
+      state.values = action.payload;
     },
     setOriginalData: (state, action) => {
       state.original = action.payload;

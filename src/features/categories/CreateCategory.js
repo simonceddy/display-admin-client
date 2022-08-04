@@ -1,8 +1,11 @@
 import { useDispatch, useSelector } from 'react-redux';
 import CategoryForm from '../../components/Forms/CategoryForm';
+import { useFetchDataQuery, useSaveNewCategoryMutation } from '../../services/api';
 import { setCategoryValues } from '../../store/newCategorySlice';
 
 function CreateCategory() {
+  const { refetch } = useFetchDataQuery();
+  const [createCategory] = useSaveNewCategoryMutation();
   const values = useSelector((state) => state.newCategory.values);
   const dispatch = useDispatch();
 
@@ -14,6 +17,11 @@ function CreateCategory() {
       <CategoryForm
         values={values}
         setValues={(vals) => dispatch(setCategoryValues(vals))}
+        onSubmit={async () => {
+          console.log(values);
+          await createCategory(values).unwrap();
+          refetch();
+        }}
       />
     </div>
   );

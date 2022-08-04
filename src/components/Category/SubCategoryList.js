@@ -2,11 +2,11 @@ import StdButton from '../Interactive/StdButton';
 
 function SubCategoryList({ subs = [] }) {
   return (
-    <ul className="w-full">
+    <div className="w-full flex flex-col justify-start items-start">
       {subs.map((c) => {
         const totalItems = c.items ? c.items.length : 0;
         return (
-          <li
+          <div
             key={`subcategory-${c.key}-listing`}
             className="my-1 flex flex-row justify-between w-full items-center"
           >
@@ -17,10 +17,10 @@ function SubCategoryList({ subs = [] }) {
             <StdButton onClick={() => console.log('edit sub')}>
               Edit Sub-Category
             </StdButton>
-          </li>
+          </div>
         );
       })}
-    </ul>
+    </div>
   );
 }
 

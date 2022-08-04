@@ -7,6 +7,7 @@ import itemReducer from './itemSlice';
 import newCategoryReducer from './newCategorySlice';
 import editCategory from '../features/categories/editCategorySlice';
 import dashboard from '../features/dashboard/dashboardSlice';
+import createSubCategory from '../features/categories/createSubCategorySlice';
 
 export const store = configureStore({
   reducer: {
@@ -17,7 +18,8 @@ export const store = configureStore({
     newCategory: newCategoryReducer,
     [testApi.reducerPath]: testApi.reducer,
     editCategory,
-    dashboard
+    dashboard,
+    createSubCategory,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(
     displayApi.middleware
