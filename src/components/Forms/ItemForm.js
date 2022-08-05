@@ -1,4 +1,4 @@
-import TextEditor from '../../containers/TextEditor';
+// import TextEditor from '../../containers/TextEditor';
 import { MEDIA_BASE_URI } from '../../support/consts';
 import DropzoneMediaUploadForm from './DropzoneMediaUploadForm';
 import LgTextInput from './LgTextInput';
@@ -7,16 +7,19 @@ function ItemForm({
   values = {}, media = [], onChange, handleFiles
 }) {
   return (
-    <div>
+    <div className="flex flex-col w-11/12 p-1 border-2 border-slate-500 m-1">
       <LgTextInput
         label="Title"
+        className="w-11/12"
         id="item-title-input"
         value={values.title}
-        onChange={onChange}
+        onChange={(e) => {
+          if (onChange) onChange({ ...values, title: e.target.value });
+        }}
       />
       {/* TODO how to handle state cycle with editor */}
       {/* TODO unwrap editor and use directly? */}
-      <TextEditor content={values.body} />
+      {/* <TextEditor content={values.body} /> */}
       {/* TODO media - uploads and displaying for admin */}
       <DropzoneMediaUploadForm handleFiles={handleFiles} />
       {/* TODO layout of thumbnails */}

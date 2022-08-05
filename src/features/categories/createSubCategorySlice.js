@@ -8,7 +8,7 @@ export const createSubCategorySlice = createSlice({
     parent: null,
   },
   reducers: {
-    setValues: (state, action) => {
+    setSubValues: (state, action) => {
       state.values = action.payload;
     },
     addItem: (state, action) => {
@@ -23,6 +23,6 @@ export const createSubCategorySlice = createSlice({
   },
 });
 
-// export const { } = createSubCategorySlice.actions;
+export const { setSubValues, addItem, removeItem } = createSubCategorySlice.actions;
 
 export default createSubCategorySlice.reducer;

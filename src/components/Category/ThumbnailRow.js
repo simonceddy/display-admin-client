@@ -6,8 +6,21 @@ function ThumbnailRow({ items = [], categoryKey }) {
   const [showTooltip, setShowTooltip] = useState(false);
   return (
     <div className="flex flex-row justify-start items-center rounded p-1 m-1">
-      {items.map((i) => {
-        if (!i.thumbnail) return null;
+      {items.map((i, index) => {
+        if (!i.thumbnail) {
+          return (
+            <div
+              key={`${index}-item-box`}
+              className="mx-2 rounded p-0.5 overflow-hidden whitespace-nowrap overflow-ellipsis"
+              style={{
+                width: '70px',
+                height: 'auto'
+              }}
+            >
+              {i.title}
+            </div>
+          );
+        }
         return (
           <Fragment key={`${categoryKey}-summary-${i.key}-thumbnail`}>
             <img
@@ -17,7 +30,7 @@ function ThumbnailRow({ items = [], categoryKey }) {
               height="auto"
               width={70}
               src={`${MEDIA_BASE_URI}thumbs/${i.thumbnail.src}`}
-              alt={i.thumbnail.alt}
+              alt={i.thumbnail.alt || i.title}
               onMouseEnter={() => setShowTooltip(true)}
               onMouseLeave={() => {
                 setShowTooltip(false);
