@@ -4,11 +4,11 @@ import { testApi } from '../services/testApi';
 // import categoryReducer from './cagtegorySlice';
 import errorsReducer from './errorsSlice';
 // import itemReducer from './itemSlice';
-import newCategoryReducer from './newCategorySlice';
 import editCategory from '../features/categories/editCategorySlice';
 import dashboard from '../features/dashboard/dashboardSlice';
 import createSubCategory from '../features/categories/createSubCategorySlice';
-import createItem from '../features/items/createItemSlice';
+import itemForm from '../features/items/createItemSlice';
+import categoryForm from '../features/categories/categoryFormSlice';
 
 export const store = configureStore({
   reducer: {
@@ -16,12 +16,12 @@ export const store = configureStore({
     // item: itemReducer,
     errors: errorsReducer,
     [displayApi.reducerPath]: displayApi.reducer,
-    newCategory: newCategoryReducer,
     [testApi.reducerPath]: testApi.reducer,
     editCategory,
     dashboard,
     createSubCategory,
-    createItem,
+    itemForm,
+    categoryForm,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(
     displayApi.middleware

@@ -10,6 +10,13 @@ export const displayApi = createApi({
     fetchCategory: builder.query({
       query: (key) => `/category/${key}`
     }),
+    fetchItem: builder.query({
+      query: ({
+        key: category,
+        sub,
+        item
+      }) => `/category/${category}/${sub ? `subCategory/${sub}/` : ''}item/${item}`
+    }),
     saveNewCategory: builder.mutation({
       query: (body) => ({
         url: '/category/create',
@@ -44,10 +51,19 @@ export const displayApi = createApi({
         method: 'PUT'
       })
     }),
+    addItemToCategory: builder.mutation({
+      query: ({ key, ...body }) => ({
+        url: `/category/${key}/addItem`,
+        body,
+        method: 'PUT'
+      }),
+      // transformResponse: (r) => r.data
+    }),
   })
 });
 
 export const {
+  useFetchItemQuery,
   useFetchDataQuery,
   useFetchCategoryQuery,
   useDeleteArticleMutation,
@@ -55,4 +71,5 @@ export const {
   useSaveNewCategoryMutation,
   useArchiveCategoryMutation,
   useUnarchiveCategoryMutation,
+  useAddItemToCategoryMutation,
 } = displayApi;

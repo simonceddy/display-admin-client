@@ -1,4 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
+import {
+  pushAll,
+  pushKey,
+  removeKey,
+  simpleSetter
+} from '../../support/store';
 
 export const createSubCategorySlice = createSlice({
   name: 'createSubCategorySlice',
@@ -8,21 +14,18 @@ export const createSubCategorySlice = createSlice({
     parent: null,
   },
   reducers: {
-    setSubValues: (state, action) => {
-      state.values = action.payload;
-    },
-    addItem: (state, action) => {
-      state.items.push(action.payload);
-    },
-    removeItem: (state, action) => {
-      state.items = state.items.filter((i) => i !== action.payload);
-    },
+    setSubValues: simpleSetter('values'),
+    addItem: pushKey('items'),
+    removeItem: removeKey('items'),
     setParentKey: (state, action) => {
       state.parent = action.payload;
-    }
+    },
+    addAllItems: pushAll('items')
   },
 });
 
-export const { setSubValues, addItem, removeItem } = createSubCategorySlice.actions;
+export const {
+  setSubValues, addItem, removeItem, addAllItems
+} = createSubCategorySlice.actions;
 
 export default createSubCategorySlice.reducer;

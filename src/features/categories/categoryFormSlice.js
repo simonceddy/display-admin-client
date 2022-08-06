@@ -4,8 +4,8 @@ import {
   pushAll, pushKey, removeKey, simpleSetter
 } from '../../support/store';
 
-export const editCategorySlice = createSlice({
-  name: 'editCategory',
+export const categoryFormSlice = createSlice({
+  name: 'categoryForm',
   initialState: {
     ...emptyCategoryVals,
     original: {}
@@ -37,6 +37,6 @@ export const {
   addAllSubs,
   initItems,
   initSubs,
-} = editCategorySlice.actions;
+} = categoryFormSlice.actions;
 
-export default editCategorySlice.reducer;
+export default categoryFormSlice.reducer;

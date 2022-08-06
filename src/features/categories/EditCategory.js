@@ -4,8 +4,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import ThumbnailRow from '../../components/Category/ThumbnailRow';
 import CategoryForm from '../../components/Forms/CategoryForm';
-import ItemForm from '../../components/Forms/ItemForm';
-import SubCategoryForm from '../../components/Forms/SubCategoryForm';
 import DebouncedButton from '../../components/Interactive/DebouncedButton';
 import StdButton from '../../components/Interactive/StdButton';
 import {
@@ -17,8 +15,9 @@ import {
 } from '../../services/api';
 import CreateItem from '../items/CreateItem';
 import CreateSubCategory from './CreateSubCategory';
-import { setFormValues } from './editCategorySlice';
-// import { emptyCategoryVals } from './support';
+import {
+  addItem, setFormValues, addAllItems, addAllSubs, initItems
+} from './categoryFormSlice';
 
 function archiveButtonLabel({ isWorking, archived }) {
   if (isWorking) return 'Working...';
@@ -31,10 +30,13 @@ function EditCategory() {
     data, isLoading, error, isSuccess, refetch
   } = useFetchCategoryQuery(key);
   const { refetch: refetchDataList } = useFetchDataQuery();
-  const [updateData] = useUpdateArticleMutation();
+  const [updateData, { isSuccess: updated }] = useUpdateArticleMutation();
   const dispatch = useDispatch();
-  const { values } = useSelector((state) => (state.editCategory));
-  const { values: newItemFormVals } = useSelector((state) => state.createItem);
+  const {
+    values,
+    items,
+    subCategories
+  } = useSelector((state) => (state.categoryForm));
   const [archiveCategory, {
     isLoading: archiving
   }] = useArchiveCategoryMutation();
@@ -44,7 +46,6 @@ function EditCategory() {
 
   const [showItemForm, setShowItemForm] = useState(false);
   const [showSubForm, setShowSubForm] = useState(false);
-  // const debouncedSubmit = onSubmit ? debounce(onSubmit, 500) : null;
 
   const refetchAll = () => {
     refetch();
@@ -52,18 +53,20 @@ function EditCategory() {
   };
   useEffect(() => {
     if (isSuccess) {
-      dispatch(setFormValues(data));
+      dispatch(setFormValues({ title: data.title || '' }));
+      dispatch(initItems(data.items || []));
+      // if (data.categories.length > 0) dispatch(addAllSubs(data.subCategories));
     }
   }, [isSuccess]);
 
   if (isLoading) return <div>Loading Data</div>;
   if (error) return <div>{error.message}</div>;
 
-  console.log(values);
+  // console.log(values);
   return (
     <CategoryForm
       onSubmit={async () => {
-        console.log(values);
+        // console.log(values);
         await updateData({ key, ...values }).unwrap();
         refetchAll();
         console.log('updated');
@@ -71,6 +74,7 @@ function EditCategory() {
       values={values}
       setValues={(vals) => dispatch(setFormValues(vals))}
     >
+      {updated ? <div>Category updated</div> : null}
       {/* items and subcategories */}
       <div className="border-2 rounded-md border-slate-400 my-2 w-full">
         {/* TODO bring up item form inline or as modal */}
@@ -79,11 +83,8 @@ function EditCategory() {
           <CreateItem
             onClose={() => setShowItemForm(false)}
             onSubmit={(item) => {
-              console.log(item);
-              dispatch(setFormValues({
-                ...values,
-                items: [...values.items, item]
-              }));
+              // console.log(item);
+              dispatch(addItem(item));
             }}
           />
         ) : (
@@ -93,7 +94,7 @@ function EditCategory() {
             Add Item
           </StdButton>
         )}
-        <ThumbnailRow items={values.items} />
+        <ThumbnailRow items={items} />
       </div>
       {/* item form - title, body, media */}
       {/* media */}

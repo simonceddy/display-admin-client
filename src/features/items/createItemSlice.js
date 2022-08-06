@@ -1,28 +1,36 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { pushKey, simpleSetter } from '../../support/store';
+
+const initialState = {
+  values: {
+    title: '',
+    body: ''
+  },
+  media: [],
+  unsaved: {}
+};
 
 export const createItemSlice = createSlice({
   name: 'createItem',
-  initialState: {
-    values: {
-      title: '',
-      body: ''
-    },
-    media: [],
-    unsaved: {}
-  },
+  initialState,
   reducers: {
-    addItemMedia(state, action) {
-      state.media.push(action.payload);
-    },
-    setItemValues(state, action) {
-      state.values = action.payload;
-    },
+    addItemMedia: pushKey('media'),
+    setItemValues: simpleSetter('values'),
     clearMedia(state) {
+      state.media = [];
+    },
+    initMedia: (state, action) => {
+      state.media = action.payload;
+    },
+    initForm: (state) => {
+      state.values = initialState.values;
       state.media = [];
     }
   },
 });
 
-export const { addItemMedia, setItemValues, clearMedia } = createItemSlice.actions;
+export const {
+  addItemMedia, setItemValues, clearMedia, initMedia, initForm
+} = createItemSlice.actions;
 
 export default createItemSlice.reducer;
