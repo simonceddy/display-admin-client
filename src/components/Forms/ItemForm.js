@@ -4,7 +4,7 @@ import DropzoneMediaUploadForm from './DropzoneMediaUploadForm';
 import LgTextInput from './LgTextInput';
 
 function ItemForm({
-  values = {}, media = [], onChange, handleFiles
+  values = {}, media = [], onChange, handleFiles, thumbnail, onThumbClick
 }) {
   return (
     <div className="flex flex-col w-11/12 p-1 border-2 border-slate-500 m-1">
@@ -32,9 +32,16 @@ function ItemForm({
             <div className="flex flex-row justify-start items-center">
               {media.map((m, key) => {
                 if (!m.src) return null;
+                const bgfill = thumbnail && thumbnail.src === m.src
+                  ? 'bg-yellow-300'
+                  : 'bg-green-500';
                 return (
                   <img
-                    className="m-1 p-1 bg-green-500 bg-opacity-20 hover:bg-opacity-90 rounded-md"
+                    className={`m-1 p-1 ${bgfill} bg-opacity-20 hover:bg-opacity-90 rounded-md`}
+                    role="presentation"
+                    onClick={() => {
+                      if (onThumbClick) onThumbClick(m);
+                    }}
                     width={80}
                     key={`item-media-thumb-${key}`}
                     src={`${MEDIA_BASE_URI}thumbs/${m.src}`}

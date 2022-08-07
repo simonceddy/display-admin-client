@@ -13,13 +13,18 @@ import {
 } from '../../services/api';
 import client from '../../util/client';
 import createMediaObject from '../../util/createMediaObject';
-import { addItemMedia, initForm, setItemValues } from './itemFormSlice';
+import {
+  addItemMedia,
+  initForm,
+  setItemValues,
+  setThumbnail
+} from './itemFormSlice';
 // import { useFetchDataQuery } from '../../services/api';
 
 function EditItem({ onClose, onSubmit, submitLabel = 'Save Item' }) {
   const navigate = useNavigate();
   const { key, sub, item } = useParams();
-  const { values, media } = useSelector((state) => state.itemForm);
+  const { values, media, thumbnail } = useSelector((state) => state.itemForm);
   const dispatch = useDispatch();
   const { refetch } = useFetchCategoryQuery(key);
   const { refetch: refetchDataList } = useFetchDataQuery();
@@ -33,7 +38,7 @@ function EditItem({ onClose, onSubmit, submitLabel = 'Save Item' }) {
   const [removeItem, { isSuccess: isRemoved }] = useRemoveItemFromCategoryMutation();
   const [updateItem, { isSuccess: isUpdated }] = useUpdateItemMutation();
   const [initialized, setInitialized] = useState(false);
-
+  // console.log(data);
   useEffect(() => {
     let formInit = false;
     if (!initialized && dataLoaded && !formInit) {
@@ -42,7 +47,8 @@ function EditItem({ onClose, onSubmit, submitLabel = 'Save Item' }) {
           title: data.title || '',
           body: data.body || ''
         },
-        media: data.media || []
+        media: data.media || [],
+        thumbnail: data.thumbnail || { src: '', alt: '', type: 'image' }
       }));
       setInitialized(true);
     }
@@ -52,7 +58,14 @@ function EditItem({ onClose, onSubmit, submitLabel = 'Save Item' }) {
   }, [initialized, dataLoaded]);
   if (isLoading) return <div>Loading Data</div>;
   if (error) return <div>{error.message}</div>;
-  console.log(values);
+  // console.log(values);
+  const doUpdate = async () => {
+    await updateItem({
+      key: data.category, item: data.key, ...values, media, thumbnail
+    }).unwrap();
+    refetchAll();
+    refresh();
+  };
   return (
     <div className="w-full flex flex-col justify-start items-center">
       {isUpdated ? (<div>Item Updated</div>) : null}
@@ -60,11 +73,12 @@ function EditItem({ onClose, onSubmit, submitLabel = 'Save Item' }) {
         <>
           <ItemForm
             media={media}
+            thumbnail={thumbnail}
             values={values}
             onChange={(vals) => dispatch(setItemValues(vals))}
             handleFiles={(files) => {
               // TODO handle type and alt defaults for media uploads
-              console.log(files);
+              // console.log(files);
               const formData = new FormData();
               files.map((file) => formData.append(file.name, file));
               client.post('/media/upload', formData, {
@@ -72,14 +86,20 @@ function EditItem({ onClose, onSubmit, submitLabel = 'Save Item' }) {
                   'Content-Type': 'multipart/form-data'
                 }
               })
-                .then((r) => {
+                .then(async (r) => {
+                  console.log(r);
                   if (r.data.success && r.data.filepaths) {
-                    setTimeout(() => {
-                      Object.values(r.data.filepaths)
-                        .map((src) => dispatch(
-                          addItemMedia(createMediaObject(src))
-                        ));
-                    }, 500);
+                    await Promise.all(Object.values(r.data.filepaths)
+                      .map((src) => {
+                        const m = createMediaObject(src);
+                        if (thumbnail.src === '') {
+                          // set as thumbnail
+                          dispatch(setThumbnail(m));
+                        }
+                        // console.log(m);
+                        return dispatch(addItemMedia(m));
+                      }));
+                    doUpdate();
                   }
                   // TODO handle failed upload
                 })
@@ -88,21 +108,15 @@ function EditItem({ onClose, onSubmit, submitLabel = 'Save Item' }) {
           />
           <StdButton onClick={async () => {
             await removeItem({ key, sub, item });
-            refetch();
+            refetchAll();
+            refresh();
           }}
           >
             Delete Item
           </StdButton>
         </>
       )}
-      <StdButton onClick={async () => {
-        await updateItem({
-          key: data.category, item: data.key, ...values, media
-        }).unwrap();
-        refetchAll();
-        refresh();
-      }}
-      >
+      <StdButton onClick={doUpdate}>
         Save Changes
       </StdButton>
       <StdButton onClick={() => {

@@ -10,7 +10,7 @@ import { initForm, setItemValues } from './itemFormSlice';
 function CreateItem({ onClose, onSubmit, submitLabel = 'Save Item' }) {
   const navigate = useNavigate();
   const { key, sub } = useParams();
-  const { values, media } = useSelector((state) => state.itemForm);
+  const { values, media, thumbnail } = useSelector((state) => state.itemForm);
   const dispatch = useDispatch();
   const [initialized, setInitialized] = useState(false);
 

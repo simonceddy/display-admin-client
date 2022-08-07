@@ -7,6 +7,9 @@ const initialState = {
     body: ''
   },
   media: [],
+  thumbnail: {
+    src: '', alt: '', type: 'image'
+  },
   unsaved: {}
 };
 
@@ -16,7 +19,8 @@ export const itemFormSlice = createSlice({
   reducers: {
     addItemMedia: pushKey('media'),
     setItemValues: simpleSetter('values'),
-    clearMedia(state) {
+    setThumbnail: simpleSetter('thumbnail'),
+    clearMedia: (state) => {
       state.media = [];
     },
     initMedia: (state, action) => {
@@ -29,12 +33,15 @@ export const itemFormSlice = createSlice({
       state.media = (action.payload && action.payload.media)
         ? action.payload.media
         : [];
+      state.thumbnail = (action.payload && action.payload.thumbnail)
+        ? action.payload.thumbnail
+        : { src: '', alt: '', type: 'image' };
     }
   },
 });
 
 export const {
-  addItemMedia, setItemValues, clearMedia, initMedia, initForm
+  addItemMedia, setItemValues, clearMedia, initMedia, initForm, setThumbnail
 } = itemFormSlice.actions;
 
 export default itemFormSlice.reducer;
