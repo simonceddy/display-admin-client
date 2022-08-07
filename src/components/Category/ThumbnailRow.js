@@ -3,13 +3,15 @@ import { useNavigate } from 'react-router-dom';
 import ReactTooltip from 'react-tooltip';
 import { MEDIA_BASE_URI } from '../../support/consts';
 
-function ThumbnailRow({ items = [], categoryKey }) {
+function ThumbnailRow({ items = [], categoryKey, onItemClick }) {
   const [showTooltip, setShowTooltip] = useState(false);
   const navigate = useNavigate();
   return (
     <div className="flex flex-row justify-start items-center rounded p-1 m-1">
       {items.map((i, index) => {
-        const clickHandler = () => navigate(`/category/${categoryKey}/item/${i.key}`);
+        const clickHandler = onItemClick
+          ? () => onItemClick(i)
+          : (() => navigate(`/category/${categoryKey}/item/${i.key}`));
         if (!i.thumbnail) {
           return (
             <div

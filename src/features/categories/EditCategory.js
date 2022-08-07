@@ -1,13 +1,14 @@
 /* eslint-disable no-unused-vars */
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import ThumbnailRow from '../../components/Category/ThumbnailRow';
 import CategoryForm from '../../components/Forms/CategoryForm';
 import DebouncedButton from '../../components/Interactive/DebouncedButton';
 import StdButton from '../../components/Interactive/StdButton';
 import {
   useArchiveCategoryMutation,
+  useDeleteCategoryMutation,
   useFetchCategoryQuery,
   useFetchDataQuery,
   useUnarchiveCategoryMutation,
@@ -16,7 +17,7 @@ import {
 import CreateItem from '../items/CreateItem';
 import CreateSubCategory from './CreateSubCategory';
 import {
-  addItem, setFormValues, addAllItems, addAllSubs, initItems
+  addItem, setFormValues, addAllItems, addAllSubs, initItems, initForm
 } from './categoryFormSlice';
 
 function archiveButtonLabel({ isWorking, archived }) {
@@ -26,6 +27,7 @@ function archiveButtonLabel({ isWorking, archived }) {
 
 function EditCategory() {
   const { key } = useParams();
+  const navigate = useNavigate();
   const {
     data, isLoading, error, isSuccess, refetch
   } = useFetchCategoryQuery(key);
@@ -44,6 +46,8 @@ function EditCategory() {
     isLoading: unarchiving
   }] = useUnarchiveCategoryMutation();
 
+  const [deleteCategory, { isSuccess: deleted }] = useDeleteCategoryMutation();
+
   const [showItemForm, setShowItemForm] = useState(false);
   const [showSubForm, setShowSubForm] = useState(false);
 
@@ -53,20 +57,31 @@ function EditCategory() {
   };
   useEffect(() => {
     if (isSuccess) {
-      dispatch(setFormValues({ title: data.title || '' }));
-      dispatch(initItems(data.items || []));
-      // if (data.categories.length > 0) dispatch(addAllSubs(data.subCategories));
+      dispatch(initForm({
+        values: { ...values, ...data },
+        items: data.items,
+        categories: data.categories
+      }));
     }
   }, [isSuccess]);
 
   if (isLoading) return <div>Loading Data</div>;
   if (error) return <div>{error.message}</div>;
 
+  if (deleted) {
+    return (
+      <div>
+        Category deleted
+        <StdButton onClick={() => navigate('/')}>
+          Done
+        </StdButton>
+      </div>
+    );
+  }
   // console.log(values);
   return (
     <CategoryForm
       onSubmit={async () => {
-        // console.log(values);
         await updateData({ key, ...values }).unwrap();
         refetchAll();
         console.log('updated');
@@ -129,6 +144,15 @@ function EditCategory() {
             isWorking: archiving || unarchiving,
             archived: data.archived
           })}
+        </DebouncedButton>
+        <DebouncedButton
+          wait={200}
+          onClick={async () => {
+            await deleteCategory(key).unwrap();
+            refetchDataList();
+          }}
+        >
+          Delete
         </DebouncedButton>
       </div>
     </CategoryForm>

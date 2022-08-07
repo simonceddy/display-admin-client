@@ -10,8 +10,8 @@ const initialState = {
   unsaved: {}
 };
 
-export const createItemSlice = createSlice({
-  name: 'createItem',
+export const itemFormSlice = createSlice({
+  name: 'itemForm',
   initialState,
   reducers: {
     addItemMedia: pushKey('media'),
@@ -22,15 +22,19 @@ export const createItemSlice = createSlice({
     initMedia: (state, action) => {
       state.media = action.payload;
     },
-    initForm: (state) => {
-      state.values = initialState.values;
-      state.media = [];
+    initForm: (state, action) => {
+      state.values = (action.payload && action.payload.values)
+        ? action.payload.values
+        : initialState.values;
+      state.media = (action.payload && action.payload.media)
+        ? action.payload.media
+        : [];
     }
   },
 });
 
 export const {
   addItemMedia, setItemValues, clearMedia, initMedia, initForm
-} = createItemSlice.actions;
+} = itemFormSlice.actions;
 
-export default createItemSlice.reducer;
+export default itemFormSlice.reducer;

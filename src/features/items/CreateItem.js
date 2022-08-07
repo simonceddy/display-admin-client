@@ -5,7 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import ItemForm from '../../components/Forms/ItemForm';
 import StdButton from '../../components/Interactive/StdButton';
 import { useAddItemToCategoryMutation, useFetchDataQuery } from '../../services/api';
-import { initForm, setItemValues } from './createItemSlice';
+import { initForm, setItemValues } from './itemFormSlice';
 
 function CreateItem({ onClose, onSubmit, submitLabel = 'Save Item' }) {
   const navigate = useNavigate();
@@ -14,7 +14,7 @@ function CreateItem({ onClose, onSubmit, submitLabel = 'Save Item' }) {
   const dispatch = useDispatch();
   const [initialized, setInitialized] = useState(false);
 
-  const [addItemTo] = useAddItemToCategoryMutation();
+  const [addItemTo, { isSuccess }] = useAddItemToCategoryMutation();
   const { refetch } = useFetchDataQuery();
 
   useEffect(() => {
@@ -33,6 +33,7 @@ function CreateItem({ onClose, onSubmit, submitLabel = 'Save Item' }) {
       {key ? (
         <h2>New item for {key}{sub ? `/${sub}` : ''}</h2>
       ) : null}
+      {isSuccess ? <div>Item Saved</div> : ''}
       <ItemForm
         media={media}
         values={values}

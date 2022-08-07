@@ -33,7 +33,7 @@ export const displayApi = createApi({
       }),
       transformResponse: (r) => r.data
     }),
-    deleteArticle: builder.mutation({
+    deleteCategory: builder.mutation({
       query: (key) => ({
         url: `/category/destroy/${key}`,
         method: 'DELETE'
@@ -59,6 +59,20 @@ export const displayApi = createApi({
       }),
       // transformResponse: (r) => r.data
     }),
+    removeItemFromCategory: builder.mutation({
+      query: ({ key, item }) => ({
+        url: `/category/${key}/removeItem/${item}`,
+        method: 'DELETE'
+      }),
+      // transformResponse: (r) => r.data
+    }),
+    updateItem: builder.mutation({
+      query: ({ key, item, ...body }) => ({
+        url: `/category/${key}/item/update/${item}`,
+        body,
+        method: 'PUT'
+      })
+    }),
   })
 });
 
@@ -66,10 +80,12 @@ export const {
   useFetchItemQuery,
   useFetchDataQuery,
   useFetchCategoryQuery,
-  useDeleteArticleMutation,
+  useDeleteCategoryMutation,
   useUpdateArticleMutation,
   useSaveNewCategoryMutation,
   useArchiveCategoryMutation,
   useUnarchiveCategoryMutation,
   useAddItemToCategoryMutation,
+  useRemoveItemFromCategoryMutation,
+  useUpdateItemMutation
 } = displayApi;

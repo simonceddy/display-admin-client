@@ -1,34 +1,47 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ThumbnailRow from '../../components/Category/ThumbnailRow';
 import CategoryForm from '../../components/Forms/CategoryForm';
 import StdButton from '../../components/Interactive/StdButton';
 import { useFetchDataQuery, useSaveNewCategoryMutation } from '../../services/api';
-import { setCategoryValues } from '../../store/newCategorySlice';
 import CreateItem from '../items/CreateItem';
-import { addItem } from './createCategorySlice';
+import { addItem, setFormValues, initForm } from './categoryFormSlice';
 import CreateSubCategory from './CreateSubCategory';
 
 function CreateCategory() {
   const { refetch } = useFetchDataQuery();
-  const [createCategory] = useSaveNewCategoryMutation();
-  const { values, items } = useSelector((state) => state.newCategory);
+  const [createCategory, { isSuccess }] = useSaveNewCategoryMutation();
+  const { values, items } = useSelector((state) => state.categoryForm);
   const dispatch = useDispatch();
 
   const [showItemForm, setShowItemForm] = useState(false);
   const [showSubForm, setShowSubForm] = useState(false);
+
+  const [initialized, setInitialized] = useState(false);
+
+  useEffect(() => {
+    let isInit = false;
+    if (!initialized && !isInit) {
+      dispatch(initForm());
+      setInitialized(true);
+    }
+    return () => {
+      isInit = true;
+    };
+  }, [initialized]);
 
   return (
     <div className="flex flex-col justify-start items-center w-full p-2">
       <h2 className="mx-2 mt-2 mb-4 text-xl font-bold p-1 border-b-2 border-slate-500">
         Create a new Category
       </h2>
+      {isSuccess ? <div>Category created</div> : null}
       <CategoryForm
         values={values}
-        setValues={(vals) => dispatch(setCategoryValues(vals))}
+        setValues={(vals) => dispatch(setFormValues(vals))}
         onSubmit={async () => {
           console.log(values);
-          await createCategory(values).unwrap();
+          await createCategory({ ...values, items }).unwrap();
           refetch();
         }}
       >
@@ -51,7 +64,12 @@ function CreateCategory() {
               Add Item
             </StdButton>
           )}
-          <ThumbnailRow items={items} />
+          <ThumbnailRow
+            items={items}
+            onItemClick={(i) => {
+              console.log(i);
+            }}
+          />
         </div>
         {/* item form - title, body, media */}
         {/* media */}

@@ -7,7 +7,7 @@ import errorsReducer from './errorsSlice';
 import editCategory from '../features/categories/editCategorySlice';
 import dashboard from '../features/dashboard/dashboardSlice';
 import createSubCategory from '../features/categories/createSubCategorySlice';
-import itemForm from '../features/items/createItemSlice';
+import itemForm from '../features/items/itemFormSlice';
 import categoryForm from '../features/categories/categoryFormSlice';
 
 export const store = configureStore({
