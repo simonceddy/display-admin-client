@@ -6,7 +6,7 @@ import errorsReducer from './errorsSlice';
 // import itemReducer from './itemSlice';
 import editCategory from '../features/categories/editCategorySlice';
 import dashboard from '../features/dashboard/dashboardSlice';
-import createSubCategory from '../features/categories/createSubCategorySlice';
+import subCategoryForm from '../features/categories/subCategoryFormSlice';
 import itemForm from '../features/items/itemFormSlice';
 import categoryForm from '../features/categories/categoryFormSlice';
 
@@ -19,7 +19,7 @@ export const store = configureStore({
     [testApi.reducerPath]: testApi.reducer,
     editCategory,
     dashboard,
-    createSubCategory,
+    subCategoryForm,
     itemForm,
     categoryForm,
   },

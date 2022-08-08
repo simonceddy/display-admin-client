@@ -109,7 +109,7 @@ function EditCategory() {
             Add Item
           </StdButton>
         )}
-        <ThumbnailRow items={items} />
+        <ThumbnailRow categoryKey={key} items={items} />
       </div>
       {/* item form - title, body, media */}
       {/* media */}

@@ -33,10 +33,10 @@ function AppRoutes() {
         path="/category/:key/:sub/createItem"
         element={<CreateItem />}
       />
-      <Route
+      {/* <Route
         path="/category/:key/:sub/createSubCategory"
         element={<CreateSubCategory />}
-      />
+      /> */}
       <Route
         path="/category/:key/:sub/item/:item"
         element={<EditItem />}

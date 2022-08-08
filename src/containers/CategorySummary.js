@@ -86,7 +86,7 @@ function CategorySummary({ category = {}, handleArchive }) {
                 Add Item
               </StdButton>
               <StdButton
-                onClick={() => console.log('add sub-category')}
+                onClick={() => navigate(`/category/${category.key}/createSubCategory`)}
               >
                 Add Sub-Category
               </StdButton>

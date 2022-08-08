@@ -2,6 +2,7 @@
 import { MEDIA_BASE_URI } from '../../support/consts';
 import DropzoneMediaUploadForm from './DropzoneMediaUploadForm';
 import LgTextInput from './LgTextInput';
+import Textarea from './Textarea';
 
 function ItemForm({
   values = {}, media = [], onChange, handleFiles, thumbnail, onThumbClick
@@ -15,6 +16,14 @@ function ItemForm({
         value={values.title}
         onChange={(e) => {
           if (onChange) onChange({ ...values, title: e.target.value });
+        }}
+      />
+      <Textarea
+        label="Content:"
+        id="item-body-input"
+        value={values.body}
+        onChange={(e) => {
+          if (onChange) onChange({ ...values, body: e.target.value });
         }}
       />
       {/* TODO how to handle state cycle with editor */}
