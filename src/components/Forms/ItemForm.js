@@ -5,7 +5,13 @@ import LgTextInput from './LgTextInput';
 import Textarea from './Textarea';
 
 function ItemForm({
-  values = {}, media = [], onChange, handleFiles, thumbnail, onThumbClick
+  values = {},
+  children,
+  media = [],
+  onChange,
+  handleFiles,
+  thumbnail,
+  onThumbClick
 }) {
   return (
     <div className="flex flex-col w-11/12 p-1 border-2 border-slate-500 m-1">
@@ -15,7 +21,12 @@ function ItemForm({
         id="item-title-input"
         value={values.title}
         onChange={(e) => {
-          if (onChange) onChange({ ...values, title: e.target.value });
+          if (onChange) {
+            onChange({
+              ...values,
+              title: e.target.value
+            });
+          }
         }}
       />
       <Textarea
@@ -62,6 +73,7 @@ function ItemForm({
           </>
         )}
       </div>
+      <div>{children}</div>
     </div>
   );
 }

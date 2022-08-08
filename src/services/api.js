@@ -1,5 +1,9 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
+const getCategoryBaseUrl = (category, sub) => (
+  `/category/${category}/${sub ? `subCategory/${sub}/` : ''}`
+);
+
 export const displayApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3030/api' }),
   reducerPath: 'displayApi',
@@ -15,7 +19,7 @@ export const displayApi = createApi({
         key: category,
         sub,
         item
-      }) => `/category/${category}/${sub ? `subCategory/${sub}/` : ''}item/${item}`
+      }) => `${getCategoryBaseUrl(category, sub)}item/${item}`
     }),
     saveNewCategory: builder.mutation({
       query: (body) => ({
@@ -52,28 +56,53 @@ export const displayApi = createApi({
       })
     }),
     addItemToCategory: builder.mutation({
-      query: ({ key, ...body }) => ({
-        url: `/category/${key}/addItem`,
+      query: ({ key, sub, ...body }) => ({
+        url: `${getCategoryBaseUrl(key, sub)}addItem`,
         body,
         method: 'PUT'
       }),
       // transformResponse: (r) => r.data
     }),
     removeItemFromCategory: builder.mutation({
-      query: ({ key, item }) => ({
-        url: `/category/${key}/removeItem/${item}`,
+      query: ({ key, sub, item }) => ({
+        url: `${getCategoryBaseUrl(key, sub)}removeItem/${item}`,
         method: 'DELETE'
       }),
       // transformResponse: (r) => r.data
     }),
     updateItem: builder.mutation({
-      query: ({ key, item, ...body }) => ({
-        url: `/category/${key}/item/update/${item}`,
+      query: ({
+        key, sub, item, ...body
+      }) => ({
+        url: `${getCategoryBaseUrl(key, sub)}item/update/${item}`,
+        body,
+        method: 'PUT'
+      }),
+    }),
+    addSubCategoryToCategory: builder.mutation({
+      query: ({ key, ...body }) => ({
+        url: `/category/${key}/addSubCategory`,
+        body,
+        method: 'PUT'
+      }),
+      // transformResponse: (r) => r.data
+    }),
+    removeSubCategoryFromCategory: builder.mutation({
+      query: ({ key, sub }) => ({
+        url: `/category/${key}/removeSubCategory/${sub}`,
+        method: 'DELETE'
+      }),
+      // transformResponse: (r) => r.data
+    }),
+    updateSubCategory: builder.mutation({
+      query: ({ key, sub, ...body }) => ({
+        url: `/category/${key}/subCategory/update/${sub}`,
         body,
         method: 'PUT'
       })
-    }),
+    })
   })
+
 });
 
 export const {
@@ -87,5 +116,8 @@ export const {
   useUnarchiveCategoryMutation,
   useAddItemToCategoryMutation,
   useRemoveItemFromCategoryMutation,
-  useUpdateItemMutation
+  useUpdateItemMutation,
+  useAddSubCategoryToCategoryMutation,
+  useRemoveSubCategoryFromCategoryMutation,
+  useUpdateSubCategoryMutation
 } = displayApi;

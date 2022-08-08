@@ -86,10 +86,10 @@ function EditItem({ onClose, onSubmit, submitLabel = 'Save Item' }) {
                   'Content-Type': 'multipart/form-data'
                 }
               })
-                .then(async (r) => {
+                .then((r) => {
                   console.log(r);
                   if (r.data.success && r.data.filepaths) {
-                    await Promise.all(Object.values(r.data.filepaths)
+                    setTimeout(() => Object.values(r.data.filepaths)
                       .map((src) => {
                         const m = createMediaObject(src);
                         if (thumbnail.src === '') {
@@ -98,8 +98,8 @@ function EditItem({ onClose, onSubmit, submitLabel = 'Save Item' }) {
                         }
                         // console.log(m);
                         return dispatch(addItemMedia(m));
-                      }));
-                    doUpdate();
+                      }), 500);
+                    // doUpdate();
                   }
                   // TODO handle failed upload
                 })
@@ -107,7 +107,7 @@ function EditItem({ onClose, onSubmit, submitLabel = 'Save Item' }) {
             }}
           />
           <StdButton onClick={async () => {
-            await removeItem({ key, sub, item });
+            await removeItem({ key, sub, item }).unwrap();
             refetchAll();
             refresh();
           }}
@@ -123,7 +123,7 @@ function EditItem({ onClose, onSubmit, submitLabel = 'Save Item' }) {
         if (onClose) { onClose(); } else { navigate('/'); }
       }}
       >
-        Done
+        {isRemoved ? 'Done' : 'Cancel Edits'}
       </StdButton>
     </div>
   );

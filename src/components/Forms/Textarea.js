@@ -3,7 +3,7 @@ function Textarea({
 }) {
   return (
     <div className="py-1 my-1 w-11/12">
-      <label htmlFor={id} className="w-full flex flex-row justify-start items-start">
+      <label htmlFor={id} className="w-full flex flex-col justify-start items-start">
         <span className="my-2 mr-2 font-bold w-1/6">{label}</span>
         <textarea
           id={id}
@@ -12,7 +12,7 @@ function Textarea({
           value={value || ''}
           onChange={onChange}
           rows={6}
-          cols={64}
+          cols={60}
           placeholder="Write content here"
         />
       </label>

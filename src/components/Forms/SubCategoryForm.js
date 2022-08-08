@@ -1,13 +1,9 @@
-import { useState } from 'react';
-import ThumbnailRow from '../Category/ThumbnailRow';
 import StdButton from '../Interactive/StdButton';
-import ItemForm from './ItemForm';
 import LgTextInput from './LgTextInput';
 
 function SubCategoryForm({
-  values = {}, setValues, onSubmit, items = [], onClose
+  values = {}, setValues, onSubmit, children, onClose
 }) {
-  const [showItemForm, setShowItemForm] = useState(false);
   const changeHandler = (key) => (e) => {
     if (setValues) {
       setValues({
@@ -17,30 +13,15 @@ function SubCategoryForm({
     }
   };
   return (
-    <div className="p-1 flex flex-col justify-start items-center border-2 rounded-md border-slate-400 my-2">
+    <div className="p-2 w-full flex flex-col justify-start items-start border-2 rounded-md border-slate-400 my-2">
       <LgTextInput
         value={values.title || ''}
         label="Title"
         onChange={changeHandler('title')}
+        className="m-2"
       />
-      <div>
-        {/* TODO bring up item form inline or as modal */}
-        items
-        {showItemForm ? (
-          <div>
-            <ItemForm />
-            <StdButton onClick={() => setShowItemForm(false)}>Done</StdButton>
-          </div>
-        ) : (
-          <StdButton
-            onClick={() => setShowItemForm(true)}
-          >
-            Add Item
-          </StdButton>
-        )}
-        <ThumbnailRow items={items} />
-      </div>
-      <div className="flex flex-row justify-around items-center w-full md:w-1/2">
+      {children}
+      <div className="flex m-2 flex-row justify-around items-center w-full md:w-1/2">
         <StdButton onClick={onSubmit}>
           Save Sub-Category
         </StdButton>
