@@ -46,6 +46,7 @@ function CreateItem({
       {showMedia ? (
         <Modal onClose={() => setShowMedia(null)}>
           <MediaViewer
+            onClose={() => setShowMedia(null)}
             setThumbnail={(m) => {
               dispatch(setThumbnail(m));
             }}

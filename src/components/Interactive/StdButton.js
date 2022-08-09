@@ -1,8 +1,9 @@
 function StdButton({
-  children, submits = false, onClick, className, id
+  children, submits = false, onClick, className, id, disabled = false
 }) {
   return (
     <button
+      disabled={disabled}
       id={id}
       type={submits ? 'submit' : 'button'}
       onClick={onClick}

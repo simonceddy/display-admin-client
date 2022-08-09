@@ -74,6 +74,8 @@ function EditItem({ onClose }) {
       {showMedia ? (
         <Modal onClose={() => setShowMedia(null)}>
           <MediaViewer
+            curretThumbnail={thumbnail}
+            onClose={() => setShowMedia(null)}
             setThumbnail={(m) => {
               dispatch(setThumbnail(m));
             }}

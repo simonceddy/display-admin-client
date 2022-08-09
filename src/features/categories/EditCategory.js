@@ -109,7 +109,13 @@ function EditCategory() {
             Add Item
           </StdButton>
         )}
-        <ThumbnailRow categoryKey={key} items={items} />
+        <ThumbnailRow
+          onItemClick={() => {
+            console.log('handle item edit');
+          }}
+          categoryKey={key}
+          items={items}
+        />
       </div>
       {/* item form - title, body, media */}
       {/* media */}
