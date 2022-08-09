@@ -1,4 +1,5 @@
 /* eslint-disable func-names */
+import { MEDIA_BASE_URI } from '../../support/consts';
 import VideoMedia from './VideoMedia';
 
 const getMediaElement = (type) => {
@@ -8,7 +9,7 @@ const getMediaElement = (type) => {
         return (
           <img
             className="flex-1"
-            src={src}
+            src={`${MEDIA_BASE_URI}/${src}`}
             alt={alt}
             style={{
               maxHeight: '78vh',
@@ -32,6 +33,7 @@ const getMediaElement = (type) => {
 
 function ItemMedia({ src, alt = '', type = 'image' }) {
   if (!src) return null;
+  // console.log(src);
   const MediaElement = getMediaElement(type);
 
   return (

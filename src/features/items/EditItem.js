@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import ItemForm from '../../components/Forms/ItemForm';
 import StdButton from '../../components/Interactive/StdButton';
+import MediaViewer from '../../components/Media/MediaViewer';
+import Modal from '../../components/Modal';
 import {
   useFetchCategoryQuery,
   useFetchDataQuery,
@@ -21,7 +23,7 @@ import {
 } from './itemFormSlice';
 // import { useFetchDataQuery } from '../../services/api';
 
-function EditItem({ onClose, onSubmit, submitLabel = 'Save Item' }) {
+function EditItem({ onClose }) {
   const navigate = useNavigate();
   const { key, sub, item } = useParams();
   const { values, media, thumbnail } = useSelector((state) => state.itemForm);
@@ -38,6 +40,7 @@ function EditItem({ onClose, onSubmit, submitLabel = 'Save Item' }) {
   const [removeItem, { isSuccess: isRemoved }] = useRemoveItemFromCategoryMutation();
   const [updateItem, { isSuccess: isUpdated }] = useUpdateItemMutation();
   const [initialized, setInitialized] = useState(false);
+  const [showMedia, setShowMedia] = useState(null);
   // console.log(data);
   useEffect(() => {
     let formInit = false;
@@ -68,10 +71,22 @@ function EditItem({ onClose, onSubmit, submitLabel = 'Save Item' }) {
   };
   return (
     <div className="w-full flex flex-col justify-start items-center">
+      {showMedia ? (
+        <Modal onClose={() => setShowMedia(null)}>
+          <MediaViewer
+            setThumbnail={(m) => {
+              dispatch(setThumbnail(m));
+            }}
+            media={showMedia}
+            alt={values.title}
+          />
+        </Modal>
+      ) : null}
       {isUpdated ? (<div>Item Updated</div>) : null}
       {isRemoved ? (<div>Item Removed</div>) : (
         <>
           <ItemForm
+            onThumbClick={(m) => setShowMedia(m)}
             media={media}
             thumbnail={thumbnail}
             values={values}
@@ -116,15 +131,17 @@ function EditItem({ onClose, onSubmit, submitLabel = 'Save Item' }) {
           </StdButton>
         </>
       )}
-      <StdButton onClick={doUpdate}>
-        Save Changes
-      </StdButton>
-      <StdButton onClick={() => {
-        if (onClose) { onClose(); } else { navigate('/'); }
-      }}
-      >
-        {isRemoved ? 'Done' : 'Cancel Edits'}
-      </StdButton>
+      <div className="w-full flex flex-row justify-around items-center">
+        <StdButton onClick={doUpdate}>
+          Save Changes
+        </StdButton>
+        <StdButton onClick={() => {
+          if (onClose) { onClose(); } else { navigate('/'); }
+        }}
+        >
+          {isRemoved || isUpdated ? 'Done' : 'Cancel Edits'}
+        </StdButton>
+      </div>
     </div>
   );
 }

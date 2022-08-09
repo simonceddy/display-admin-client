@@ -10,6 +10,8 @@ import {
 } from './itemFormSlice';
 import client from '../../util/client';
 import createMediaObject from '../../util/createMediaObject';
+import Modal from '../../components/Modal';
+import MediaViewer from '../../components/Media/MediaViewer';
 
 function CreateItem({
   onClose,
@@ -26,6 +28,7 @@ function CreateItem({
 
   const [addItemTo, { isSuccess }] = useAddItemToCategoryMutation();
   const { refetch } = useFetchDataQuery();
+  const [showMedia, setShowMedia] = useState(null);
 
   useEffect(() => {
     let isInit = false;
@@ -40,6 +43,17 @@ function CreateItem({
 
   return (
     <div className="w-full flex flex-col justify-start items-center">
+      {showMedia ? (
+        <Modal onClose={() => setShowMedia(null)}>
+          <MediaViewer
+            setThumbnail={(m) => {
+              dispatch(setThumbnail(m));
+            }}
+            media={showMedia}
+            alt={values.title}
+          />
+        </Modal>
+      ) : null}
       {key || category ? (
         <h2>
           New item for {key || category}{(sub || subCategory) ? `/${sub || subCategory}` : ''}
@@ -47,6 +61,7 @@ function CreateItem({
       ) : null}
       {isSuccess ? <div>Item Saved</div> : ''}
       <ItemForm
+        onThumbClick={(m) => setShowMedia(m)}
         media={media}
         values={values}
         onChange={(vals) => dispatch(setItemValues(vals))}
@@ -79,23 +94,27 @@ function CreateItem({
             .catch(console.error);
         }}
       />
-      <StdButton onClick={async () => {
-        if (onSubmit) {
-          await onSubmit(values);
-        } else if (key) {
-          await addItemTo({ key, sub, ...values }).unwrap();
-        }
-        refetch();
-      }}
-      >
-        {submitLabel}
-      </StdButton>
-      <StdButton onClick={() => {
-        if (onClose) { onClose(); } else { navigate('/'); }
-      }}
-      >
-        Done
-      </StdButton>
+      <div className="w-full flex flex-row justify-around items-center">
+        <StdButton onClick={async () => {
+          if (onSubmit) {
+            await onSubmit(values);
+          } else if (key) {
+            await addItemTo({
+              key, sub, ...values, media, thumbnail
+            }).unwrap();
+          }
+          refetch();
+        }}
+        >
+          {submitLabel}
+        </StdButton>
+        <StdButton onClick={() => {
+          if (onClose) { onClose(); } else { navigate('/'); }
+        }}
+        >
+          Done
+        </StdButton>
+      </div>
     </div>
   );
 }
