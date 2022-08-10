@@ -10,6 +10,7 @@ import TestingItem from './containers/TestingItem';
 import EditCategory from './features/categories/EditCategory';
 import CreateSubCategory from './features/categories/CreateSubCategory';
 import EditItem from './features/items/EditItem';
+import EditSubCategory from './features/categories/EditSubCategory';
 
 function AppRoutes() {
   return (
@@ -33,13 +34,13 @@ function AppRoutes() {
         path="/category/:key/:sub/createItem"
         element={<CreateItem />}
       />
-      {/* <Route
-        path="/category/:key/:sub/createSubCategory"
-        element={<CreateSubCategory />}
-      /> */}
       <Route
         path="/category/:key/:sub/item/:item"
         element={<EditItem />}
+      />
+      <Route
+        path="/category/:key/:sub"
+        element={<EditSubCategory />}
       />
       <Route path="/settings" element={<DisplaySettings />} />
       <Route path="/tests" element={<Testing />} />

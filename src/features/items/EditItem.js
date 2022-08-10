@@ -23,12 +23,12 @@ import {
 } from './itemFormSlice';
 // import { useFetchDataQuery } from '../../services/api';
 
-function EditItem({ onClose }) {
+function EditItem({ onClose, category, subCategory }) {
   const navigate = useNavigate();
   const { key, sub, item } = useParams();
   const { values, media, thumbnail } = useSelector((state) => state.itemForm);
   const dispatch = useDispatch();
-  const { refetch } = useFetchCategoryQuery(key);
+  const { refetch } = useFetchCategoryQuery(key || category);
   const { refetch: refetchDataList } = useFetchDataQuery();
   const refetchAll = () => {
     refetch();
@@ -36,7 +36,11 @@ function EditItem({ onClose }) {
   };
   const {
     data, isLoading, error, isSuccess: dataLoaded, refetch: refresh
-  } = useFetchItemQuery({ key, sub, item });
+  } = useFetchItemQuery({
+    key: key || category,
+    sub: sub || subCategory,
+    item
+  });
   const [removeItem, { isSuccess: isRemoved }] = useRemoveItemFromCategoryMutation();
   const [updateItem, { isSuccess: isUpdated }] = useUpdateItemMutation();
   const [initialized, setInitialized] = useState(false);
@@ -64,7 +68,12 @@ function EditItem({ onClose }) {
   // console.log(values);
   const doUpdate = async () => {
     await updateItem({
-      key: data.category, item: data.key, ...values, media, thumbnail
+      key: key || category,
+      sub: sub || subCategory || null,
+      item: data.key,
+      ...values,
+      media,
+      thumbnail
     }).unwrap();
     refetchAll();
     refresh();

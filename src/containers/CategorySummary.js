@@ -70,7 +70,7 @@ function CategorySummary({ category = {}, handleArchive }) {
               ) : null}
             </div>
             {totalSubItems && showSubs ? (
-              <SubCategoryList subs={category.categories} />
+              <SubCategoryList category={category.key} subs={category.categories} />
             ) : null}
           </div>
           <div className="flex flex-row justify-between items-center w-full">

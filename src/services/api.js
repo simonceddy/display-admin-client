@@ -21,6 +21,9 @@ export const displayApi = createApi({
         item
       }) => `${getCategoryBaseUrl(category, sub)}item/${item}`
     }),
+    fetchSubCategory: builder.query({
+      query: ({ key, sub }) => getCategoryBaseUrl(key, sub)
+    }),
     saveNewCategory: builder.mutation({
       query: (body) => ({
         url: '/category/create',
@@ -95,11 +98,16 @@ export const displayApi = createApi({
       // transformResponse: (r) => r.data
     }),
     updateSubCategory: builder.mutation({
-      query: ({ key, sub, ...body }) => ({
-        url: `/category/${key}/subCategory/update/${sub}`,
-        body,
-        method: 'PUT'
-      })
+      query: (args) => {
+        // TODO fix this brittle hack
+        const { key, sub, ...body } = args;
+        console.log(args);
+        return ({
+          url: `/category/${body.parent}/subCategory/update/${sub}`,
+          body,
+          method: 'PUT'
+        });
+      }
     })
   })
 
@@ -109,6 +117,7 @@ export const {
   useFetchItemQuery,
   useFetchDataQuery,
   useFetchCategoryQuery,
+  useFetchSubCategoryQuery,
   useDeleteCategoryMutation,
   useUpdateArticleMutation,
   useSaveNewCategoryMutation,

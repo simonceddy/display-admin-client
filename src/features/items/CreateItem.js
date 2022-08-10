@@ -98,7 +98,7 @@ function CreateItem({
       <div className="w-full flex flex-row justify-around items-center">
         <StdButton onClick={async () => {
           if (onSubmit) {
-            await onSubmit(values);
+            await onSubmit({ ...values, media, thumbnail });
           } else if (key) {
             await addItemTo({
               key, sub, ...values, media, thumbnail
