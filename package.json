@@ -2,6 +2,7 @@
   "name": "admin",
   "version": "0.1.0",
   "private": true,
+  "homepage": "admin",
   "dependencies": {
     "@react-rxjs/core": "^0.9.6",
     "@react-rxjs/utils": "^0.9.5",
