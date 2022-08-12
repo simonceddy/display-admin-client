@@ -32,7 +32,7 @@ function Dashboard({ filter }) {
   if (isLoading) return <div>loading...</div>;
 
   const dataList = filterData(filterBy, data);
-
+  // console.log(data);
   return (
     <div className="flex flex-col justify-start items-start w-full p-3">
       <h1 className="font-bold text-4xl underline mb-3 mt-1 rounded w-full">

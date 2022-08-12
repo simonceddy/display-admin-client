@@ -5,8 +5,8 @@ import Dashboard from './features/dashboard/Dashboard';
 import CreateItem from './features/items/CreateItem';
 
 import DisplaySettings from './containers/DisplaySettings';
-import Testing from './containers/Testing';
-import TestingItem from './containers/TestingItem';
+// import Testing from './containers/Testing';
+// import TestingItem from './containers/TestingItem';
 import EditCategory from './features/categories/EditCategory';
 import CreateSubCategory from './features/categories/CreateSubCategory';
 import EditItem from './features/items/EditItem';
@@ -43,8 +43,8 @@ function AppRoutes() {
         element={<EditSubCategory />}
       />
       <Route path="/settings" element={<DisplaySettings />} />
-      <Route path="/tests" element={<Testing />} />
-      <Route path="/tests/item/:key" element={<TestingItem />} />
+      {/* <Route path="/tests" element={<Testing />} />
+      <Route path="/tests/item/:key" element={<TestingItem />} /> */}
     </Routes>
   );
 }

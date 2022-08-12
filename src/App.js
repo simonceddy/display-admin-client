@@ -16,7 +16,6 @@ function App() {
               <NavbarLink to="/">Dashboard</NavbarLink>
               <NavbarLink to="/create">Create New Category</NavbarLink>
               <NavbarLink to="/settings">Settings</NavbarLink>
-              <NavbarLink to="/tests">Tests</NavbarLink>
             </div>
             <div>
               {error ? 'Errors' : 'No errors!'}

@@ -4,6 +4,7 @@ import StdButton from '../components/Interactive/StdButton';
 import ThumbnailRow from '../components/Category/ThumbnailRow';
 import SubCategoryList from '../components/Category/SubCategoryList';
 import DebouncedButton from '../components/Interactive/DebouncedButton';
+import VertArrowToggle from '../components/Interactive/VertArrowToggle';
 
 function countSubCategoryItems(subs = []) {
   let totalItems = 0;
@@ -36,12 +37,17 @@ function CategorySummary({ category = {}, handleArchive }) {
         role="presentation"
         className="w-full cursor-pointer flex flex-row justify-between items-center pb-2"
       >
-        <h3
-          className="hover:underline text-xl capitalize font-bold flex-1"
-        >
-          {category.archived ? 'Archived - ' : ''}{category.title}
-        </h3>
-        <div className="text-lg pr-3">{showSummary ? '△' : '▽'}</div>
+        <span className="hover:underline flex flex-row justify-start items-center">
+          <span className="mr-2">
+            {category.published ? '' : 'Unpublished - '}{category.archived ? 'Archived - ' : ''}
+          </span>
+          <h3
+            className="text-xl capitalize font-bold flex-1"
+          >
+            {category.title}
+          </h3>
+        </span>
+        <VertArrowToggle toggled={showSummary} />
       </div>
       {showSummary ? (
         <div
@@ -58,20 +64,20 @@ function CategorySummary({ category = {}, handleArchive }) {
           <div className="my-1 p-2a flex flex-col justify-start items-start bg-green-500 bg-opacity-25 w-full p-2 rounded">
             <div
               role="presentation"
-              onClick={() => { if (totalSubItems) setShowSubs(!showSubs); }}
-              className={`w-full flex flex-row ${totalSubItems ? 'justify-between' : 'justify-start'} items-center`}
+              onClick={() => { if (totalSubs) setShowSubs(!showSubs); }}
+              className={`w-full flex flex-row ${totalSubs ? 'justify-between' : 'justify-start'} items-center`}
             >
               <span>
                 {totalSubs} sub-categor{totalSubs === 1 ? 'y' : 'ies'} in category
-                {totalSubItems ? ` containing ${totalSubItems} total item${totalSubItems === 1 ? null : 's'}` : null}
+                {totalSubItems ? ` containing ${totalSubItems} total item${totalSubItems === 1 ? '' : 's'}` : ''}
               </span>
-              {totalSubItems ? (
-                <div className="text-lg pr-3">{showSubs ? '△' : '▽'}</div>
-              ) : null}
+              {totalSubs ? (
+                <VertArrowToggle toggled={showSubs} />
+              ) : ''}
             </div>
-            {totalSubItems && showSubs ? (
+            {totalSubs && showSubs ? (
               <SubCategoryList category={category.key} subs={category.categories} />
-            ) : null}
+            ) : ''}
           </div>
           <div className="flex flex-row justify-between items-center w-full">
             <div>
