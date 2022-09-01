@@ -13,6 +13,7 @@ function ImgCrop({ src, onConfirm, imgStyle = {} }) {
           style={{
             maxHeight: '500px',
             width: 'auto',
+            objectFit: 'scale-down',
             ...imgStyle
           }}
           src={src}

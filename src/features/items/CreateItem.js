@@ -4,14 +4,17 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import ItemForm from '../../components/Forms/ItemForm';
 import StdButton from '../../components/Interactive/StdButton';
-import { useAddItemToCategoryMutation, useFetchDataQuery } from '../../services/api';
+import {
+  useAddItemToCategoryMutation,
+  useFetchDataQuery
+} from '../../services/api';
 import {
   addItemMedia, initForm, setItemValues, setThumbnail
 } from './itemFormSlice';
-import client from '../../util/client';
 import createMediaObject from '../../util/createMediaObject';
 import Modal from '../../components/Modal';
 import MediaViewer from '../../components/Media/MediaViewer';
+import uploadFiles from '../../util/uploadFiles';
 
 function CreateItem({
   onClose,
@@ -69,13 +72,7 @@ function CreateItem({
         handleFiles={(files) => {
           // TODO handle type and alt defaults for media uploads
           // console.log(files);
-          const formData = new FormData();
-          files.map((file) => formData.append(file.name, file));
-          client.post('/media/upload', formData, {
-            headers: {
-              'Content-Type': 'multipart/form-data'
-            }
-          })
+          uploadFiles(files)
             .then((r) => {
               console.log(r);
               if (r.data.success && r.data.filepaths) {
@@ -87,6 +84,7 @@ function CreateItem({
                       dispatch(setThumbnail(m));
                     }
                     console.log(m);
+                    // TODO check media type
                     return dispatch(addItemMedia(m));
                   }), 400);
               }

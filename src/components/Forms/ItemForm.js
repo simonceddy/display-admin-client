@@ -1,8 +1,9 @@
 // import TextEditor from '../../containers/TextEditor';
+import Tiptap from '../../features/tiptap/Tiptap';
 import { MEDIA_BASE_URI } from '../../support/consts';
 import DropzoneMediaUploadForm from './DropzoneMediaUploadForm';
 import LgTextInput from './LgTextInput';
-import Textarea from './Textarea';
+// import Textarea from './Textarea';
 
 function ItemForm({
   values = {},
@@ -29,17 +30,14 @@ function ItemForm({
           }
         }}
       />
-      <Textarea
+      <Tiptap
         label="Content:"
         id="item-body-input"
-        value={values.body}
+        content={values.body}
         onChange={(e) => {
           if (onChange) onChange({ ...values, body: e.target.value });
         }}
       />
-      {/* TODO how to handle state cycle with editor */}
-      {/* TODO unwrap editor and use directly? */}
-      {/* <TextEditor content={values.body} /> */}
       {/* TODO media - uploads and displaying for admin */}
       <DropzoneMediaUploadForm handleFiles={handleFiles} />
       {/* TODO layout of thumbnails */}

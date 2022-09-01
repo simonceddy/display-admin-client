@@ -19,7 +19,7 @@ import {
   RiH5 as H5Icon,
   RiH6 as H6Icon,
 } from 'react-icons/ri';
-import TiptapMenuBtn from '../../components/interactive/TiptapMenuBtn';
+import TiptapMenuBtn from '../../components/Interactive/TiptapMenuBtn';
 
 function MenuBar({ editor }) {
   if (!editor) {
@@ -27,7 +27,7 @@ function MenuBar({ editor }) {
   }
 
   return (
-    <div className="flex flex-row justify-start items-center">
+    <div className="flex flex-wrap flex-row justify-start items-center border-b-2 border-slate-400 dark:border-slate-600">
       <TiptapMenuBtn
         onClick={() => editor.chain().focus().toggleBold().run()}
         className={editor.isActive('bold') ? 'is-active' : ''}
