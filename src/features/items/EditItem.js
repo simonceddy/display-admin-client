@@ -65,7 +65,7 @@ function EditItem({ onClose, category, subCategory }) {
   }, [initialized, dataLoaded]);
   if (isLoading) return <div>Loading Data</div>;
   if (error) return <div>{error.message}</div>;
-  // console.log(values);
+  console.log(values);
   const doUpdate = async () => {
     await updateItem({
       key: key || category,
@@ -101,7 +101,10 @@ function EditItem({ onClose, category, subCategory }) {
             media={media}
             thumbnail={thumbnail}
             values={values}
-            onChange={(vals) => dispatch(setItemValues(vals))}
+            onChange={(vals) => {
+              console.log(vals);
+              dispatch(setItemValues(vals));
+            }}
             handleFiles={(files) => {
               // TODO handle type and alt defaults for media uploads
               // console.log(files);

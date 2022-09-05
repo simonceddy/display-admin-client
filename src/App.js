@@ -3,6 +3,9 @@ import NavbarLink from './components/Navbar/NavbarLink';
 import { useFetchDataQuery } from './services/api';
 import AppRoutes from './AppRoutes';
 
+// const worker = new Worker('./worker.js');
+// console.log(worker);
+
 function App() {
   // TODO this isn't used here beyond preloading
   const { error, isLoading } = useFetchDataQuery();

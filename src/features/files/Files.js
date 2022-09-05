@@ -1,8 +1,8 @@
 /* eslint-disable no-unused-vars */
 import { useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+// import { useDispatch, useSelector } from 'react-redux';
 import FileDropzone from '../../components/FileDropzone';
-import StdButton from '../../components/Interactive/StdButton';
+// import StdButton from '../../components/Interactive/StdButton';
 import ImageViewer from './ImageViewer';
 import VideoViewer from './VideoViewer';
 // import ImgCrop from '../../components/ImgCrop';
@@ -28,7 +28,7 @@ const fileStates = {
   UPLOADED: 'UPLOADED',
 };
 
-function Files() {
+function Files({ handleUpload }) {
   const ref = useRef(null);
   const [tempFiles, setTempFiles] = useState([]);
   const [uploadState, setUploadState] = useState(fileStates.UNSAVED);
@@ -82,8 +82,6 @@ function Files() {
         {uploadState === fileStates.UPLOADED && <div>Uploaded!</div>}
         {/* {files ? (<ImgCrop src={URL.createObjectURL(files)} />) : ''} */}
       </div>
-      It&apos;s the lab
-      <StdButton onClick={onUpload}>UPLOAD FILES</StdButton>
       <FileDropzone onDrop={(f = []) => {
         if (f[0]) {
           console.log(f);

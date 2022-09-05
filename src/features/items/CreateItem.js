@@ -15,6 +15,7 @@ import createMediaObject from '../../util/createMediaObject';
 import Modal from '../../components/Modal';
 import MediaViewer from '../../components/Media/MediaViewer';
 import uploadFiles from '../../util/uploadFiles';
+import Files from '../files/Files';
 
 function CreateItem({
   onClose,
@@ -68,7 +69,10 @@ function CreateItem({
         onThumbClick={(m) => setShowMedia(m)}
         media={media}
         values={values}
-        onChange={(vals) => dispatch(setItemValues(vals))}
+        onChange={(vals) => {
+          console.log(vals);
+          dispatch(setItemValues(vals));
+        }}
         handleFiles={(files) => {
           // TODO handle type and alt defaults for media uploads
           // console.log(files);
@@ -93,8 +97,17 @@ function CreateItem({
             .catch(console.error);
         }}
       />
+      <Files
+        handleUpload={(files) => {
+          console.log(files);
+          // Check file type
+          // If video: upload in background - use object url during upload
+          // Once uploaded, allow selecting frame for thumbnail
+        }}
+      />
       <div className="w-full flex flex-row justify-around items-center">
         <StdButton onClick={async () => {
+          console.log(values);
           if (onSubmit) {
             await onSubmit({ ...values, media, thumbnail });
           } else if (key) {

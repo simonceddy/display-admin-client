@@ -3,22 +3,22 @@ import {
   FaBold as BoldIcon,
   FaItalic as ItalicIcon,
   FaStrikethrough as StrikeIcon,
-  FaCode as CodeIcon,
-  FaParagraph as ParagraphIcon,
-  FaListUl as BulletListIcon,
-  FaListOl as OrderedListIcon,
-  FaQuoteLeft as BlockquoteIcon,
+  // FaCode as CodeIcon,
+  // FaParagraph as ParagraphIcon,
+  // FaListUl as BulletListIcon,
+  // FaListOl as OrderedListIcon,
+  // FaQuoteLeft as BlockquoteIcon,
   FaUndo as UndoIcon,
   FaRedo as RedoIcon,
 } from 'react-icons/fa';
-import {
-  RiH1 as H1Icon,
-  RiH2 as H2Icon,
-  RiH3 as H3Icon,
-  RiH4 as H4Icon,
-  RiH5 as H5Icon,
-  RiH6 as H6Icon,
-} from 'react-icons/ri';
+// import {
+//   RiH1 as H1Icon,
+//   RiH2 as H2Icon,
+//   RiH3 as H3Icon,
+//   RiH4 as H4Icon,
+//   RiH5 as H5Icon,
+//   RiH6 as H6Icon,
+// } from 'react-icons/ri';
 import TiptapMenuBtn from '../../components/Interactive/TiptapMenuBtn';
 
 function MenuBar({ editor }) {
@@ -46,7 +46,7 @@ function MenuBar({ editor }) {
       >
         <StrikeIcon size={18} />
       </TiptapMenuBtn>
-      <TiptapMenuBtn
+      {/* <TiptapMenuBtn
         onClick={() => editor.chain().focus().toggleCode().run()}
         className={editor.isActive('code') ? 'is-active' : ''}
       >
@@ -61,14 +61,8 @@ function MenuBar({ editor }) {
         onClick={() => editor.chain().focus().clearNodes().run()}
       >
         clear nodes
-      </TiptapMenuBtn>
-      <TiptapMenuBtn
-        onClick={() => editor.chain().focus().setParagraph().run()}
-        className={editor.isActive('paragraph') ? 'is-active' : ''}
-      >
-        <ParagraphIcon size={18} />
-      </TiptapMenuBtn>
-      <TiptapMenuBtn
+      </TiptapMenuBtn> */}
+      {/* <TiptapMenuBtn
         onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
         className={editor.isActive('heading', { level: 1 }) ? 'is-active' : ''}
       >
@@ -109,20 +103,20 @@ function MenuBar({ editor }) {
         className={editor.isActive('bulletList') ? 'is-active' : ''}
       >
         <BulletListIcon size={18} />
-      </TiptapMenuBtn>
-      <TiptapMenuBtn
+      </TiptapMenuBtn> */}
+      {/* <TiptapMenuBtn
         onClick={() => editor.chain().focus().toggleOrderedList().run()}
         className={editor.isActive('orderedList') ? 'is-active' : ''}
       >
         <OrderedListIcon size={18} />
-      </TiptapMenuBtn>
-      <TiptapMenuBtn
+      </TiptapMenuBtn> */}
+      {/* <TiptapMenuBtn
         onClick={() => editor.chain().focus().toggleCodeBlock().run()}
         className={editor.isActive('codeBlock') ? 'is-active' : ''}
       >
         <CodeIcon size={18} />
-      </TiptapMenuBtn>
-      <TiptapMenuBtn
+      </TiptapMenuBtn> */}
+      {/* <TiptapMenuBtn
         onClick={() => editor.chain().focus().toggleBlockquote().run()}
         className={editor.isActive('blockquote') ? 'is-active' : ''}
       >
@@ -137,7 +131,7 @@ function MenuBar({ editor }) {
         onClick={() => editor.chain().focus().setHardBreak().run()}
       >
         hard break
-      </TiptapMenuBtn>
+      </TiptapMenuBtn> */}
       <TiptapMenuBtn
         onClick={() => editor.chain().focus().undo().run()}
       >

@@ -1,14 +1,20 @@
-import { useState } from 'react';
+// import { useState } from 'react';
 import ReactCrop from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
 import StdButton from '../Interactive/StdButton';
 
-function ImgCrop({ src, onConfirm, imgStyle = {} }) {
-  const [crop, setCrop] = useState();
+function ImgCrop({
+  src, onConfirm, imgStyle = {}, crop = null, setCrop
+}) {
   // console.log(crop);
   return (
     <>
-      <ReactCrop crop={crop} onChange={(c) => setCrop(c)}>
+      <ReactCrop
+        crop={crop}
+        onChange={(c) => {
+          if (setCrop) setCrop(c);
+        }}
+      >
         <img
           style={{
             maxHeight: '500px',
