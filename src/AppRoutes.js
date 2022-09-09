@@ -2,15 +2,17 @@ import { Route, Routes } from 'react-router-dom';
 
 import CreateCategory from './features/categories/CreateCategory';
 import Dashboard from './features/dashboard/Dashboard';
-import CreateItem from './features/items/CreateItem';
+// import CreateItem from './features/items/CreateItem';
 
 import DisplaySettings from './containers/DisplaySettings';
 // import Testing from './containers/Testing';
 // import TestingItem from './containers/TestingItem';
 import EditCategory from './features/categories/EditCategory';
 import CreateSubCategory from './features/categories/CreateSubCategory';
-import EditItem from './features/items/EditItem';
+// import EditItem from './features/items/EditItem';
 import EditSubCategory from './features/categories/EditSubCategory';
+import NewItem from './features/items/NewItem';
+import UpdateItem from './features/items/UpdateItem';
 
 function AppRoutes() {
   return (
@@ -20,7 +22,7 @@ function AppRoutes() {
       <Route path="/category/:key" element={<EditCategory />} />
       <Route
         path="/category/:key/createItem"
-        element={<CreateItem />}
+        element={<NewItem />}
       />
       <Route
         path="/category/:key/createSubCategory"
@@ -28,15 +30,15 @@ function AppRoutes() {
       />
       <Route
         path="/category/:key/item/:item"
-        element={<EditItem />}
+        element={<UpdateItem />}
       />
       <Route
         path="/category/:key/:sub/createItem"
-        element={<CreateItem />}
+        element={<NewItem />}
       />
       <Route
         path="/category/:key/:sub/item/:item"
-        element={<EditItem />}
+        element={<UpdateItem />}
       />
       <Route
         path="/category/:key/:sub"

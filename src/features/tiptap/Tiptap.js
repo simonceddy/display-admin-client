@@ -10,7 +10,9 @@ import MenuBar from './MenuBar';
 //   this.updateStateInner(state, this.state.plugins !== state.plugins);
 // };
 
-function Tiptap({ content, label, setContent }) {
+function Tiptap({
+  content, label, setContent, tabIndex
+}) {
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -29,16 +31,16 @@ function Tiptap({ content, label, setContent }) {
     // onBeforeCreate: ({ editor: e }) => {
     //   console.log(e.getJSON(), 'before create event');
     // },
-    onCreate: ({ editor: e }) => {
-      console.log('create event');
-      // e.setOptions({ content: content || '' });
-    },
-    onSelectionUpdate: () => {
-      console.log('selection update event');
-    },
-    onTransaction: ({ editor: e, transaction: t }) => {
-      console.log('transaction event');
-    },
+    // onCreate: ({ editor: e }) => {
+    //   // console.log('create event');
+    //   // e.setOptions({ content: content || '' });
+    // },
+    // onSelectionUpdate: () => {
+    //   // console.log('selection update event');
+    // },
+    // onTransaction: ({ editor: e, transaction: t }) => {
+    //   // console.log('transaction event');
+    // },
   });
 
   // console.log(editor);
@@ -55,6 +57,7 @@ function Tiptap({ content, label, setContent }) {
       >
         <MenuBar editor={editor} />
         <EditorContent
+          tabIndex={tabIndex}
           editor={editor}
           style={{
             height: '200px'

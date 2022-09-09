@@ -1,4 +1,4 @@
-import { Fragment, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ReactTooltip from 'react-tooltip';
 import { MEDIA_BASE_URI } from '../../support/consts';
@@ -12,16 +12,17 @@ function ThumbnailRow({ items = [], categoryKey, onItemClick }) {
         const clickHandler = onItemClick
           ? () => onItemClick(i)
           : (() => navigate(`/category/${categoryKey}/item/${i.key}`));
-        if (!i.thumbnail) {
+        if (!i.thumbnail || !i.thumbnail.src) {
+          // console.log(i.thumbnail);
           return (
             <div
               key={`${index}-item-box`}
-              className="mx-2 rounded p-0.5 overflow-hidden whitespace-nowrap overflow-ellipsis"
+              className="mx-2 rounded p-0.5 overflow-hidden whitespace-nowrap overflow-ellipsis bg-blue-500 bg-opacity-30"
               role="presentation"
               onClick={clickHandler}
               style={{
                 width: '70px',
-                height: 'auto'
+                height: '70px'
               }}
             >
               {i.title}
@@ -29,15 +30,22 @@ function ThumbnailRow({ items = [], categoryKey, onItemClick }) {
           );
         }
         return (
-          <Fragment key={`${categoryKey}-summary-${i.key}-thumbnail`}>
+          <div
+            key={`${categoryKey}-summary-${i.key}-thumbnail`}
+            style={{
+              height: '70px',
+              width: '70px'
+            }}
+            className="mx-2 bg-blue-500 bg-opacity-30"
+            role="presentation"
+            onClick={clickHandler}
+          >
             <img
               data-tip={i.title}
               id={`${categoryKey}-summary-${i.key}-thumbnail`}
-              className="mx-2 rounded p-0.5"
+              className="rounded p-0.5"
               height="auto"
               width={70}
-              role="presentation"
-              onClick={clickHandler}
               src={`${MEDIA_BASE_URI}thumbs/${i.thumbnail.src}`}
               alt={i.thumbnail.alt || i.title}
               onMouseEnter={() => setShowTooltip(true)}
@@ -47,7 +55,7 @@ function ThumbnailRow({ items = [], categoryKey, onItemClick }) {
               }}
             />
             {showTooltip && <ReactTooltip effect="solid" />}
-          </Fragment>
+          </div>
         );
       })}
     </div>

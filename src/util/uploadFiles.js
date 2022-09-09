@@ -1,12 +1,17 @@
 import client from './client';
 
-export default function uploadFiles(files) {
+export default async function uploadFiles(files) {
   const formData = new FormData();
   files.map((file) => formData.append(file.name, file));
-  return client.post('/media/upload', formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data'
-    }
-  })
-    .catch(console.error);
+  try {
+    const res = await client.post('/media/upload', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
+    return res;
+  } catch (e) {
+    console.error(e);
+    return false;
+  }
 }

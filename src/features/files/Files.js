@@ -53,7 +53,7 @@ function Files({ handleUpload }) {
 
   return (
     <>
-      <div ref={ref} className="flex flex-wrap flex-row justify-start items-center w-full">
+      <div ref={ref} className="flex flex-wrap flex-row justify-start items-center w-full bg-cyan-500 bg-opacity-30">
         {uploadState === fileStates.UPLOADING && (
           <div>Uploading...</div>
         )}
