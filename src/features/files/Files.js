@@ -12,9 +12,12 @@ function getFileComponent(file, props = {}) {
     switch (file.type) {
       case 'video/mp4':
       case 'video/x-m4v':
+      case 'video/webm':
         return <VideoViewer {...props} file={file} />;
       case 'image/jpeg':
       case 'image/png':
+      case 'image/gif':
+      case 'image/svg+xml':
         return <ImageViewer {...props} file={file} />;
       default:
     }
@@ -84,7 +87,7 @@ function Files({ handleUpload }) {
       </div>
       <FileDropzone onDrop={(f = []) => {
         if (f[0]) {
-          console.log(f);
+          console.log(f[0]);
           //   const img = new Image();
           //   img.src = URL.createObjectURL(f[0]);
           //   ref.current.appendChild(img);

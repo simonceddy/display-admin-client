@@ -58,8 +58,10 @@ function UpdateItem({ category, subCategory }) {
   if (error) return <div>{error.message}</div>;
 
   const doUpdate = async (vals) => {
-    console.log(vals);
-    const res = await updateItem(vals).unwrap();
+    // console.log(vals);
+    const res = await updateItem({
+      ...vals, key, sub, item
+    }).unwrap();
     console.log(res);
     refetchAll();
   };

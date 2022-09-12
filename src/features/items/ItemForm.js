@@ -10,6 +10,7 @@ import Tiptap from '../tiptap/Tiptap';
 function ItemForm({
   onSubmit,
   onClose,
+  onUpload,
   submitLabel = 'Submit',
   values = {
     title: '',
@@ -81,6 +82,7 @@ function ItemForm({
         <Files
           handleUpload={(files) => {
             console.log(files);
+            if (onUpload) onUpload(files);
           // Check file type
           // If video: upload in background - use object url during upload
           // Once uploaded, allow selecting frame for thumbnail

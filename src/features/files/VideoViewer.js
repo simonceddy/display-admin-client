@@ -3,7 +3,11 @@ import StdButton from '../../components/Interactive/StdButton';
 import Modal from '../../components/Modal';
 
 /* eslint-disable jsx-a11y/media-has-caption */
-function VideoViewer({ file, onRemove }) {
+function VideoViewer({
+  file,
+  onRemove,
+  thumbnail
+}) {
   if (!file) return null;
   const ref = useRef(null);
   const vRef = useRef(null);
@@ -11,8 +15,36 @@ function VideoViewer({ file, onRemove }) {
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
-    if (ref.current) console.log(ref.current);
+    let initialised = false;
+    if (!initialised && ref.current) {
+      const vid = ref.current;
+      vid.addEventListener('loadeddata', () => {
+        const rand = Math.round(Math.random() * vid.duration * 1000) + 1;
+        console.log(rand, thumbnail, vid);
+      }, false);
+    }
+    return () => {
+      initialised = true;
+    };
   }, [ref.current]);
+
+  useEffect(() => {
+    let initialised = false;
+    if (!initialised && vRef.current) {
+      const vid = vRef.current;
+      vid.addEventListener('loadeddata', () => {
+        const rand = Math.round(Math.random() * vid.duration * 1000) + 1;
+        console.log(rand, thumbnail, vid);
+      }, false);
+      vid.addEventListener('seeked', () => {
+        console.log('seeked');
+      });
+    }
+    return () => {
+      initialised = true;
+    };
+  }, [vRef.current]);
+
   return (
     <>
       {showModal && (
@@ -31,6 +63,15 @@ function VideoViewer({ file, onRemove }) {
           />
           <div className="w-full justify-around items-center flex flex-row">
             <StdButton onClick={() => setShowModal(false)}>Done</StdButton>
+            <StdButton onClick={() => {
+              if (vRef.current) {
+                const video = vRef.current;
+                console.log(video);
+              }
+            }}
+            >
+              Use Current Frame As Thumbnail
+            </StdButton>
             <StdButton
               onClick={() => console.log(vRef.current)}
             >Log
