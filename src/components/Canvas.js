@@ -1,23 +1,18 @@
-import { useEffect, useRef } from 'react';
+import { forwardRef, useEffect, useRef } from 'react';
 
-/**
- * Canvas component
- * @param {object} props
- * @returns
- */
-function Canvas({
+const Canvas = forwardRef(({
   draw, width = 600, height = 450
-}) {
-  const canvasRef = useRef(null);
+}, ref) => {
+  const canvasRef = ref || useRef(null);
   useEffect(() => {
-    if (canvasRef.current && canvasRef.current.getContext && draw) {
-      draw(canvasRef.current.getContext('2d'));
+    if (canvasRef.current && canvasRef.current.getContext) {
+      if (draw) draw(canvasRef.current.getContext('2d'));
     }
-  }, [canvasRef]);
+  }, [draw]);
   // console.log(draw);
   return (
     <canvas width={width} height={height} ref={canvasRef} />
   );
-}
+});
 
 export default Canvas;

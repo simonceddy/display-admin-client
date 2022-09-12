@@ -1,4 +1,6 @@
+/* eslint-disable no-unused-vars */
 import { useEffect, useRef, useState } from 'react';
+import Canvas from '../../components/Canvas';
 import StdButton from '../../components/Interactive/StdButton';
 import Modal from '../../components/Modal';
 
@@ -9,41 +11,41 @@ function VideoViewer({
   thumbnail
 }) {
   if (!file) return null;
-  const ref = useRef(null);
-  const vRef = useRef(null);
+
   const src = URL.createObjectURL(file);
+
+  const ref = useRef(null);
+  const canvasRef = useRef(null);
   const [showModal, setShowModal] = useState(false);
 
-  useEffect(() => {
-    let initialised = false;
-    if (!initialised && ref.current) {
-      const vid = ref.current;
-      vid.addEventListener('loadeddata', () => {
-        const rand = Math.round(Math.random() * vid.duration * 1000) + 1;
-        console.log(rand, thumbnail, vid);
-      }, false);
-    }
-    return () => {
-      initialised = true;
+  const drawThumb = (video) => {
+    const ctx = canvasRef.current.getContext('2d');
+    console.log('draw');
+    const vh = video.videoHeight;
+    const vw = video.videoWidth;
+    const dim = {
+      width: vh > vw ? 100 : (100 / vh) * vw,
+      height: vw > vh ? 100 : (100 / vw) * vh,
     };
-  }, [ref.current]);
+    console.log(dim, vh, vw);
+    ctx.drawImage(video, 0, 0, dim.width, dim.height);
+  };
 
-  useEffect(() => {
-    let initialised = false;
-    if (!initialised && vRef.current) {
-      const vid = vRef.current;
-      vid.addEventListener('loadeddata', () => {
-        const rand = Math.round(Math.random() * vid.duration * 1000) + 1;
-        console.log(rand, thumbnail, vid);
-      }, false);
-      vid.addEventListener('seeked', () => {
-        console.log('seeked');
-      });
-    }
-    return () => {
-      initialised = true;
-    };
-  }, [vRef.current]);
+  // useEffect(() => {
+  //   let initialised = false;
+  //   if (!initialised && ref.current) {
+  //     const vid = ref.current;
+  //     vid.addEventListener('canplaythrough', () => {
+  //       console.log('can play');
+  //       if (canvasRef.current) {
+  //         drawThumb(vid);
+  //       }
+  //     }, false);
+  //   }
+  //   return () => {
+  //     initialised = true;
+  //   };
+  // }, [ref.current]);
 
   return (
     <>
@@ -53,7 +55,7 @@ function VideoViewer({
           onClose={() => setShowModal(false)}
         >
           <video
-            ref={vRef}
+            ref={ref}
             src={src}
             controls
             style={{
@@ -63,18 +65,22 @@ function VideoViewer({
           />
           <div className="w-full justify-around items-center flex flex-row">
             <StdButton onClick={() => setShowModal(false)}>Done</StdButton>
-            <StdButton onClick={() => {
-              if (vRef.current) {
-                const video = vRef.current;
-                console.log(video);
+            <StdButton onClick={(e) => {
+              if (ref.current) {
+                const video = ref.current;
+                console.log(video.currentTime);
+                if (canvasRef.current) {
+                  drawThumb(video);
+                }
               }
             }}
             >
               Use Current Frame As Thumbnail
             </StdButton>
             <StdButton
-              onClick={() => console.log(vRef.current)}
-            >Log
+              onClick={() => console.log(ref.current)}
+            >
+              Log
             </StdButton>
             <StdButton onClick={() => {
               if (onRemove) onRemove(file);
@@ -91,14 +97,13 @@ function VideoViewer({
         role="presentation"
         className="p-1 m-1 hover:bg-slate-500 rounded-lg"
       >
-        <video
-          ref={ref}
-          src={src}
-          style={{
-            height: '100px',
-            width: '100px',
-            objectFit: 'cover',
-          }}
+        <Canvas
+          ref={canvasRef}
+          // draw={() => {
+          //   if (ref.current) drawThumb(ref.current);
+          // }}
+          width={100}
+          height={100}
         />
       </div>
     </>
