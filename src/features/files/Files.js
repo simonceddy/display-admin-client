@@ -2,6 +2,9 @@
 import { useRef, useState } from 'react';
 // import { useDispatch, useSelector } from 'react-redux';
 import FileDropzone from '../../components/FileDropzone';
+import StdButton from '../../components/Interactive/StdButton';
+import uploadFiles from '../../util/uploadFiles';
+import uploadThumbnails from '../../util/uploadThumbnail';
 // import StdButton from '../../components/Interactive/StdButton';
 import ImageViewer from './ImageViewer';
 import VideoViewer from './VideoViewer';
@@ -45,14 +48,42 @@ function Files({ handleUpload }) {
     setTempFiles(tempFiles.filter((f) => f !== file));
   }
 
-  const onUpload = () => {
+  const onUpload = async () => {
     if (tempFiles.length > 0) {
       setUploadState(fileStates.UPLOADING);
-      setTimeout(() => {
-        setUploadState(fileStates.UPLOADED);
-      }, 1200);
+      const ths = Object.keys(thumbnails);
+      // console.log(fls);
+      const res = await uploadFiles(tempFiles);
+      if (res.data.filepaths && ths.length > 0) {
+        const thRes = await uploadThumbnails(ths
+          .filter((fn) => res.data.filepaths[fn])
+          .map((fn) => {
+            let nm = res.data.filepaths[fn];
+            const blob = thumbnails[fn];
+            if (!nm.endsWith('.png')) nm = `${nm}.png`;
+            return new File(
+              [blob],
+              nm,
+              { type: blob.type }
+            );
+          }));
+        console.log(thRes.data);
+      }
+
+      if (res.status === 200) {
+        if (handleUpload) handleUpload(res);
+        setTimeout(() => {
+          setUploadState(fileStates.UPLOADED);
+          setTempFiles([]);
+          setThumbnails({});
+        }, 1200);
+      } else {
+        setUploadState(fileStates.UNSAVED);
+      }
     }
   };
+
+  // console.log(thumbnails);
 
   return (
     <>
@@ -66,6 +97,13 @@ function Files({ handleUpload }) {
               {getFileComponent(f, {
                 onRemove: (fl) => removeFile(fl),
                 thumbnail: thumbnails[f.name] || null,
+                setVideoThumbnail: (blob) => {
+                  // console.log(blob,);
+                  setThumbnails({
+                    ...thumbnails,
+                    [f.name]: blob
+                  });
+                },
                 setThumbnail: async (fl, crop) => {
                   console.log(crop, fl instanceof Blob);
                   const thb = await createImageBitmap(fl, crop.x, crop.y, crop.width, crop.height);
@@ -98,6 +136,13 @@ function Files({ handleUpload }) {
         }
       }}
       />
+      <div>
+        <StdButton
+          onClick={onUpload}
+        >
+          Save media
+        </StdButton>
+      </div>
     </>
   );
 }

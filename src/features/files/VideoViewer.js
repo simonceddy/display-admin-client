@@ -4,11 +4,15 @@ import Canvas from '../../components/Canvas';
 import StdButton from '../../components/Interactive/StdButton';
 import Modal from '../../components/Modal';
 
+const defaultCanvasWidth = 400;
+const defaultCanvasHeight = 300;
+
 /* eslint-disable jsx-a11y/media-has-caption */
 function VideoViewer({
   file,
   onRemove,
-  thumbnail
+  thumbnail,
+  setVideoThumbnail
 }) {
   if (!file) return null;
 
@@ -20,32 +24,31 @@ function VideoViewer({
 
   const drawThumb = (video) => {
     const ctx = canvasRef.current.getContext('2d');
-    console.log('draw');
+    // console.log('draw');
     const vh = video.videoHeight;
     const vw = video.videoWidth;
     const dim = {
-      width: vh > vw ? 100 : (100 / vh) * vw,
-      height: vw > vh ? 100 : (100 / vw) * vh,
+      width: vh > vw ? defaultCanvasWidth : (defaultCanvasHeight / vh) * vw,
+      height: vw > vh ? defaultCanvasHeight : (defaultCanvasWidth / vw) * vh,
     };
-    console.log(dim, vh, vw);
-    ctx.drawImage(video, 0, 0, dim.width, dim.height);
+    const x = vh > vw ? 0 : ((dim.width - defaultCanvasWidth) / 2) * -1;
+    const y = vw > vh ? 0 : ((dim.height - defaultCanvasHeight) / 2) * -1;
+    // console.log(dim, vh, vw, x, y);
+    ctx.drawImage(video, x, y, dim.width, dim.height);
   };
 
   // useEffect(() => {
   //   let initialised = false;
-  //   if (!initialised && ref.current) {
-  //     const vid = ref.current;
-  //     vid.addEventListener('canplaythrough', () => {
-  //       console.log('can play');
-  //       if (canvasRef.current) {
-  //         drawThumb(vid);
-  //       }
-  //     }, false);
+  //   if (!initialised && canvasRef.current) {
+  //     if (canvasRef.current) {
+  //       console.log(file);
+  //       drawThumb(createImageBitmap(file));
+  //     }
   //   }
   //   return () => {
   //     initialised = true;
   //   };
-  // }, [ref.current]);
+  // }, [file]);
 
   return (
     <>
@@ -70,7 +73,13 @@ function VideoViewer({
                 const video = ref.current;
                 console.log(video.currentTime);
                 if (canvasRef.current) {
-                  drawThumb(video);
+                  Promise.resolve(
+                    drawThumb(video)
+                  )
+                    .then(() => canvasRef.current.toBlob((blob) => {
+                      if (setVideoThumbnail) setVideoThumbnail(blob);
+                    }))
+                    .catch(console.error);
                 }
               }
             }}
@@ -102,8 +111,8 @@ function VideoViewer({
           // draw={() => {
           //   if (ref.current) drawThumb(ref.current);
           // }}
-          width={100}
-          height={100}
+          width={defaultCanvasWidth}
+          height={defaultCanvasHeight}
         />
       </div>
     </>

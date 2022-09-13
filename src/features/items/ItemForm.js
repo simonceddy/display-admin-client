@@ -4,13 +4,23 @@ import { useNavigate } from 'react-router-dom';
 import LgTextInput from '../../components/Forms/LgTextInput';
 import StdButton from '../../components/Interactive/StdButton';
 import ErrorBoundary from '../../containers/ErrorBoundary';
+import { MEDIA_BASE_URI } from '../../support/consts';
 import Files from '../files/Files';
 import Tiptap from '../tiptap/Tiptap';
+
+function getMediaType(file) {
+  if (file.type) {
+    if (file.type.startsWith('image/')) return 'image';
+    if (file.type.startsWith('video/')) return 'video';
+  }
+  return null;
+}
 
 function ItemForm({
   onSubmit,
   onClose,
   onUpload,
+  onThumbClick,
   submitLabel = 'Submit',
   values = {
     title: '',
@@ -80,15 +90,49 @@ function ItemForm({
           )}
         </div> */}
         <Files
-          handleUpload={(files) => {
-            console.log(files);
-            if (onUpload) onUpload(files);
+          handleUpload={(res) => {
+            // console.log(res);
+            if (res.data && res.data.filepaths) {
+              const files = Object.keys(res.data.filepaths);
+              // console.log(files);
+              const mediaItems = files
+                .map((file) => ({
+                  src: res.data.filepaths[file],
+                  alt: file
+                }));
+              setMedia([...media, ...mediaItems]);
+              if (!thumbnail) setThumbnail(mediaItems[0]);
+            }
+            // if (onUpload) onUpload(media);
           // Check file type
           // If video: upload in background - use object url during upload
           // Once uploaded, allow selecting frame for thumbnail
           }}
         />
         {/* TODO media list */}
+        <div className="flex flex-row justify-evenly items-start flex-wrap p-2">
+          {media.map(({ src, type = 'image', alt }, idx) => {
+            const thumbsrc = src.endsWith('.png') ? src : `${src}.png`;
+            const bgfill = thumbnail && thumbnail.src === src
+              ? 'bg-yellow-300'
+              : 'bg-green-500';
+            return (
+              <div key={`media-${idx}`}>
+                <img
+                  src={`${MEDIA_BASE_URI}thumbs/${thumbsrc}`}
+                  alt={alt || ''}
+                  className={`m-1 p-1 ${bgfill} bg-opacity-20 hover:bg-opacity-90 rounded-md`}
+                  role="presentation"
+                  onClick={() => {
+                    if (onThumbClick) onThumbClick(media[idx]);
+                  }}
+                  height="auto"
+                  width={110}
+                />
+              </div>
+            );
+          })}
+        </div>
         <div className="w-full flex flex-row justify-around items-center">
           <StdButton
             onClick={() => {

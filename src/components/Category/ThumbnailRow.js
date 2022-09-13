@@ -29,6 +29,9 @@ function ThumbnailRow({ items = [], categoryKey, onItemClick }) {
             </div>
           );
         }
+        const { src } = i.thumbnail;
+        const thumbsrc = src.endsWith('.png') ? src : `${src}.png`;
+
         return (
           <div
             key={`${categoryKey}-summary-${i.key}-thumbnail`}
@@ -46,7 +49,7 @@ function ThumbnailRow({ items = [], categoryKey, onItemClick }) {
               className="rounded p-0.5"
               height="auto"
               width={70}
-              src={`${MEDIA_BASE_URI}thumbs/${i.thumbnail.src}`}
+              src={`${MEDIA_BASE_URI}thumbs/${thumbsrc}`}
               alt={i.thumbnail.alt || i.title}
               onMouseEnter={() => setShowTooltip(true)}
               onMouseLeave={() => {
