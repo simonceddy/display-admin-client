@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
+import StdButton from '../../components/Interactive/StdButton';
 import {
   useFetchCategoryQuery,
   useFetchDataQuery,
@@ -65,6 +66,15 @@ function UpdateItem({ category, subCategory }) {
     console.log(res);
     refetchAll();
   };
+
+  if (isRemoved) {
+    return (
+      <div>
+        Item removed
+        <StdButton onClick={() => navigate('/')}>Done</StdButton>
+      </div>
+    );
+  }
   return (
     <div>
       {key && (<h2>New Item for {key}{sub && `/${sub}`}</h2>)}
@@ -76,6 +86,14 @@ function UpdateItem({ category, subCategory }) {
           navigate(getUrl(key, sub));
         }}
       />
+      <StdButton onClick={async () => {
+        await removeItem({ key, sub, item }).unwrap();
+        refetchAll();
+      }}
+      >
+        Delete Item
+      </StdButton>
+
     </div>
   );
 }
