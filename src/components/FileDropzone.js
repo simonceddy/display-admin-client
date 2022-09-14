@@ -10,7 +10,7 @@ function FileDropzone({ onDrop }) {
         <section>
           <div {...getRootProps()}>
             <input {...getInputProps()} />
-            <p className="p-2 text-4xl font-bold m-2 border-2 rounded-md border-sky-500">Drag files here, or click to select files</p>
+            <p className="p-2 text-xl font-bold m-2 border-2 rounded-md border-sky-500">Drag files here, or click to select files</p>
           </div>
         </section>
       )}

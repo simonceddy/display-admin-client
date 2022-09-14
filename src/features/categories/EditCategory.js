@@ -7,6 +7,7 @@ import CategoryForm from '../../components/Forms/CategoryForm';
 import DebouncedButton from '../../components/Interactive/DebouncedButton';
 import StdButton from '../../components/Interactive/StdButton';
 import {
+  useAddItemToCategoryMutation,
   useArchiveCategoryMutation,
   useDeleteCategoryMutation,
   useFetchCategoryQuery,
@@ -14,11 +15,12 @@ import {
   useUnarchiveCategoryMutation,
   useUpdateArticleMutation
 } from '../../services/api';
-import CreateItem from '../items/CreateItem';
+// import CreateItem from '../items/CreateItem';
 import CreateSubCategory from './CreateSubCategory';
 import {
   addItem, setFormValues, addAllItems, addAllSubs, initItems, initForm
 } from './categoryFormSlice';
+import NewItem from '../items/NewItem';
 
 function archiveButtonLabel({ isWorking, archived }) {
   if (isWorking) return 'Working...';
@@ -47,6 +49,7 @@ function EditCategory() {
   }] = useUnarchiveCategoryMutation();
 
   const [deleteCategory, { isSuccess: deleted }] = useDeleteCategoryMutation();
+  const [addItemTo, { isSuccess: itemAdded }] = useAddItemToCategoryMutation();
 
   const [showItemForm, setShowItemForm] = useState(false);
   const [showSubForm, setShowSubForm] = useState(false);
@@ -78,7 +81,7 @@ function EditCategory() {
       </div>
     );
   }
-  // console.log(values);
+  console.log(items);
   return (
     <CategoryForm
       onSubmit={async () => {
@@ -89,17 +92,21 @@ function EditCategory() {
       values={values}
       setValues={(vals) => dispatch(setFormValues(vals))}
     >
-      {updated ? <div>Category updated</div> : null}
+      {itemAdded && <div>New item added</div>}
+      {updated && <div>Category updated</div>}
       {/* items and subcategories */}
       <div className="border-2 rounded-md border-slate-400 my-2 w-full">
         {/* TODO bring up item form inline or as modal */}
         items
         {showItemForm ? (
-          <CreateItem
+          <NewItem
             onClose={() => setShowItemForm(false)}
-            onSubmit={(item) => {
+            onSubmit={async (item) => {
               // console.log(item);
-              dispatch(addItem(item));
+              const res = await addItemTo(item).unwrap();
+              if (res.status === 200) dispatch(addItem(item));
+              refetchAll();
+              setShowItemForm(false);
             }}
           />
         ) : (
@@ -110,8 +117,9 @@ function EditCategory() {
           </StdButton>
         )}
         <ThumbnailRow
-          onItemClick={() => {
-            console.log('handle item edit');
+          onItemClick={(i) => {
+            navigate(`/category/${key}/item/${i.key}`);
+            // console.log('handle item edit');
           }}
           categoryKey={key}
           items={items}

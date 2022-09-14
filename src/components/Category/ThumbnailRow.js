@@ -34,7 +34,7 @@ function ThumbnailRow({ items = [], categoryKey, onItemClick }) {
 
         return (
           <div
-            key={`${categoryKey}-summary-${i.key}-thumbnail`}
+            key={`${categoryKey}-summary-${i.key}-thumbnail-${index}`}
             style={{
               height: '70px',
               width: '70px'

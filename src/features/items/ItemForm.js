@@ -34,7 +34,7 @@ function ItemForm({
   const [title, setTitle] = useState(values.title || '');
   const [thumbnail, setThumbnail] = useState(values.thumbnail || null);
   const [media, setMedia] = useState(values.media || []);
-
+  console.log(media);
   return (
     <ErrorBoundary>
       <div className="flex flex-col w-11/12 p-1 border-2 border-slate-500 m-1">

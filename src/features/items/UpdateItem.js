@@ -76,7 +76,7 @@ function UpdateItem({ category, subCategory }) {
     );
   }
   return (
-    <div>
+    <div className="w-11/12">
       {key && (<h2>New Item for {key}{sub && `/${sub}`}</h2>)}
       <ItemForm
         values={data}

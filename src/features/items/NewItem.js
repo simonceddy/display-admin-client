@@ -5,13 +5,13 @@ import ItemForm from './ItemForm';
 import getUrl from '../../util/getUrl';
 import { useAddItemToCategoryMutation } from '../../services/api';
 
-function NewItem() {
+function NewItem({ onSubmit, onClose }) {
   const { key, sub } = useParams();
   const navigate = useNavigate();
   const [addItemTo, { isSuccess }] = useAddItemToCategoryMutation();
 
   return (
-    <div>
+    <div className="w-11/12">
       {key && (<h2>New Item for {key}{sub ? `/${sub}` : ''}</h2>)}
       {isSuccess ? (
         <div>Item created!</div>
@@ -19,12 +19,20 @@ function NewItem() {
         <ItemForm
           submitLabel="Save New Item"
           onSubmit={async (vals) => {
-            await addItemTo({
-              key, sub, ...vals
-            }).unwrap();
+            if (onSubmit) {
+              onSubmit({ key, sub, ...vals });
+            } else {
+              await addItemTo({
+                key, sub, ...vals
+              }).unwrap();
+            }
           }}
           onClose={() => {
-            navigate(getUrl(key, sub));
+            if (onClose) {
+              onClose();
+            } else {
+              navigate(getUrl(key, sub));
+            }
           }}
         />
       )}

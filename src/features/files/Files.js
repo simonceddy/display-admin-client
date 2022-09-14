@@ -76,7 +76,7 @@ function Files({ handleUpload }) {
           setUploadState(fileStates.UPLOADED);
           setTempFiles([]);
           setThumbnails({});
-        }, 1200);
+        }, 300);
       } else {
         setUploadState(fileStates.UNSAVED);
       }
