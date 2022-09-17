@@ -1,11 +1,11 @@
-import client from './client';
+import client from '../client';
 
-export default async function uploadThumbnails(files) {
+export default async function uploadFiles(files, makeThumbnails) {
   const formData = new FormData();
   files.map((file) => formData.append(file.name, file));
   try {
     const res = await client.post(
-      '/media/thumbnail/upload',
+      `/media/upload${makeThumbnails ? `?makeThumbnails=${makeThumbnails}` : ''}`,
       formData,
       {
         headers: {

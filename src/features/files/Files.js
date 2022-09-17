@@ -3,8 +3,8 @@ import { useRef, useState } from 'react';
 // import { useDispatch, useSelector } from 'react-redux';
 import FileDropzone from '../../components/FileDropzone';
 import StdButton from '../../components/Interactive/StdButton';
-import uploadFiles from '../../util/uploadFiles';
-import uploadThumbnails from '../../util/uploadThumbnail';
+import uploadFiles from '../../util/uploads/uploadFiles';
+import uploadThumbnails from '../../util/uploads/uploadThumbnail';
 // import StdButton from '../../components/Interactive/StdButton';
 import ImageViewer from './ImageViewer';
 import VideoViewer from './VideoViewer';
@@ -16,6 +16,7 @@ function getFileComponent(file, props = {}) {
       case 'video/mp4':
       case 'video/x-m4v':
       case 'video/webm':
+      // case 'video/x-flv':
         return <VideoViewer {...props} file={file} />;
       case 'image/jpeg':
       case 'image/png':
@@ -34,7 +35,7 @@ const fileStates = {
   UPLOADED: 'UPLOADED',
 };
 
-function Files({ handleUpload }) {
+function Files({ onUploaded }) {
   const ref = useRef(null);
   const [tempFiles, setTempFiles] = useState([]);
   const [uploadState, setUploadState] = useState(fileStates.UNSAVED);
@@ -50,11 +51,20 @@ function Files({ handleUpload }) {
 
   const onUpload = async () => {
     if (tempFiles.length > 0) {
+      // Set state to uploading
       setUploadState(fileStates.UPLOADING);
+
+      // Get thumbnail keys corresponding to filename
       const ths = Object.keys(thumbnails);
       // console.log(fls);
+
+      // Upload files to server
       const res = await uploadFiles(tempFiles);
+
+      // TODO thumbnail assignment/uploading
+      // If thumbnails are present and files were uploaded successfully
       if (res.data.filepaths && ths.length > 0) {
+        // Upload thumbnails
         const thRes = await uploadThumbnails(ths
           .filter((fn) => res.data.filepaths[fn])
           .map((fn) => {
@@ -70,8 +80,11 @@ function Files({ handleUpload }) {
         console.log(thRes.data);
       }
 
+      // If uploads successful set upload stae to uploaded and clear temp files
       if (res.status === 200) {
-        if (handleUpload) handleUpload(res);
+        // If onUploaded is set, run it with the required data.
+        // TODO provide adequate args to onUpload
+        if (onUploaded) await onUploaded(res);
         setTimeout(() => {
           setUploadState(fileStates.UPLOADED);
           setTempFiles([]);
@@ -89,7 +102,7 @@ function Files({ handleUpload }) {
     <>
       <div ref={ref} className="flex flex-wrap flex-row justify-start items-center w-full bg-cyan-500 bg-opacity-30">
         {uploadState === fileStates.UPLOADING && (
-          <div>Uploading...</div>
+          <div className="text-xl p-2 font-bold">Uploading...</div>
         )}
         {uploadState === fileStates.UNSAVED && (
           tempFiles.map((f, idx) => (
@@ -138,6 +151,7 @@ function Files({ handleUpload }) {
       />
       <div>
         <StdButton
+          disabled={uploadState !== fileStates.UNSAVED}
           onClick={onUpload}
         >
           Save media

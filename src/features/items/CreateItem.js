@@ -14,7 +14,7 @@ import {
 import createMediaObject from '../../util/createMediaObject';
 import Modal from '../../components/Modal';
 import MediaViewer from '../../components/Media/MediaViewer';
-import uploadFiles from '../../util/uploadFiles';
+import { uploadFiles } from '../../util/uploads';
 import Files from '../files/Files';
 
 function CreateItem({

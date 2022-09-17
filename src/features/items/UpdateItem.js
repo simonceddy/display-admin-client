@@ -12,7 +12,9 @@ import {
 import getUrl from '../../util/getUrl';
 import ItemForm from './ItemForm';
 
-function UpdateItem({ category, subCategory }) {
+function UpdateItem({
+  category, subCategory, onClose, onSubmit
+}) {
   const { key, sub, item } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -77,7 +79,14 @@ function UpdateItem({ category, subCategory }) {
   }
   return (
     <div className="w-11/12">
-      {key && (<h2>New Item for {key}{sub && `/${sub}`}</h2>)}
+      {isUpdated && (
+        <div className="p-2 text-lg font-bold">Updated item!</div>
+      )}
+      {data.title && (
+      <h2 className="text-xl p-2">
+        Editing <span className="font-bold">{data.title}</span>
+      </h2>
+      )}
       <ItemForm
         values={data}
         submitLabel="Update Item"

@@ -4,7 +4,7 @@ import ThumbnailRow from '../../components/Category/ThumbnailRow';
 import CategoryForm from '../../components/Forms/CategoryForm';
 import StdButton from '../../components/Interactive/StdButton';
 import { useFetchDataQuery, useSaveNewCategoryMutation } from '../../services/api';
-import CreateItem from '../items/CreateItem';
+import NewItem from '../items/NewItem';
 import { addItem, setFormValues, initForm } from './categoryFormSlice';
 import CreateSubCategory from './CreateSubCategory';
 
@@ -48,9 +48,8 @@ function CreateCategory() {
         {/* items and subcategories */}
         <div className="border-2 rounded-md border-slate-400 my-2 w-full">
           {/* TODO bring up item form inline or as modal */}
-          items
           {showItemForm ? (
-            <CreateItem
+            <NewItem
               onClose={() => setShowItemForm(false)}
               onSubmit={(item) => {
                 console.log(item);

@@ -20,6 +20,7 @@ function ItemForm({
   onSubmit,
   onClose,
   onUpload,
+  onChange,
   onThumbClick,
   submitLabel = 'Submit',
   values = {
@@ -45,6 +46,11 @@ function ItemForm({
           value={title}
           onChange={(e) => {
             setTitle(e.target.value);
+            if (onChange) {
+              onChange({
+                title: e.target.value, body, media, thumbnail
+              });
+            }
           }}
         />
         <Tiptap
@@ -54,6 +60,11 @@ function ItemForm({
           setContent={(html) => {
             // console.log(html);
             setBody(html);
+            if (onChange) {
+              onChange({
+                title, body: html, media, thumbnail
+              });
+            }
           }}
         />
         {/* TODO media - uploads and displaying for admin */}
@@ -90,8 +101,8 @@ function ItemForm({
           )}
         </div> */}
         <Files
-          handleUpload={(res) => {
-            // console.log(res);
+          handleUpload={async (res) => {
+            console.log(res);
             if (res.data && res.data.filepaths) {
               const files = Object.keys(res.data.filepaths);
               // console.log(files);
@@ -100,8 +111,17 @@ function ItemForm({
                   src: res.data.filepaths[file],
                   alt: file
                 }));
-              setMedia([...media, ...mediaItems]);
-              if (!thumbnail) setThumbnail(mediaItems[0]);
+              console.log(mediaItems);
+              await Promise.resolve(() => {
+                setMedia([...media, ...mediaItems]);
+                if (!thumbnail) setThumbnail(mediaItems[0]);
+              });
+
+              if (onChange) {
+                onChange({
+                  title, body, media, thumbnail
+                });
+              }
             }
             // if (onUpload) onUpload(media);
           // Check file type
