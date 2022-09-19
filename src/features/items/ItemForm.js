@@ -20,6 +20,7 @@ function ItemForm({
   onSubmit,
   onClose,
   onUpload,
+  cancelLabel = 'Done',
   onChange,
   onThumbClick,
   submitLabel = 'Submit',
@@ -35,7 +36,7 @@ function ItemForm({
   const [title, setTitle] = useState(values.title || '');
   const [thumbnail, setThumbnail] = useState(values.thumbnail || null);
   const [media, setMedia] = useState(values.media || []);
-  console.log(media);
+  // console.log(media);
   return (
     <ErrorBoundary>
       <div className="flex flex-col w-11/12 p-1 border-2 border-slate-500 m-1">
@@ -101,8 +102,8 @@ function ItemForm({
           )}
         </div> */}
         <Files
-          handleUpload={async (res) => {
-            console.log(res);
+          onUploaded={(res) => {
+            // console.log(res);
             if (res.data && res.data.filepaths) {
               const files = Object.keys(res.data.filepaths);
               // console.log(files);
@@ -112,10 +113,8 @@ function ItemForm({
                   alt: file
                 }));
               console.log(mediaItems);
-              await Promise.resolve(() => {
-                setMedia([...media, ...mediaItems]);
-                if (!thumbnail) setThumbnail(mediaItems[0]);
-              });
+              setMedia([...media, ...mediaItems]);
+              if (!thumbnail) setThumbnail(mediaItems[0]);
 
               if (onChange) {
                 onChange({
@@ -132,7 +131,9 @@ function ItemForm({
         {/* TODO media list */}
         <div className="flex flex-row justify-evenly items-start flex-wrap p-2">
           {media.map(({ src, type = 'image', alt }, idx) => {
-            const thumbsrc = src.endsWith('.png') ? src : `${src}.png`;
+            const thumbsrc = src.endsWith('.png') || src.endsWith('.jpg')
+              ? src
+              : `${src}.png`;
             const bgfill = thumbnail && thumbnail.src === src
               ? 'bg-yellow-300'
               : 'bg-green-500';
@@ -169,7 +170,7 @@ function ItemForm({
             if (onClose) { onClose(); } else { navigate('/'); }
           }}
           >
-            Done
+            {cancelLabel}
           </StdButton>
         </div>
       </div>

@@ -5,8 +5,8 @@ import SubCategoryForm from '../../components/Forms/SubCategoryForm';
 import { addItem, initForm, setSubValues } from './subCategoryFormSlice';
 import StdButton from '../../components/Interactive/StdButton';
 import ThumbnailRow from '../../components/Category/ThumbnailRow';
-import CreateItem from '../items/CreateItem';
 import { useAddSubCategoryToCategoryMutation, useFetchCategoryQuery, useFetchDataQuery } from '../../services/api';
+import NewItem from '../items/NewItem';
 
 function CreateSubCategory({ onClose }) {
   const { key } = useParams();
@@ -67,8 +67,8 @@ function CreateSubCategory({ onClose }) {
           <div className="w-5/6">
             items
             {showItemForm ? (
-              <CreateItem
-                subCategory="New Sub-Category"
+              <NewItem
+                // subCategory="New Sub-Category"
                 onClose={() => setShowItemForm(false)}
                 onSubmit={(item) => {
                   // console.log(item);

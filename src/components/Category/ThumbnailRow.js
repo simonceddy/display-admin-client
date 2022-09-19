@@ -30,7 +30,8 @@ function ThumbnailRow({ items = [], categoryKey, onItemClick }) {
           );
         }
         const { src } = i.thumbnail;
-        const thumbsrc = src.endsWith('.png') ? src : `${src}.png`;
+        const thumbsrc = src.endsWith('.png') || src.endsWith('.jpg')
+          ? src : `${src}.png`;
 
         return (
           <div

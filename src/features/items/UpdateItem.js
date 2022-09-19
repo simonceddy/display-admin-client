@@ -13,7 +13,7 @@ import getUrl from '../../util/getUrl';
 import ItemForm from './ItemForm';
 
 function UpdateItem({
-  category, subCategory, onClose, onSubmit
+  category, subCategory, onClose, onSubmit, itemKey
 }) {
   const { key, sub, item } = useParams();
   const navigate = useNavigate();
@@ -26,7 +26,7 @@ function UpdateItem({
   } = useFetchItemQuery({
     key: key || category,
     sub: sub || subCategory,
-    item
+    item: item || itemKey
   });
 
   const refetchAll = () => {
@@ -63,10 +63,16 @@ function UpdateItem({
   const doUpdate = async (vals) => {
     // console.log(vals);
     const res = await updateItem({
-      ...vals, key, sub, item
+      ...vals, key, sub, item: item || itemKey
     }).unwrap();
-    console.log(res);
+    // console.log(res);
     refetchAll();
+
+    if (onSubmit) {
+      onSubmit({
+        ...vals, key, sub, item
+      });
+    }
   };
 
   if (isRemoved) {
@@ -88,11 +94,16 @@ function UpdateItem({
       </h2>
       )}
       <ItemForm
+        cancelLabel="Cancel edits"
         values={data}
         submitLabel="Update Item"
         onSubmit={doUpdate}
         onClose={() => {
-          navigate(getUrl(key, sub));
+          if (onClose) {
+            onClose();
+          } else {
+            navigate(getUrl(key, sub));
+          }
         }}
       />
       <StdButton onClick={async () => {

@@ -1,8 +1,13 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-const getCategoryBaseUrl = (category, sub) => (
-  `/category/${category}/${sub ? `subCategory/${sub}/` : ''}`
-);
+const getCategoryBaseUrl = (category, sub) => {
+  console.log(category, sub);
+  const uri = (
+    `/category/${category}/${sub ? `subCategory/${sub}/` : ''}`
+  );
+  console.log(uri);
+  return uri;
+};
 
 export const displayApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3030/api' }),

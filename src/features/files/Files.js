@@ -79,12 +79,12 @@ function Files({ onUploaded }) {
           }));
         console.log(thRes.data);
       }
-
+      console.log(res.status);
       // If uploads successful set upload stae to uploaded and clear temp files
       if (res.status === 200) {
         // If onUploaded is set, run it with the required data.
         // TODO provide adequate args to onUpload
-        if (onUploaded) await onUploaded(res);
+        if (onUploaded) onUploaded(res);
         setTimeout(() => {
           setUploadState(fileStates.UPLOADED);
           setTempFiles([]);

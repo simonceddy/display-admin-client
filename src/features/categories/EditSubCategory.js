@@ -6,7 +6,6 @@ import SubCategoryForm from '../../components/Forms/SubCategoryForm';
 import { addItem, initForm, setSubValues } from './subCategoryFormSlice';
 import StdButton from '../../components/Interactive/StdButton';
 import ThumbnailRow from '../../components/Category/ThumbnailRow';
-import CreateItem from '../items/CreateItem';
 import {
   useFetchCategoryQuery,
   useFetchDataQuery,
@@ -14,6 +13,8 @@ import {
   useUpdateSubCategoryMutation,
   useRemoveSubCategoryFromCategoryMutation
 } from '../../services/api';
+import NewItem from '../items/NewItem';
+import UpdateItem from '../items/UpdateItem';
 
 function EditSubCategory({ onClose }) {
   const { key, sub } = useParams();
@@ -24,7 +25,8 @@ function EditSubCategory({ onClose }) {
   const navigate = useNavigate();
   const { values, items } = useSelector((state) => state.subCategoryForm);
   const dispatch = useDispatch();
-  const [showItemForm, setShowItemForm] = useState(false);
+  const [showNewItemForm, setShowNewItemForm] = useState(false);
+  const [editingItem, setEditingItem] = useState(false);
   const { refetch } = useFetchCategoryQuery(key);
   const { refetch: refetchDataList } = useFetchDataQuery();
   const [initialized, setInitialized] = useState(false);
@@ -54,7 +56,7 @@ function EditSubCategory({ onClose }) {
     refetchDataList();
   };
 
-  console.log(items);
+  // console.log(items);
   return (
     <div className="w-11/12">
       {isUpdated ? (
@@ -77,7 +79,7 @@ function EditSubCategory({ onClose }) {
           <SubCategoryForm
             onSubmit={async (e) => {
               e.preventDefault();
-              console.log(key, sub);
+              // console.log(key, sub);
               await updateSub({
                 key, sub, ...values, items
               }).unwrap();
@@ -95,11 +97,10 @@ function EditSubCategory({ onClose }) {
             setValues={(vals) => dispatch(setSubValues(vals))}
           >
             <div className="w-5/6">
-              items
-              {showItemForm ? (
-                <CreateItem
-                  subCategory="New Sub-Category"
-                  onClose={() => setShowItemForm(false)}
+              {showNewItemForm ? (
+                <NewItem
+                  // subCategory="New Sub-Category"
+                  onClose={() => setShowNewItemForm(false)}
                   onSubmit={(item) => {
                     // console.log(item);
                     dispatch(addItem(item));
@@ -107,17 +108,28 @@ function EditSubCategory({ onClose }) {
                 />
               ) : (
                 <StdButton
-                  onClick={() => setShowItemForm(true)}
+                  onClick={() => setShowNewItemForm(true)}
                 >
                   Add Item
                 </StdButton>
               )}
               <ThumbnailRow
                 items={items}
-                onItemClick={() => {
-                  console.log('handle item edit');
+                onItemClick={({ key: id }) => {
+                  setEditingItem(id);
                 }}
               />
+              {editingItem && (
+                <UpdateItem
+                  itemKey={editingItem}
+                  category={key}
+                  subCategory={sub}
+                  onSubmit={() => {
+                    refetchAll();
+                  }}
+                  onClose={() => setEditingItem(false)}
+                />
+              )}
             </div>
           </SubCategoryForm>
           <StdButton onClick={async () => {

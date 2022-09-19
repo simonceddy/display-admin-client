@@ -17,6 +17,7 @@ function NewItem({ onSubmit, onClose }) {
         <div>Item created!</div>
       ) : (
         <ItemForm
+          cancelLabel="Cancel new item"
           submitLabel="Save New Item"
           onSubmit={async (vals) => {
             if (onSubmit) {
