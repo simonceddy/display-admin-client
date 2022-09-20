@@ -84,7 +84,8 @@ function Files({ onUploaded }) {
       if (res.status === 200) {
         // If onUploaded is set, run it with the required data.
         // TODO provide adequate args to onUpload
-        if (onUploaded) onUploaded(res);
+        if (onUploaded) onUploaded(res, tempFiles);
+        console.log(res);
         setTimeout(() => {
           setUploadState(fileStates.UPLOADED);
           setTempFiles([]);

@@ -5,7 +5,13 @@ import ItemForm from './ItemForm';
 import getUrl from '../../util/getUrl';
 import { useAddItemToCategoryMutation } from '../../services/api';
 
-function NewItem({ onSubmit, onClose }) {
+function NewItem({
+  onSubmit,
+  onClose,
+  setCategoryThumb,
+  category,
+  subCategory
+}) {
   const { key, sub } = useParams();
   const navigate = useNavigate();
   const [addItemTo, { isSuccess }] = useAddItemToCategoryMutation();
@@ -17,14 +23,15 @@ function NewItem({ onSubmit, onClose }) {
         <div>Item created!</div>
       ) : (
         <ItemForm
+          setCategoryThumb={setCategoryThumb}
           cancelLabel="Cancel new item"
           submitLabel="Save New Item"
           onSubmit={async (vals) => {
             if (onSubmit) {
-              onSubmit({ key, sub, ...vals });
+              onSubmit({ key: key || category, sub: sub || subCategory, ...vals });
             } else {
               await addItemTo({
-                key, sub, ...vals
+                key: key || category, sub: sub || subCategory, ...vals
               }).unwrap();
             }
           }}

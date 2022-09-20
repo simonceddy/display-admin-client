@@ -3,7 +3,9 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import SubCategoryForm from '../../components/Forms/SubCategoryForm';
-import { addItem, initForm, setSubValues } from './subCategoryFormSlice';
+import {
+  addItem, initForm, setItems, setSubValues, setThumbnail
+} from './subCategoryFormSlice';
 import StdButton from '../../components/Interactive/StdButton';
 import ThumbnailRow from '../../components/Category/ThumbnailRow';
 import {
@@ -15,15 +17,20 @@ import {
 } from '../../services/api';
 import NewItem from '../items/NewItem';
 import UpdateItem from '../items/UpdateItem';
+import { MEDIA_BASE_URI } from '../../support/consts';
+import thumbsrc from '../../util/thumbsrc';
 
-function EditSubCategory({ onClose }) {
+function EditSubCategory({ onClose, category, subCategory }) {
   const { key, sub } = useParams();
   // console.log(key, sub);
   const {
     data, isSuccess: fetched, isLoading: fetching, error, refetch: refresh
-  } = useFetchSubCategoryQuery({ key, sub });
+  } = useFetchSubCategoryQuery({
+    key: key || category,
+    sub: sub || subCategory,
+  });
   const navigate = useNavigate();
-  const { values, items } = useSelector((state) => state.subCategoryForm);
+  const { values, items, thumbnail } = useSelector((state) => state.subCategoryForm);
   const dispatch = useDispatch();
   const [showNewItemForm, setShowNewItemForm] = useState(false);
   const [editingItem, setEditingItem] = useState(false);
@@ -39,6 +46,7 @@ function EditSubCategory({ onClose }) {
       dispatch(initForm({
         values: { ...values, ...data },
         items: data.items,
+        thumbnail: data.thumbnail
       }));
       setInitialized(true);
     }
@@ -56,7 +64,28 @@ function EditSubCategory({ onClose }) {
     refetchDataList();
   };
 
-  // console.log(items);
+  console.log(items);
+
+  const doUpdate = async (e) => {
+    if (e && e.preventDefault) e.preventDefault();
+    // console.log(key, sub);
+    console.log({
+      key: key || category,
+      sub: sub || subCategory,
+      ...values,
+      items,
+      thumbnail
+    });
+    await updateSub({
+      key: key || category,
+      sub: sub || subCategory,
+      ...values,
+      items,
+      thumbnail
+    }).unwrap();
+    setTimeout(refetchAll, 200);
+  };
+
   return (
     <div className="w-11/12">
       {isUpdated ? (
@@ -76,15 +105,18 @@ function EditSubCategory({ onClose }) {
         </div>
       ) : (
         <>
+          {thumbnail && thumbnail.src && (
+          <img
+            id={`${key}-thumbnail`}
+            className="rounded p-0.5"
+            height="auto"
+            width={70}
+            src={`${MEDIA_BASE_URI}thumbs/${thumbsrc(thumbnail.src)}`}
+            alt={thumbnail.alt || values.title}
+          />
+          )}
           <SubCategoryForm
-            onSubmit={async (e) => {
-              e.preventDefault();
-              // console.log(key, sub);
-              await updateSub({
-                key, sub, ...values, items
-              }).unwrap();
-              refetchAll();
-            }}
+            onSubmit={doUpdate}
             items={items}
             values={values}
             onClose={() => {
@@ -99,11 +131,23 @@ function EditSubCategory({ onClose }) {
             <div className="w-5/6">
               {showNewItemForm ? (
                 <NewItem
-                  // subCategory="New Sub-Category"
+                  subCategory={sub || subCategory}
+                  category={key || category}
                   onClose={() => setShowNewItemForm(false)}
-                  onSubmit={(item) => {
+                  onSubmit={async ({
+                    title, media, thumbnail: tb, body
+                  }) => {
                     // console.log(item);
-                    dispatch(addItem(item));
+                    await Promise.resolve(dispatch(addItem({
+                      title,
+                      thumbnail: tb,
+                      media,
+                      body
+                    })))
+                      .then(doUpdate)
+                      .then(() => {
+                        setShowNewItemForm(false);
+                      });
                   }}
                 />
               ) : (
@@ -115,15 +159,25 @@ function EditSubCategory({ onClose }) {
               )}
               <ThumbnailRow
                 items={items}
-                onItemClick={({ key: id }) => {
-                  setEditingItem(id);
+                onItemClick={(i) => {
+                  console.log(i);
+                  setEditingItem(i.key);
                 }}
               />
               {editingItem && (
                 <UpdateItem
+                  onDelete={async (d) => {
+                    console.log(d);
+                    setEditingItem(null);
+                    await Promise.resolve(
+                      dispatch(setItems(items.filter((i) => i.title !== d.title)))
+                    );
+                    await doUpdate();
+                  }}
+                  setCategoryThumb={(src) => dispatch(setThumbnail({ src }))}
                   itemKey={editingItem}
-                  category={key}
-                  subCategory={sub}
+                  category={key || category}
+                  subCategory={sub || subCategory}
                   onSubmit={() => {
                     refetchAll();
                   }}

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ReactTooltip from 'react-tooltip';
 import { MEDIA_BASE_URI } from '../../support/consts';
+import thumbsrc from '../../util/thumbsrc';
 
 function ThumbnailRow({ items = [], categoryKey, onItemClick }) {
   const [showTooltip, setShowTooltip] = useState(false);
@@ -30,8 +31,6 @@ function ThumbnailRow({ items = [], categoryKey, onItemClick }) {
           );
         }
         const { src } = i.thumbnail;
-        const thumbsrc = src.endsWith('.png') || src.endsWith('.jpg')
-          ? src : `${src}.png`;
 
         return (
           <div
@@ -50,7 +49,7 @@ function ThumbnailRow({ items = [], categoryKey, onItemClick }) {
               className="rounded p-0.5"
               height="auto"
               width={70}
-              src={`${MEDIA_BASE_URI}thumbs/${thumbsrc}`}
+              src={`${MEDIA_BASE_URI}thumbs/${thumbsrc(src)}`}
               alt={i.thumbnail.alt || i.title}
               onMouseEnter={() => setShowTooltip(true)}
               onMouseLeave={() => {

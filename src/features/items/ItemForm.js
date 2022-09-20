@@ -7,14 +7,7 @@ import ErrorBoundary from '../../containers/ErrorBoundary';
 import { MEDIA_BASE_URI } from '../../support/consts';
 import Files from '../files/Files';
 import Tiptap from '../tiptap/Tiptap';
-
-function getMediaType(file) {
-  if (file.type) {
-    if (file.type.startsWith('image/')) return 'image';
-    if (file.type.startsWith('video/')) return 'video';
-  }
-  return null;
-}
+import getMediaType from '../../util/getMediaType';
 
 function ItemForm({
   onSubmit,
@@ -29,7 +22,8 @@ function ItemForm({
     body: '',
     media: [],
     thumbnail: null
-  }
+  },
+  setCategoryThumb
 }) {
   const navigate = useNavigate();
   const [body, setBody] = useState(values.body || '');
@@ -102,25 +96,30 @@ function ItemForm({
           )}
         </div> */}
         <Files
-          onUploaded={(res) => {
+          onUploaded={(res, files) => {
             // console.log(res);
             if (res.data && res.data.filepaths) {
-              const files = Object.keys(res.data.filepaths);
-              // console.log(files);
-              const mediaItems = files
+              const uploadedFiles = Object.keys(res.data.filepaths);
+              // console.log(uploadedFiles);
+              const fls = Object.fromEntries(files.map((f) => [f.name, f]));
+              console.log(fls);
+              const mediaItems = uploadedFiles
                 .map((file) => ({
                   src: res.data.filepaths[file],
-                  alt: file
+                  alt: file,
+                  type: getMediaType(fls[file])
                 }));
               console.log(mediaItems);
-              setMedia([...media, ...mediaItems]);
-              if (!thumbnail) setThumbnail(mediaItems[0]);
+              setTimeout(() => {
+                setMedia([...media, ...mediaItems]);
+                if (!thumbnail) setThumbnail(mediaItems[0]);
 
-              if (onChange) {
-                onChange({
-                  title, body, media, thumbnail
-                });
-              }
+                if (onChange) {
+                  onChange({
+                    title, body, media, thumbnail
+                  });
+                }
+              }, 200);
             }
             // if (onUpload) onUpload(media);
           // Check file type
@@ -154,6 +153,20 @@ function ItemForm({
             );
           })}
         </div>
+        {setCategoryThumb && media[0] && (
+        <div className="w-full flex flex-row justify-around items-center">
+          <StdButton
+            onClick={() => {
+              // TODO
+              setCategoryThumb(
+                thumbnail.src ? thumbnail.src : media[0].src
+              );
+            }}
+          >
+            Set Category Thumbnail
+          </StdButton>
+        </div>
+        )}
         <div className="w-full flex flex-row justify-around items-center">
           <StdButton
             onClick={() => {

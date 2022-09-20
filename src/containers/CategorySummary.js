@@ -5,6 +5,8 @@ import ThumbnailRow from '../components/Category/ThumbnailRow';
 import SubCategoryList from '../components/Category/SubCategoryList';
 import DebouncedButton from '../components/Interactive/DebouncedButton';
 import VertArrowToggle from '../components/Interactive/VertArrowToggle';
+import thumbsrc from '../util/thumbsrc';
+import { MEDIA_BASE_URI } from '../support/consts';
 
 function countSubCategoryItems(subs = []) {
   let totalItems = 0;
@@ -49,17 +51,27 @@ function CategorySummary({ category = {}, handleArchive }) {
         </span>
         <VertArrowToggle toggled={showSummary} />
       </div>
-      {showSummary ? (
+      {showSummary && (
         <div
           className="flex flex-col justify-start items-start border-t-2 w-full border-blue-600 dark:border-blue-200 pt-3"
         >
+          {category.thumbnail && category.thumbnail.src && (
+          <img
+            id={`${category.key}-thumbnail`}
+            className="rounded p-0.5"
+            height="auto"
+            width={70}
+            src={`${MEDIA_BASE_URI}thumbs/${thumbsrc(category.thumbnail.src)}`}
+            alt={category.thumbnail.alt || category.title}
+          />
+          )}
           <div className="my-1 p-2 bg-green-500 bg-opacity-25 flex flex-col justify-start items-start w-full rounded">
             <span>
-              {totalItems} item{totalItems === 1 ? null : 's'} in category
+              {totalItems} item{totalItems === 1 ? '' : 's'} in category
             </span>
-            {totalItems > 0 ? (
+            {totalItems > 0 && (
               <ThumbnailRow items={category.items} categoryKey={category.key} />
-            ) : null}
+            )}
           </div>
           <div className="my-1 p-2a flex flex-col justify-start items-start bg-green-500 bg-opacity-25 w-full p-2 rounded">
             <div
@@ -71,13 +83,13 @@ function CategorySummary({ category = {}, handleArchive }) {
                 {totalSubs} sub-categor{totalSubs === 1 ? 'y' : 'ies'} in category
                 {totalSubItems ? ` containing ${totalSubItems} total item${totalSubItems === 1 ? '' : 's'}` : ''}
               </span>
-              {totalSubs ? (
+              {totalSubs && (
                 <VertArrowToggle toggled={showSubs} />
-              ) : ''}
+              )}
             </div>
-            {totalSubs && showSubs ? (
+            {totalSubs && showSubs && (
               <SubCategoryList category={category.key} subs={category.categories} />
-            ) : ''}
+            )}
           </div>
           <div className="flex flex-row justify-between items-center w-full">
             <div>
@@ -107,7 +119,7 @@ function CategorySummary({ category = {}, handleArchive }) {
             </div>
           </div>
         </div>
-      ) : null}
+      )}
     </div>
   );
 }

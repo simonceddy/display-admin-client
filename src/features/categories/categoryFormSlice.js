@@ -15,6 +15,7 @@ export const categoryFormSlice = createSlice({
     setOriginalData: (state, action) => {
       state.original = action.payload;
     },
+    setThumbnail: simpleSetter('thumbnail'),
     addItem: pushKey('items'),
     removeItem: removeKey('items'),
     addSubCat: pushKey('subCategories'),
@@ -49,6 +50,7 @@ export const {
   initItems,
   initSubs,
   initForm,
+  setThumbnail,
 } = categoryFormSlice.actions;
 
 export default categoryFormSlice.reducer;

@@ -1,7 +1,11 @@
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import { OuterContainer } from './components/Layout';
 import NavbarLink from './components/Navbar/NavbarLink';
 import { useFetchDataQuery } from './services/api';
 import AppRoutes from './AppRoutes';
+import Notifications from './features/notifications/Notifications';
+import { addNotification } from './features/notifications/notificationsSlice';
 
 // const worker = new Worker('./worker.js');
 // console.log(worker);
@@ -9,6 +13,11 @@ import AppRoutes from './AppRoutes';
 function App() {
   // TODO this isn't used here beyond preloading
   const { error, isLoading } = useFetchDataQuery();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (error) dispatch(addNotification(error.message));
+  }, [error]);
 
   return (
     <OuterContainer>
@@ -21,7 +30,7 @@ function App() {
               <NavbarLink to="/settings">Settings</NavbarLink>
             </div>
             <div>
-              {error ? 'Errors' : 'No errors!'}
+              <Notifications />
             </div>
           </div>
           <div className="w-full flex-1 flex flex-col justify-start items-center overflow-y-scroll">

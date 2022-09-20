@@ -1,5 +1,10 @@
 export const emptyCategoryVals = {
-  values: { title: '' },
+  values: {
+    title: '',
+    archived: false,
+    published: false,
+  },
   subCategories: [],
   items: [],
+  thumbnail: null
 };

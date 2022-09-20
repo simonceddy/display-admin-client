@@ -63,6 +63,18 @@ export const displayApi = createApi({
         method: 'PUT'
       })
     }),
+    publishCategory: builder.mutation({
+      query: (key) => ({
+        url: `/category/publish/${key}`,
+        method: 'PUT'
+      })
+    }),
+    unpublishCategory: builder.mutation({
+      query: (key) => ({
+        url: `/category/unpublish/${key}`,
+        method: 'PUT'
+      })
+    }),
     addItemToCategory: builder.mutation({
       query: ({ key, sub, ...body }) => ({
         url: `${getCategoryBaseUrl(key, sub)}addItem`,
@@ -133,5 +145,7 @@ export const {
   useUpdateItemMutation,
   useAddSubCategoryToCategoryMutation,
   useRemoveSubCategoryFromCategoryMutation,
-  useUpdateSubCategoryMutation
+  useUpdateSubCategoryMutation,
+  usePublishCategoryMutation,
+  useUnpublishCategoryMutation
 } = displayApi;

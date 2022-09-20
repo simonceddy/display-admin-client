@@ -12,23 +12,37 @@ import {
   useDeleteCategoryMutation,
   useFetchCategoryQuery,
   useFetchDataQuery,
+  usePublishCategoryMutation,
   useUnarchiveCategoryMutation,
+  useUnpublishCategoryMutation,
   useUpdateArticleMutation
 } from '../../services/api';
 // import CreateItem from '../items/CreateItem';
 import CreateSubCategory from './CreateSubCategory';
 import {
-  addItem, setFormValues, addAllItems, addAllSubs, initItems, initForm
+  addItem, setFormValues, addAllItems, addAllSubs, initItems, initForm, setThumbnail
 } from './categoryFormSlice';
 import NewItem from '../items/NewItem';
+import UpdateItem from '../items/UpdateItem';
+import { addNotification } from '../notifications/notificationsSlice';
+import { MEDIA_BASE_URI } from '../../support/consts';
 
 function archiveButtonLabel({ isWorking, archived }) {
   if (isWorking) return 'Working...';
   return archived ? 'Unarchive' : 'Archive';
 }
 
+function publisheButtonLabel({ isWorking, published }) {
+  if (isWorking) return 'Working...';
+  return published ? 'Unpublish' : 'Publish';
+}
+
+const thumbsrc = (src) => (src.endsWith('.png') || src.endsWith('.jpg')
+  ? src : `${src}.png`);
+
 function EditCategory() {
   const { key } = useParams();
+  const [editingItem, setEditingItem] = useState(null);
   const navigate = useNavigate();
   const {
     data, isLoading, error, isSuccess, refetch
@@ -39,7 +53,8 @@ function EditCategory() {
   const {
     values,
     items,
-    subCategories
+    subCategories,
+    thumbnail,
   } = useSelector((state) => (state.categoryForm));
   const [archiveCategory, {
     isLoading: archiving
@@ -47,6 +62,12 @@ function EditCategory() {
   const [unarchiveCategory, {
     isLoading: unarchiving
   }] = useUnarchiveCategoryMutation();
+  const [publishCategory, {
+    isLoading: publishing
+  }] = usePublishCategoryMutation();
+  const [unpublishCategory, {
+    isLoading: unpublishing
+  }] = useUnpublishCategoryMutation();
 
   const [deleteCategory, { isSuccess: deleted }] = useDeleteCategoryMutation();
   const [addItemTo, { isSuccess: itemAdded }] = useAddItemToCategoryMutation();
@@ -63,7 +84,8 @@ function EditCategory() {
       dispatch(initForm({
         values: { ...values, ...data },
         items: data.items,
-        categories: data.categories
+        categories: data.categories,
+        thumbnail: data.thumbnail
       }));
     }
   }, [isSuccess]);
@@ -85,7 +107,9 @@ function EditCategory() {
   return (
     <CategoryForm
       onSubmit={async () => {
-        await updateData({ key, ...values }).unwrap();
+        await updateData({
+          key, ...values, thumbnail, items, categories: subCategories
+        }).unwrap();
         refetchAll();
         console.log('updated');
       }}
@@ -95,18 +119,34 @@ function EditCategory() {
       {itemAdded && <div>New item added</div>}
       {updated && <div>Category updated</div>}
       {/* items and subcategories */}
+      {thumbnail && thumbnail.src && (
+        <img
+          id={`${key}-thumbnail`}
+          className="rounded p-0.5"
+          height="auto"
+          width={70}
+          src={`${MEDIA_BASE_URI}thumbs/${thumbsrc(thumbnail.src)}`}
+          alt={thumbnail.alt || values.title}
+        />
+      )}
       <div className="border-2 rounded-md border-slate-400 my-2 w-full">
         {/* TODO bring up item form inline or as modal */}
-        items
         {showItemForm ? (
           <NewItem
             onClose={() => setShowItemForm(false)}
             onSubmit={async (item) => {
-              // console.log(item);
+              console.log(item);
               const res = await addItemTo(item).unwrap();
-              if (res.status === 200) dispatch(addItem(item));
-              refetchAll();
-              setShowItemForm(false);
+              if (res.key) {
+                dispatch(addItem(item));
+                refetchAll();
+                setShowItemForm(false);
+              } else {
+                console.log(res);
+                dispatch(addNotification(
+                  'There was an error adding the new item to category'
+                ));
+              }
             }}
           />
         ) : (
@@ -118,17 +158,33 @@ function EditCategory() {
         )}
         <ThumbnailRow
           onItemClick={(i) => {
-            navigate(`/category/${key}/item/${i.key}`);
+            // navigate(`/category/${key}/item/${i.key}`);
             // console.log('handle item edit');
+            setEditingItem(i.key);
           }}
           categoryKey={key}
           items={items}
         />
+        {editingItem && (
+          <UpdateItem
+            setCategoryThumb={(src) => {
+              dispatch(setThumbnail({
+                src
+              }));
+              refetchAll();
+            }}
+            itemKey={editingItem}
+            category={key}
+            // subCategory={sub}
+            onSubmit={() => {
+              refetchAll();
+            }}
+            onClose={() => setEditingItem(false)}
+          />
+        )}
       </div>
-      {/* item form - title, body, media */}
-      {/* media */}
-
       {/* subcategories */}
+
       <div className="border-2 rounded-md border-slate-400 my-2 w-full">
         {/* {values.categories.length} total sub-categories */}
         {showSubForm ? (
@@ -146,6 +202,7 @@ function EditCategory() {
           wait={300}
           disabled={archiving || unarchiving}
           onClick={async () => {
+            dispatch(setFormValues({ ...values, archived: !data.archived }));
             if (data.archived) {
               await unarchiveCategory(key).unwrap();
             } else {
@@ -157,6 +214,24 @@ function EditCategory() {
           {archiveButtonLabel({
             isWorking: archiving || unarchiving,
             archived: data.archived
+          })}
+        </DebouncedButton>
+        <DebouncedButton
+          wait={300}
+          disabled={publishing || unpublishing}
+          onClick={async () => {
+            dispatch(setFormValues({ ...values, published: !data.published }));
+            if (data.published) {
+              await unpublishCategory(key).unwrap();
+            } else {
+              await publishCategory(key).unwrap();
+            }
+            refetchAll();
+          }}
+        >
+          {publisheButtonLabel({
+            isWorking: publishing || unpublishing,
+            published: data.published
           })}
         </DebouncedButton>
         <DebouncedButton

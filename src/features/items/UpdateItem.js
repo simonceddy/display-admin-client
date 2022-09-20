@@ -13,7 +13,7 @@ import getUrl from '../../util/getUrl';
 import ItemForm from './ItemForm';
 
 function UpdateItem({
-  category, subCategory, onClose, onSubmit, itemKey
+  category, subCategory, onClose, onSubmit, itemKey, children, setCategoryThumb, onDelete
 }) {
   const { key, sub, item } = useParams();
   const navigate = useNavigate();
@@ -63,14 +63,14 @@ function UpdateItem({
   const doUpdate = async (vals) => {
     // console.log(vals);
     const res = await updateItem({
-      ...vals, key, sub, item: item || itemKey
+      ...vals, key: key || category, sub: sub || subCategory, item: item || itemKey
     }).unwrap();
     // console.log(res);
     refetchAll();
 
     if (onSubmit) {
       onSubmit({
-        ...vals, key, sub, item
+        ...vals, key: key || category, sub: sub || subCategory, item: item || itemKey
       });
     }
   };
@@ -94,6 +94,7 @@ function UpdateItem({
       </h2>
       )}
       <ItemForm
+        setCategoryThumb={setCategoryThumb}
         cancelLabel="Cancel edits"
         values={data}
         submitLabel="Update Item"
@@ -106,9 +107,16 @@ function UpdateItem({
           }
         }}
       />
+      {children}
       <StdButton onClick={async () => {
-        await removeItem({ key, sub, item }).unwrap();
-        refetchAll();
+        if (onDelete) {
+          onDelete(data);
+        } else {
+          await removeItem({
+            key: key || category, sub: sub || subCategory, item: item || itemKey
+          }).unwrap();
+          refetchAll();
+        }
       }}
       >
         Delete Item
