@@ -19,7 +19,7 @@ function countSubCategoryItems(subs = []) {
   return totalItems;
 }
 
-function CategorySummary({ category = {}, handleArchive }) {
+function CategorySummary({ category = {}, handleArchive, handlePublish }) {
   const navigate = useNavigate();
   const [showSummary, setShowSummary] = useState(false);
   const totalItems = category.items ? category.items.length : 0;
@@ -83,11 +83,11 @@ function CategorySummary({ category = {}, handleArchive }) {
                 {totalSubs} sub-categor{totalSubs === 1 ? 'y' : 'ies'} in category
                 {totalSubItems ? ` containing ${totalSubItems} total item${totalSubItems === 1 ? '' : 's'}` : ''}
               </span>
-              {totalSubs && (
+              {totalSubs > 0 && (
                 <VertArrowToggle toggled={showSubs} />
               )}
             </div>
-            {totalSubs && showSubs && (
+            {totalSubs > 0 && showSubs && (
               <SubCategoryList category={category.key} subs={category.categories} />
             )}
           </div>
@@ -110,6 +110,12 @@ function CategorySummary({ category = {}, handleArchive }) {
               </StdButton>
             </div>
             <div>
+              <DebouncedButton
+                wait={300}
+                onClick={handlePublish}
+              >
+                {category.published ? 'Unpublish' : 'Publish'}
+              </DebouncedButton>
               <DebouncedButton
                 wait={300}
                 onClick={handleArchive}

@@ -4,6 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import ItemForm from './ItemForm';
 import getUrl from '../../util/getUrl';
 import { useAddItemToCategoryMutation } from '../../services/api';
+import useRefetchAll from '../../hooks/useRefetchAll';
 
 function NewItem({
   onSubmit,
@@ -15,7 +16,7 @@ function NewItem({
   const { key, sub } = useParams();
   const navigate = useNavigate();
   const [addItemTo, { isSuccess }] = useAddItemToCategoryMutation();
-
+  const refetchAll = useRefetchAll({ category: key });
   return (
     <div className="w-11/12">
       {key && (<h2>New Item for {key}{sub ? `/${sub}` : ''}</h2>)}
@@ -33,6 +34,7 @@ function NewItem({
               await addItemTo({
                 key: key || category, sub: sub || subCategory, ...vals
               }).unwrap();
+              refetchAll();
             }
           }}
           onClose={() => {

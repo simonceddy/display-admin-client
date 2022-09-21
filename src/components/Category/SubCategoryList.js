@@ -1,4 +1,6 @@
 import { useNavigate, useParams } from 'react-router-dom';
+import { MEDIA_BASE_URI } from '../../support/consts';
+import thumbsrc from '../../util/thumbsrc';
 import StdButton from '../Interactive/StdButton';
 
 function SubCategoryList({ subs = [], onSubClick, category }) {
@@ -20,6 +22,17 @@ function SubCategoryList({ subs = [], onSubClick, category }) {
             role="presentation"
             onClick={clickHandler(c)}
           >
+            <span>{c.thumbnail && c.thumbnail.src && (
+              <img
+                id={`${c.key}-thumbnail`}
+                className="rounded p-0.5"
+                height="auto"
+                width={70}
+                src={`${MEDIA_BASE_URI}thumbs/${thumbsrc(c.thumbnail.src)}`}
+                alt={c.thumbnail.alt || c.title}
+              />
+            )}
+            </span>
             <span className="hover:underline font-bold text-lg mr-2">
               {c.title}
             </span>

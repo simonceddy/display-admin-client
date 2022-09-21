@@ -119,7 +119,7 @@ function ItemForm({
                     title, body, media, thumbnail
                   });
                 }
-              }, 200);
+              }, 300);
             }
             // if (onUpload) onUpload(media);
           // Check file type

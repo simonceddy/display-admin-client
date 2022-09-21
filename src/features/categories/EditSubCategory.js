@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
+import { confirmAlert } from 'react-confirm-alert';
 import SubCategoryForm from '../../components/Forms/SubCategoryForm';
 import {
   addItem, initForm, setItems, setSubValues, setThumbnail
@@ -148,6 +149,9 @@ function EditSubCategory({ onClose, category, subCategory }) {
                       .then(() => {
                         setShowNewItemForm(false);
                       });
+                    if ((!thumbnail || !thumbnail.src) && tb && tb.src) {
+                      dispatch(setThumbnail({ src: tb.src }));
+                    }
                   }}
                 />
               ) : (
@@ -186,10 +190,23 @@ function EditSubCategory({ onClose, category, subCategory }) {
               )}
             </div>
           </SubCategoryForm>
-          <StdButton onClick={async () => {
-            await removeSub({ key, sub }).unwrap();
-            refetchAll();
-          }}
+          <StdButton onClick={() => confirmAlert({
+            buttons: [
+              {
+                label: 'Delete Sub-Category!',
+                onClick: async () => {
+                  await removeSub({ key, sub }).unwrap();
+                  refetchAll();
+                }
+              },
+              {
+                label: 'Cancel!',
+                onClick: () => console.log('cancelled')
+              }
+            ],
+            title: `Confirm delete Sub-Category: ${values.title || ''}`,
+            message: 'This action cannot be undone!'
+          })}
           >
             Delete Sub-Category
           </StdButton>

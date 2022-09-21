@@ -1,7 +1,13 @@
 /* eslint-disable no-unused-vars */
 import { useDispatch, useSelector } from 'react-redux';
 import FilterButton from '../../components/Interactive/FilterButton';
-import { useArchiveCategoryMutation, useFetchDataQuery, useUnarchiveCategoryMutation } from '../../services/api';
+import {
+  useArchiveCategoryMutation,
+  useFetchDataQuery,
+  usePublishCategoryMutation,
+  useUnarchiveCategoryMutation,
+  useUnpublishCategoryMutation
+} from '../../services/api';
 import CategorySummary from '../../containers/CategorySummary';
 import {
   FILTER_ARCHIVED, FILTER_CURRENT, FILTER_NONE, FILTER_UNPUBLISHED, setFilter
@@ -28,6 +34,12 @@ function Dashboard({ filter }) {
   const [unarchiveCategory, { isLoading: unarchiving }] = useUnarchiveCategoryMutation();
   const { filterBy } = useSelector((state) => state.dashboard);
   const dispatch = useDispatch();
+  const [publishCategory, {
+    isLoading: publishing
+  }] = usePublishCategoryMutation();
+  const [unpublishCategory, {
+    isLoading: unpublishing
+  }] = useUnpublishCategoryMutation();
 
   if (isLoading) return <div>loading...</div>;
 
@@ -73,6 +85,14 @@ function Dashboard({ filter }) {
           <CategorySummary
             key={`category-row-${c.key}`}
             category={c}
+            handlePublish={async () => {
+              if (c.published) {
+                await unpublishCategory(c.key).unwrap();
+              } else {
+                await publishCategory(c.key).unwrap();
+              }
+              refetch();
+            }}
             handleArchive={async () => {
               if (c.archived) {
                 await unarchiveCategory(c.key).unwrap();

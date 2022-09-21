@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
+import { confirmAlert } from 'react-confirm-alert';
 import ThumbnailRow from '../../components/Category/ThumbnailRow';
 import CategoryForm from '../../components/Forms/CategoryForm';
 import DebouncedButton from '../../components/Interactive/DebouncedButton';
@@ -20,7 +21,7 @@ import {
 // import CreateItem from '../items/CreateItem';
 import CreateSubCategory from './CreateSubCategory';
 import {
-  addItem, setFormValues, addAllItems, addAllSubs, initItems, initForm, setThumbnail
+  addItem, setFormValues, initForm, setThumbnail
 } from './categoryFormSlice';
 import NewItem from '../items/NewItem';
 import UpdateItem from '../items/UpdateItem';
@@ -103,7 +104,7 @@ function EditCategory() {
       </div>
     );
   }
-  console.log(items);
+  // console.log(thumbnail, data.thumbnail);
   return (
     <CategoryForm
       onSubmit={async () => {
@@ -140,6 +141,12 @@ function EditCategory() {
               if (res.key) {
                 dispatch(addItem(item));
                 refetchAll();
+                if ((!thumbnail || !thumbnail.src)
+                  && item.thumbnail
+                  && item.thumbnail.src
+                ) {
+                  dispatch(setThumbnail({ src: item.thumbnail.src }));
+                }
                 setShowItemForm(false);
               } else {
                 console.log(res);
@@ -236,10 +243,23 @@ function EditCategory() {
         </DebouncedButton>
         <DebouncedButton
           wait={200}
-          onClick={async () => {
-            await deleteCategory(key).unwrap();
-            refetchDataList();
-          }}
+          onClick={() => confirmAlert({
+            buttons: [
+              {
+                label: 'Delete Category!',
+                onClick: async () => {
+                  await deleteCategory(key).unwrap();
+                  refetchDataList();
+                }
+              },
+              {
+                label: 'Cancel!',
+                onClick: () => console.log('cancelled')
+              }
+            ],
+            title: `Confirm delete Category: ${values.title || ''}`,
+            message: 'This action cannot be undone!'
+          })}
         >
           Delete
         </DebouncedButton>

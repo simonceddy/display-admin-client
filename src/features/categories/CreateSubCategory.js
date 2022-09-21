@@ -2,22 +2,39 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import SubCategoryForm from '../../components/Forms/SubCategoryForm';
-import { addItem, initForm, setSubValues } from './subCategoryFormSlice';
+import {
+  addItem,
+  initForm,
+  removeItem,
+  setItems,
+  setSubValues,
+  setThumbnail
+} from './subCategoryFormSlice';
 import StdButton from '../../components/Interactive/StdButton';
 import ThumbnailRow from '../../components/Category/ThumbnailRow';
-import { useAddSubCategoryToCategoryMutation, useFetchCategoryQuery, useFetchDataQuery } from '../../services/api';
+import {
+  useAddSubCategoryToCategoryMutation,
+  useFetchCategoryQuery,
+  useFetchDataQuery
+} from '../../services/api';
 import NewItem from '../items/NewItem';
+import EditUnsavedItem from '../items/EditUnsavedItem';
 
 function CreateSubCategory({ onClose }) {
   const { key } = useParams();
   const navigate = useNavigate();
-  const { values, items } = useSelector((state) => state.subCategoryForm);
+  const {
+    values,
+    items,
+    thumbnail
+  } = useSelector((state) => state.subCategoryForm);
   const dispatch = useDispatch();
   const [addSub, { isSuccess }] = useAddSubCategoryToCategoryMutation();
   const [showItemForm, setShowItemForm] = useState(false);
   const { refetch } = useFetchCategoryQuery(key);
   const { refetch: refetchDataList } = useFetchDataQuery();
   const [initialized, setInitialized] = useState(false);
+  const [editingItem, setEditingItem] = useState(false);
 
   useEffect(() => {
     let isInit = false;
@@ -73,6 +90,13 @@ function CreateSubCategory({ onClose }) {
                 onSubmit={(item) => {
                   // console.log(item);
                   dispatch(addItem(item));
+                  if ((!thumbnail || !thumbnail.src)
+                    && item.thumbnail
+                    && item.thumbnail.src
+                  ) {
+                    dispatch(setThumbnail({ src: item.thumbnail.src }));
+                  }
+                  setShowItemForm(false);
                 }}
               />
             ) : (
@@ -84,10 +108,31 @@ function CreateSubCategory({ onClose }) {
             )}
             <ThumbnailRow
               items={items}
-              onItemClick={() => {
-                console.log('handle item edit');
+              onItemClick={(i) => {
+                setEditingItem(i);
+                console.log(i);
               }}
             />
+            {editingItem && (
+              <EditUnsavedItem
+                setCategoryThumb={(src) => dispatch(setThumbnail({ src }))}
+                data={editingItem}
+                onClose={() => setEditingItem(false)}
+                onDelete={() => {
+                  dispatch(removeItem(editingItem));
+                  setEditingItem(false);
+                }}
+                onUpdate={(i) => {
+                  dispatch(setItems(items.map((a) => {
+                    if (a === editingItem) {
+                      return i;
+                    }
+                    return a;
+                  })));
+                  setEditingItem(false);
+                }}
+              />
+            )}
           </div>
         </SubCategoryForm>
       )}

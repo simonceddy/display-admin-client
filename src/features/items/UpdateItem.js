@@ -1,6 +1,8 @@
 /* eslint-disable no-unused-vars */
 import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
 import StdButton from '../../components/Interactive/StdButton';
 import {
   useFetchCategoryQuery,
@@ -13,7 +15,14 @@ import getUrl from '../../util/getUrl';
 import ItemForm from './ItemForm';
 
 function UpdateItem({
-  category, subCategory, onClose, onSubmit, itemKey, children, setCategoryThumb, onDelete
+  category,
+  subCategory,
+  onClose,
+  onSubmit,
+  itemKey,
+  children,
+  setCategoryThumb,
+  onDelete
 }) {
   const { key, sub, item } = useParams();
   const navigate = useNavigate();
@@ -108,16 +117,29 @@ function UpdateItem({
         }}
       />
       {children}
-      <StdButton onClick={async () => {
-        if (onDelete) {
-          onDelete(data);
-        } else {
-          await removeItem({
-            key: key || category, sub: sub || subCategory, item: item || itemKey
-          }).unwrap();
-          refetchAll();
-        }
-      }}
+      <StdButton onClick={() => confirmAlert({
+        title: 'Confirm delete item',
+        message: 'This action cannot be undone.',
+        buttons: [
+          {
+            label: 'Delete the item!',
+            onClick: async () => {
+              if (onDelete) {
+                onDelete(data);
+              } else {
+                await removeItem({
+                  key: key || category, sub: sub || subCategory, item: item || itemKey
+                }).unwrap();
+                refetchAll();
+              }
+            }
+          },
+          {
+            label: 'Cancel!',
+            onClick: () => console.log('cancelled delete!')
+          }
+        ]
+      })}
       >
         Delete Item
       </StdButton>

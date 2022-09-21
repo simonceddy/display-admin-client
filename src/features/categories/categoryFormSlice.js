@@ -18,6 +18,7 @@ export const categoryFormSlice = createSlice({
     setThumbnail: simpleSetter('thumbnail'),
     addItem: pushKey('items'),
     removeItem: removeKey('items'),
+    setItems: simpleSetter('items'),
     addSubCat: pushKey('subCategories'),
     removeSubCat: removeKey('subCategories'),
     addAllItems: pushAll('items'),
@@ -34,6 +35,9 @@ export const categoryFormSlice = createSlice({
       state.values = action.payload && action.payload.values
         ? action.payload.values
         : emptyCategoryVals.values;
+      state.thumbnail = (action.payload && action.payload.thumbnail)
+        ? action.payload.thumbnail
+        : null;
     }
   },
 });
@@ -51,6 +55,7 @@ export const {
   initSubs,
   initForm,
   setThumbnail,
+  setItems,
 } = categoryFormSlice.actions;
 
 export default categoryFormSlice.reducer;

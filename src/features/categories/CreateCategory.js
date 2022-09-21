@@ -4,18 +4,22 @@ import ThumbnailRow from '../../components/Category/ThumbnailRow';
 import CategoryForm from '../../components/Forms/CategoryForm';
 import StdButton from '../../components/Interactive/StdButton';
 import { useFetchDataQuery, useSaveNewCategoryMutation } from '../../services/api';
+import EditUnsavedItem from '../items/EditUnsavedItem';
 import NewItem from '../items/NewItem';
-import { addItem, setFormValues, initForm } from './categoryFormSlice';
+import {
+  addItem, setFormValues, initForm, setThumbnail, removeItem, setItems
+} from './categoryFormSlice';
 import CreateSubCategory from './CreateSubCategory';
 
 function CreateCategory() {
   const { refetch } = useFetchDataQuery();
   const [createCategory, { isSuccess }] = useSaveNewCategoryMutation();
-  const { values, items } = useSelector((state) => state.categoryForm);
+  const { values, items, thumbnail } = useSelector((state) => state.categoryForm);
   const dispatch = useDispatch();
 
   const [showItemForm, setShowItemForm] = useState(false);
   const [showSubForm, setShowSubForm] = useState(false);
+  const [editingItem, setEditingItem] = useState(false);
 
   const [initialized, setInitialized] = useState(false);
 
@@ -41,7 +45,7 @@ function CreateCategory() {
         setValues={(vals) => dispatch(setFormValues(vals))}
         onSubmit={async () => {
           console.log(values);
-          await createCategory({ ...values, items }).unwrap();
+          await createCategory({ ...values, items, thumbnail }).unwrap();
           refetch();
         }}
       >
@@ -54,6 +58,13 @@ function CreateCategory() {
               onSubmit={(item) => {
                 console.log(item);
                 dispatch(addItem(item));
+                if ((!thumbnail || !thumbnail.src)
+                  && item.thumbnail
+                  && item.thumbnail.src
+                ) {
+                  dispatch(setThumbnail({ src: item.thumbnail.src }));
+                }
+                setShowItemForm(false);
               }}
             />
           ) : (
@@ -66,9 +77,30 @@ function CreateCategory() {
           <ThumbnailRow
             items={items}
             onItemClick={(i) => {
+              setEditingItem(i);
               console.log(i);
             }}
           />
+          {editingItem && (
+            <EditUnsavedItem
+              setCategoryThumb={(src) => dispatch(setThumbnail({ src }))}
+              data={editingItem}
+              onClose={() => setEditingItem(false)}
+              onDelete={() => {
+                dispatch(removeItem(editingItem));
+                setEditingItem(false);
+              }}
+              onUpdate={(i) => {
+                dispatch(setItems(items.map((a) => {
+                  if (a === editingItem) {
+                    return i;
+                  }
+                  return a;
+                })));
+                setEditingItem(false);
+              }}
+            />
+          )}
         </div>
         {/* item form - title, body, media */}
         {/* media */}
