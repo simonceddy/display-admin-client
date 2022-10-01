@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
+import { useState } from 'react';
 import StdButton from '../../components/Interactive/StdButton';
 import {
   useFetchCategoryQuery,
@@ -13,6 +14,8 @@ import {
 } from '../../services/api';
 import getUrl from '../../util/getUrl';
 import ItemForm from './ItemForm';
+import Modal from '../../components/Modal';
+import ItemMedia from '../media/ItemMedia';
 
 function UpdateItem({
   category,
@@ -22,7 +25,8 @@ function UpdateItem({
   itemKey,
   children,
   setCategoryThumb,
-  onDelete
+  onDelete,
+  update
 }) {
   const { key, sub, item } = useParams();
   const navigate = useNavigate();
@@ -43,7 +47,7 @@ function UpdateItem({
     refetch();
     refetchDataList();
   };
-
+  const [showMedia, setShowMedia] = useState(false);
   const [removeItem, { isSuccess: isRemoved }] = useRemoveItemFromCategoryMutation();
   const [updateItem, { isSuccess: isUpdated }] = useUpdateItemMutation();
   // const [initialized, setInitialized] = useState(false);
@@ -70,17 +74,21 @@ function UpdateItem({
   if (error) return <div>{error.message}</div>;
 
   const doUpdate = async (vals) => {
-    // console.log(vals);
-    const res = await updateItem({
-      ...vals, key: key || category, sub: sub || subCategory, item: item || itemKey
-    }).unwrap();
-    // console.log(res);
-    refetchAll();
-
-    if (onSubmit) {
-      onSubmit({
+    if (update) {
+      await update({
         ...vals, key: key || category, sub: sub || subCategory, item: item || itemKey
       });
+    } else {
+      const res = await updateItem({
+        ...vals, key: key || category, sub: sub || subCategory, item: item || itemKey
+      }).unwrap();
+      refetchAll();
+
+      if (onSubmit) {
+        onSubmit({
+          ...vals, key: key || category, sub: sub || subCategory, item: item || itemKey
+        });
+      }
     }
   };
 
@@ -94,6 +102,11 @@ function UpdateItem({
   }
   return (
     <div className="w-11/12">
+      {showMedia && (
+        <Modal onClose={() => setShowMedia(false)}>
+          <ItemMedia media={showMedia} />
+        </Modal>
+      )}
       {isUpdated && (
         <div className="p-2 text-lg font-bold">Updated item!</div>
       )}
@@ -103,6 +116,10 @@ function UpdateItem({
       </h2>
       )}
       <ItemForm
+        onThumbClick={(arg) => {
+          console.log(arg, 'media edit');
+          setShowMedia(arg);
+        }}
         setCategoryThumb={setCategoryThumb}
         cancelLabel="Cancel edits"
         values={data}

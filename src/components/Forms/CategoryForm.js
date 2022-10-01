@@ -44,7 +44,9 @@ function CategoryForm({
         }}
       /> */}
       {children}
-      <StdButton submits>Save</StdButton>
+      <div className="flex p-2 flex-row">
+        <StdButton submits>Save</StdButton>
+      </div>
     </form>
   );
 }

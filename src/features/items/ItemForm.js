@@ -8,6 +8,7 @@ import { MEDIA_BASE_URI } from '../../support/consts';
 import Files from '../files/Files';
 import Tiptap from '../tiptap/Tiptap';
 import getMediaType from '../../util/getMediaType';
+import thumbsrc from '../../util/thumbsrc';
 
 function ItemForm({
   onSubmit,
@@ -96,8 +97,8 @@ function ItemForm({
           )}
         </div> */}
         <Files
-          onUploaded={(res, files) => {
-            // console.log(res);
+          onUploaded={(res, files, thumbs) => {
+            console.log(thumbs);
             if (res.data && res.data.filepaths) {
               const uploadedFiles = Object.keys(res.data.filepaths);
               // console.log(uploadedFiles);
@@ -107,7 +108,10 @@ function ItemForm({
                 .map((file) => ({
                   src: res.data.filepaths[file],
                   alt: file,
-                  type: getMediaType(fls[file])
+                  type: getMediaType(fls[file]),
+                  // thumbnail: thumbs && thumbs[file]
+                  //   ? thumbs[file]
+                  //   : thumbsrc(res.data.filepaths[file])
                 }));
               console.log(mediaItems);
               setTimeout(() => {
@@ -130,16 +134,13 @@ function ItemForm({
         {/* TODO media list */}
         <div className="flex flex-row justify-evenly items-start flex-wrap p-2">
           {media.map(({ src, type = 'image', alt }, idx) => {
-            const thumbsrc = src.endsWith('.png') || src.endsWith('.jpg')
-              ? src
-              : `${src}.png`;
             const bgfill = thumbnail && thumbnail.src === src
               ? 'bg-yellow-300'
               : 'bg-green-500';
             return (
               <div key={`media-${idx}`}>
                 <img
-                  src={`${MEDIA_BASE_URI}thumbs/${thumbsrc}`}
+                  src={`${MEDIA_BASE_URI}thumbs/${thumbsrc(src)}`}
                   alt={alt || ''}
                   className={`m-1 p-1 ${bgfill} bg-opacity-20 hover:bg-opacity-90 rounded-md`}
                   role="presentation"

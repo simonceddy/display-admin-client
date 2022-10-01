@@ -204,7 +204,7 @@ function EditCategory() {
           </StdButton>
         )}
       </div>
-      <div>
+      <div className="flex flex-row p-2">
         <DebouncedButton
           wait={300}
           disabled={archiving || unarchiving}

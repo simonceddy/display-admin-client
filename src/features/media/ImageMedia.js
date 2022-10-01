@@ -1,47 +1,59 @@
-/* eslint-disable no-unused-vars */
 import { useState } from 'react';
-import DropzoneMediaUploadForm from '../../components/Forms/DropzoneMediaUploadForm';
+import Canvas from '../../components/Canvas';
+import ImgCrop from '../../components/Media/ImgCrop';
 import StdButton from '../../components/Interactive/StdButton';
 
-function FileToImage(props) {
-  const { file } = props;
-  if (!file) return null;
+function ImageMedia({
+  src, alt = '', onRemove, thumbnail = null, setThumbnail, removeThumbnail
+}) {
+  if (!src) return null;
+  const [crop, setCrop] = useState(null);
+  console.log(thumbnail);
   return (
-    <img alt={props.alt || ''} {...props} src={URL.createObjectURL(file)} />
-  );
-}
-
-function ImageMedia() {
-  const [media, setMedia] = useState([]);
-  return (
-    <div>
-      <DropzoneMediaUploadForm
-        handleFiles={(files) => {
-          console.log(files);
-          // Validate files
-          // If image add to media
-          // TODO handle video - get still for thumbnail/preview
-          // Add to media
-        }}
-      />
-      <div>
-        {media.map((m, index) => (
-          <div key={`media-${index}`}>
-            {/* {
-              TODO click on file preview to open larger view with option for
-              cropping thumbnail
-            } */}
-            <FileToImage file={m} />
-          </div>
-        ))}
-      </div>
+    <>
+      <ImgCrop src={src} crop={crop} setCrop={setCrop} />
       <StdButton onClick={() => {
-        console.log('confirm files');
+        if (setThumbnail) setThumbnail(src, crop);
+        // setShowModal(false);
       }}
       >
-        Confirm
+        Set Thumbnail
       </StdButton>
-    </div>
+      {thumbnail && (
+      <StdButton onClick={() => {
+        if (removeThumbnail) removeThumbnail(src);
+      }}
+      >
+        Remove Thumbnail
+      </StdButton>
+      )}
+      {/* <StdButton onClick={() => setShowModal(false)}>Done</StdButton> */}
+      <StdButton onClick={() => {
+        if (onRemove) onRemove(src);
+      }}
+      >
+        Remove File
+      </StdButton>
+      {thumbnail ? (
+        <Canvas
+          width={thumbnail.width}
+          height={thumbnail.height}
+          draw={(ctx) => {
+            ctx.drawImage(thumbnail, 0, 0);
+          }}
+        />
+      ) : (
+        <img
+          style={{
+            height: '100px',
+            width: '100px',
+            objectFit: 'cover',
+          }}
+          src={src}
+          alt={alt}
+        />
+      )}
+    </>
   );
 }
 

@@ -17,8 +17,9 @@ function VideoViewer({
   if (!file) return null;
 
   const src = URL.createObjectURL(file);
-
-  const ref = useRef(null);
+  const videoEl = document.createElement('video');
+  videoEl.src = src;
+  const ref = useRef(videoEl);
   const canvasRef = useRef(null);
   const [showModal, setShowModal] = useState(false);
 
@@ -37,18 +38,18 @@ function VideoViewer({
     ctx.drawImage(video, x, y, dim.width, dim.height);
   };
 
-  // useEffect(() => {
-  //   let initialised = false;
-  //   if (!initialised && canvasRef.current) {
-  //     if (canvasRef.current) {
-  //       console.log(file);
-  //       drawThumb(createImageBitmap(file));
-  //     }
-  //   }
-  //   return () => {
-  //     initialised = true;
-  //   };
-  // }, [file]);
+  useEffect(() => {
+    let initialised = false;
+    if (!initialised && canvasRef.current && ref.current) {
+      console.log(file, ref.current);
+      ref.current.addEventListener('canplay', () => {
+        drawThumb(ref.current);
+      });
+    }
+    return () => {
+      initialised = true;
+    };
+  }, [file]);
 
   return (
     <>

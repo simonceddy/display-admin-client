@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 const getCategoryBaseUrl = (category, sub) => {
-  console.log(category, sub);
+  // console.log(category, sub);
   const uri = (
     `/category/${category}/${sub ? `subCategory/${sub}/` : ''}`
   );

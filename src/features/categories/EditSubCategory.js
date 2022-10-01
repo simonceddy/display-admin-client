@@ -65,25 +65,26 @@ function EditSubCategory({ onClose, category, subCategory }) {
     refetchDataList();
   };
 
-  console.log(items);
+  // console.log(items);
 
   const doUpdate = async (e) => {
     if (e && e.preventDefault) e.preventDefault();
     // console.log(key, sub);
-    console.log({
-      key: key || category,
-      sub: sub || subCategory,
-      ...values,
-      items,
-      thumbnail
-    });
-    await updateSub({
+    // console.log({
+    //   key: key || category,
+    //   sub: sub || subCategory,
+    //   ...values,
+    //   items,
+    //   thumbnail
+    // });
+    const res = await updateSub({
       key: key || category,
       sub: sub || subCategory,
       ...values,
       items,
       thumbnail
     }).unwrap();
+    console.log(res);
     setTimeout(refetchAll, 200);
   };
 
@@ -164,14 +165,14 @@ function EditSubCategory({ onClose, category, subCategory }) {
               <ThumbnailRow
                 items={items}
                 onItemClick={(i) => {
-                  console.log(i);
+                  // console.log(i);
                   setEditingItem(i.key);
                 }}
               />
               {editingItem && (
                 <UpdateItem
                   onDelete={async (d) => {
-                    console.log(d);
+                    // console.log(d);
                     setEditingItem(null);
                     await Promise.resolve(
                       dispatch(setItems(items.filter((i) => i.title !== d.title)))
