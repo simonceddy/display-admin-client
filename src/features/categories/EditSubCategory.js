@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { confirmAlert } from 'react-confirm-alert';
@@ -88,6 +88,45 @@ function EditSubCategory({ onClose, category, subCategory }) {
     setTimeout(refetchAll, 200);
   };
 
+  const UpdateComponent = useCallback(() => (
+    editingItem ? (
+      <UpdateItem
+        onDelete={async (d) => {
+          // console.log(d);
+          setEditingItem(null);
+          await Promise.resolve(
+            dispatch(setItems(items.filter((i) => i.title !== d.title)))
+          );
+          await doUpdate();
+        }}
+        setCategoryThumb={(src) => dispatch(setThumbnail({ src }))}
+        itemKey={editingItem}
+        category={key || category}
+        subCategory={sub || subCategory}
+        update={(vals) => {
+          console.log(vals);
+          const newItems = items.map((i) => {
+            if (i.key === vals.item) {
+              console.log('matched');
+              const newVals = {
+                ...i,
+                ...vals,
+                key: i.key
+              };
+              console.log(newVals);
+              return newVals;
+            }
+            return i;
+          });
+          console.log(newItems);
+          dispatch(setItems(newItems));
+          // refetchAll();
+        }}
+        onClose={() => setEditingItem(false)}
+      />
+    ) : ''
+  ), [editingItem]);
+
   return (
     <div className="w-11/12">
       {isUpdated ? (
@@ -170,24 +209,7 @@ function EditSubCategory({ onClose, category, subCategory }) {
                 }}
               />
               {editingItem && (
-                <UpdateItem
-                  onDelete={async (d) => {
-                    // console.log(d);
-                    setEditingItem(null);
-                    await Promise.resolve(
-                      dispatch(setItems(items.filter((i) => i.title !== d.title)))
-                    );
-                    await doUpdate();
-                  }}
-                  setCategoryThumb={(src) => dispatch(setThumbnail({ src }))}
-                  itemKey={editingItem}
-                  category={key || category}
-                  subCategory={sub || subCategory}
-                  onSubmit={() => {
-                    refetchAll();
-                  }}
-                  onClose={() => setEditingItem(false)}
-                />
+                <UpdateComponent />
               )}
             </div>
           </SubCategoryForm>

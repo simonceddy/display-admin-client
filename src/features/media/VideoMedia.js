@@ -12,12 +12,12 @@ function VideoMedia({
   src,
   onRemove,
   thumbnail,
-  setVideoThumbnail
+  setThumbnail
 }) {
   if (!src) return null;
 
-  const videoEl = document.createElement('video');
-  const ref = useRef(videoEl);
+  // const videoEl = document.createElement('video');
+  const ref = useRef(null);
   const canvasRef = useRef(null);
 
   const drawThumb = (video) => {
@@ -38,6 +38,8 @@ function VideoMedia({
   useEffect(() => {
     let initialised = false;
     if (!initialised && canvasRef.current && ref.current) {
+      canvasRef.current.crossOrigin = 'anonymous';
+      ref.current.crossOrigin = 'anonymous';
       console.log(src, ref.current);
       ref.current.addEventListener('loadeddata', () => {
         drawThumb(ref.current);
@@ -48,6 +50,10 @@ function VideoMedia({
       initialised = true;
     };
   }, [src]);
+
+  const doSetThumb = (blob) => {
+    if (setThumbnail) setThumbnail(blob);
+  };
 
   return (
     <>
@@ -64,13 +70,13 @@ function VideoMedia({
         <StdButton onClick={(e) => {
           if (ref.current) {
             const video = ref.current;
-            console.log(video.currentTime);
+            // console.log(video.currentTime);
             if (canvasRef.current) {
               Promise.resolve(
                 drawThumb(video)
               )
                 .then(() => canvasRef.current.toBlob((blob) => {
-                  if (setVideoThumbnail) setVideoThumbnail(blob);
+                  doSetThumb(blob);
                 }))
                 .catch(console.error);
             }

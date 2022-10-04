@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { confirmAlert } from 'react-confirm-alert';
@@ -91,6 +91,29 @@ function EditCategory() {
     }
   }, [isSuccess]);
 
+  const UpdateComponent = useCallback(() => (
+    editingItem ? (
+      <UpdateItem
+        setCategoryThumb={(src) => {
+          dispatch(setThumbnail({
+            src
+          }));
+          refetchAll();
+        }}
+        itemKey={editingItem}
+        category={key}
+        onSetThumb={() => {
+          refetchAll();
+        }}
+              // subCategory={sub}
+        onSubmit={() => {
+          refetchAll();
+        }}
+        onClose={() => setEditingItem(false)}
+      />
+    ) : ''
+  ), [editingItem]);
+
   if (isLoading) return <div>Loading Data</div>;
   if (error) return <div>{error.message}</div>;
 
@@ -167,27 +190,17 @@ function EditCategory() {
           onItemClick={(i) => {
             // navigate(`/category/${key}/item/${i.key}`);
             // console.log('handle item edit');
-            setEditingItem(i.key);
+            if (editingItem !== i.key) {
+              setEditingItem(i.key);
+            } else {
+              setEditingItem(false);
+            }
           }}
           categoryKey={key}
           items={items}
         />
         {editingItem && (
-          <UpdateItem
-            setCategoryThumb={(src) => {
-              dispatch(setThumbnail({
-                src
-              }));
-              refetchAll();
-            }}
-            itemKey={editingItem}
-            category={key}
-            // subCategory={sub}
-            onSubmit={() => {
-              refetchAll();
-            }}
-            onClose={() => setEditingItem(false)}
-          />
+          <UpdateComponent />
         )}
       </div>
       {/* subcategories */}

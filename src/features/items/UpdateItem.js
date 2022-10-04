@@ -16,6 +16,8 @@ import getUrl from '../../util/getUrl';
 import ItemForm from './ItemForm';
 import Modal from '../../components/Modal';
 import ItemMedia from '../media/ItemMedia';
+import uploadThumbnails from '../../util/uploads/uploadThumbnail';
+import { setThumbnail } from './itemFormSlice';
 
 function UpdateItem({
   category,
@@ -26,7 +28,8 @@ function UpdateItem({
   children,
   setCategoryThumb,
   onDelete,
-  update
+  update,
+  onSetThumb
 }) {
   const { key, sub, item } = useParams();
   const navigate = useNavigate();
@@ -104,7 +107,26 @@ function UpdateItem({
     <div className="w-11/12">
       {showMedia && (
         <Modal onClose={() => setShowMedia(false)}>
-          <ItemMedia media={showMedia} />
+          <ItemMedia
+            media={showMedia}
+            setThumbnail={async (th) => {
+              const src = `${key || category}-${item || itemKey}.png`;
+              const file = new File(
+                [th],
+                src,
+                { type: th.type }
+              );
+              const res = await uploadThumbnails([file]);
+              if (res.data.results[src]) {
+                await doUpdate({
+                  thumbnail: {
+                    src
+                  }
+                });
+                if (onSetThumb) onSetThumb();
+              }
+            }}
+          />
         </Modal>
       )}
       {isUpdated && (
