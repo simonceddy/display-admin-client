@@ -31,24 +31,39 @@ function ItemForm({
   const [title, setTitle] = useState(values.title || '');
   const [thumbnail, setThumbnail] = useState(values.thumbnail || null);
   const [media, setMedia] = useState(values.media || []);
-  // console.log(media);
+  // console.log(thumbnail);
   return (
     <ErrorBoundary>
       <div className="flex flex-col w-11/12 p-1 border-2 border-slate-500 m-1">
-        <LgTextInput
-          label="Title"
-          className="w-11/12"
-          id="item-title-input"
-          value={title}
-          onChange={(e) => {
-            setTitle(e.target.value);
-            if (onChange) {
-              onChange({
-                title: e.target.value, body, media, thumbnail
-              });
-            }
-          }}
-        />
+        <div className="flex flex-row justify-between items-start">
+          {thumbnail && thumbnail.src && (
+            <img
+              src={`${MEDIA_BASE_URI}thumbs/${thumbsrc(thumbnail.src)}`}
+              alt={title}
+              className="mr-2"
+              style={{
+                width: '150px',
+                height: '150px',
+                objectFit: 'cover'
+              }}
+            />
+          )}
+          <LgTextInput
+            label="Title"
+            labelClassName="flex-1"
+            className="w-11/12"
+            id="item-title-input"
+            value={title}
+            onChange={(e) => {
+              setTitle(e.target.value);
+              if (onChange) {
+                onChange({
+                  title: e.target.value, body, media, thumbnail
+                });
+              }
+            }}
+          />
+        </div>
         <Tiptap
           label="Content:"
           id="item-body-input"
@@ -132,7 +147,8 @@ function ItemForm({
           }}
         />
         {/* TODO media list */}
-        <div className="flex flex-row justify-evenly items-start flex-wrap p-2">
+        <div className="flex flex-row justify-start items-center flex-wrap p-2">
+          <div className="text-xl mr-2">Media</div>
           {media.map(({ src, type = 'image', alt }, idx) => {
             const bgfill = thumbnail && thumbnail.src === src
               ? 'bg-yellow-300'

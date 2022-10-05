@@ -100,7 +100,7 @@ function Files({ onUploaded }) {
   // console.log(thumbnails);
 
   return (
-    <>
+    <div className="bg-cyan-500 bg-opacity-30 my-2">
       <div ref={ref} className="flex flex-wrap flex-row justify-start items-center w-full bg-cyan-500 bg-opacity-30">
         {uploadState === fileStates.UPLOADING && (
           <div className="text-xl p-2 font-bold">Uploading...</div>
@@ -158,7 +158,7 @@ function Files({ onUploaded }) {
           Save media
         </StdButton>
       </div>
-    </>
+    </div>
   );
 }
 

@@ -2,7 +2,7 @@
 import {
   FaBold as BoldIcon,
   FaItalic as ItalicIcon,
-  FaStrikethrough as StrikeIcon,
+  // FaStrikethrough as StrikeIcon,
   // FaCode as CodeIcon,
   // FaParagraph as ParagraphIcon,
   // FaListUl as BulletListIcon,
@@ -40,12 +40,12 @@ function MenuBar({ editor }) {
       >
         <ItalicIcon size={18} />
       </TiptapMenuBtn>
-      <TiptapMenuBtn
+      {/* <TiptapMenuBtn
         onClick={() => editor.chain().focus().toggleStrike().run()}
         className={editor.isActive('strike') ? 'is-active' : ''}
       >
         <StrikeIcon size={18} />
-      </TiptapMenuBtn>
+      </TiptapMenuBtn> */}
       {/* <TiptapMenuBtn
         onClick={() => editor.chain().focus().toggleCode().run()}
         className={editor.isActive('code') ? 'is-active' : ''}

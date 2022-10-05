@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import StdButton from '../../components/Interactive/StdButton';
 import {
   useFetchCategoryQuery,
@@ -53,6 +53,46 @@ function UpdateItem({
   const [showMedia, setShowMedia] = useState(false);
   const [removeItem, { isSuccess: isRemoved }] = useRemoveItemFromCategoryMutation();
   const [updateItem, { isSuccess: isUpdated }] = useUpdateItemMutation();
+
+  const doUpdate = async (vals) => {
+    if (update) {
+      await update({
+        ...vals, key: key || category, sub: sub || subCategory, item: item || itemKey
+      });
+    } else {
+      const res = await updateItem({
+        ...vals, key: key || category, sub: sub || subCategory, item: item || itemKey
+      }).unwrap();
+      refetchAll();
+
+      if (onSubmit) {
+        onSubmit({
+          ...vals, key: key || category, sub: sub || subCategory, item: item || itemKey
+        });
+      }
+    }
+  };
+
+  const ItemFormComponent = useCallback(() => (
+    <ItemForm
+      onThumbClick={(arg) => {
+        // console.log(arg, 'media edit');
+        setShowMedia(arg);
+      }}
+      setCategoryThumb={setCategoryThumb}
+      cancelLabel="Cancel edits"
+      values={data}
+      submitLabel="Update Item"
+      onSubmit={doUpdate}
+      onClose={() => {
+        if (onClose) {
+          onClose();
+        } else {
+          navigate(getUrl(key, sub));
+        }
+      }}
+    />
+  ), [data]);
   // const [initialized, setInitialized] = useState(false);
   // const [showMedia, setShowMedia] = useState(null);
   // console.log(data);
@@ -75,25 +115,6 @@ function UpdateItem({
   // }, [initialized, dataLoaded]);
   if (isLoading) return <div>Loading Data</div>;
   if (error) return <div>{error.message}</div>;
-
-  const doUpdate = async (vals) => {
-    if (update) {
-      await update({
-        ...vals, key: key || category, sub: sub || subCategory, item: item || itemKey
-      });
-    } else {
-      const res = await updateItem({
-        ...vals, key: key || category, sub: sub || subCategory, item: item || itemKey
-      }).unwrap();
-      refetchAll();
-
-      if (onSubmit) {
-        onSubmit({
-          ...vals, key: key || category, sub: sub || subCategory, item: item || itemKey
-        });
-      }
-    }
-  };
 
   if (isRemoved) {
     return (
@@ -137,24 +158,7 @@ function UpdateItem({
         Editing <span className="font-bold">{data.title}</span>
       </h2>
       )}
-      <ItemForm
-        onThumbClick={(arg) => {
-          console.log(arg, 'media edit');
-          setShowMedia(arg);
-        }}
-        setCategoryThumb={setCategoryThumb}
-        cancelLabel="Cancel edits"
-        values={data}
-        submitLabel="Update Item"
-        onSubmit={doUpdate}
-        onClose={() => {
-          if (onClose) {
-            onClose();
-          } else {
-            navigate(getUrl(key, sub));
-          }
-        }}
-      />
+      <ItemFormComponent />
       {children}
       <StdButton onClick={() => confirmAlert({
         title: 'Confirm delete item',

@@ -56,9 +56,6 @@ function EditSubCategory({ onClose, category, subCategory }) {
     };
   }, [initialized, fetched]);
 
-  if (fetching) return <div>Loading Data</div>;
-  if (error) return <div>{error.message}</div>;
-
   const refetchAll = () => {
     refresh();
     refetch();
@@ -125,7 +122,10 @@ function EditSubCategory({ onClose, category, subCategory }) {
         onClose={() => setEditingItem(false)}
       />
     ) : ''
-  ), [editingItem]);
+  ), [editingItem, isUpdated]);
+
+  if (fetching) return <div>Loading Data</div>;
+  if (error) return <div>{error.message}</div>;
 
   return (
     <div className="w-11/12">

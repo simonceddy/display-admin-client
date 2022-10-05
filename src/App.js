@@ -27,7 +27,7 @@ function App() {
             <div className="flex flex-row justify-start items-center">
               <NavbarLink to="/">Dashboard</NavbarLink>
               <NavbarLink to="/create">Create New Category</NavbarLink>
-              <NavbarLink to="/settings">Settings</NavbarLink>
+              {/* <NavbarLink to="/settings">Settings</NavbarLink> */}
             </div>
             <div>
               <Notifications />

@@ -62,7 +62,7 @@ function VideoMedia({
         src={`${MEDIA_BASE_URI}${src}`}
         controls
         style={{
-          height: '300px',
+          height: '500px',
           width: 'auto'
         }}
       />
@@ -98,12 +98,14 @@ function VideoMedia({
         </StdButton>
       </div>
       <div
+        hidden
         // onClick={() => }
         role="presentation"
         className="p-1 m-1 hover:bg-slate-500 rounded-lg"
       >
         <Canvas
           ref={canvasRef}
+          hidden
           // draw={() => {
           //   if (ref.current) drawThumb(ref.current);
           // }}

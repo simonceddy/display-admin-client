@@ -1,7 +1,7 @@
 import { forwardRef, useEffect, useRef } from 'react';
 
 const Canvas = forwardRef(({
-  draw, width = 600, height = 450
+  draw, width = 600, height = 450, hidden = false
 }, ref) => {
   const canvasRef = ref || useRef(null);
   useEffect(() => {
@@ -11,7 +11,7 @@ const Canvas = forwardRef(({
   }, [draw]);
   // console.log(draw);
   return (
-    <canvas width={width} height={height} ref={canvasRef} />
+    <canvas hidden={hidden} width={width} height={height} ref={canvasRef} />
   );
 });
 

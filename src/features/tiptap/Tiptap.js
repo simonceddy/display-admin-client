@@ -20,7 +20,7 @@ function Tiptap({
     editorProps: {
       attributes: {
         class: 'prose prose-sm sm:prose lg:prose-lg xl:prose-2xl m-2 focus:outline-none',
-        style: 'height: 200px;'
+        style: 'height: 120px;'
       },
     },
     content: content || '',
@@ -61,7 +61,7 @@ function Tiptap({
           tabIndex={tabIndex}
           editor={editor}
           style={{
-            height: '200px'
+            height: '120px'
           }}
         />
       </div>
