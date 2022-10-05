@@ -112,7 +112,23 @@ function EditCategory() {
         onClose={() => setEditingItem(false)}
       />
     ) : ''
-  ), [editingItem]);
+  ), [editingItem, updated]);
+
+  // const ItemRow = useCallback(() => (
+  //   <ThumbnailRow
+  //     onItemClick={(i) => {
+  //       // navigate(`/category/${key}/item/${i.key}`);
+  //       // console.log('handle item edit');
+  //       if (editingItem !== i.key) {
+  //         setEditingItem(i.key);
+  //       } else {
+  //         setEditingItem(false);
+  //       }
+  //     }}
+  //     categoryKey={key}
+  //     items={items}
+  //   />
+  // ), [items, data, updated]);
 
   if (isLoading) return <div>Loading Data</div>;
   if (error) return <div>{error.message}</div>;
@@ -186,6 +202,7 @@ function EditCategory() {
             Add Item
           </StdButton>
         )}
+        {/* <ItemRow /> */}
         <ThumbnailRow
           onItemClick={(i) => {
             // navigate(`/category/${key}/item/${i.key}`);

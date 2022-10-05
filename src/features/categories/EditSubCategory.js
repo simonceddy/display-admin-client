@@ -117,6 +117,7 @@ function EditSubCategory({ onClose, category, subCategory }) {
           });
           console.log(newItems);
           dispatch(setItems(newItems));
+          doUpdate();
           // refetchAll();
         }}
         onClose={() => setEditingItem(false)}
@@ -124,9 +125,19 @@ function EditSubCategory({ onClose, category, subCategory }) {
     ) : ''
   ), [editingItem, isUpdated]);
 
+  // const ItemsRow = useCallback(() => (
+  //   <ThumbnailRow
+  //     items={items}
+  //     onItemClick={(i) => {
+  //       // console.log(i);
+  //       setEditingItem(i.key);
+  //     }}
+  //   />
+  // ), [items]);
+
   if (fetching) return <div>Loading Data</div>;
   if (error) return <div>{error.message}</div>;
-
+  console.log(items);
   return (
     <div className="w-11/12">
       {isUpdated ? (
@@ -201,6 +212,7 @@ function EditSubCategory({ onClose, category, subCategory }) {
                   Add Item
                 </StdButton>
               )}
+              {/* <ItemsRow /> */}
               <ThumbnailRow
                 items={items}
                 onItemClick={(i) => {

@@ -92,7 +92,7 @@ function UpdateItem({
         }
       }}
     />
-  ), [data]);
+  ), [data, isUpdated]);
   // const [initialized, setInitialized] = useState(false);
   // const [showMedia, setShowMedia] = useState(null);
   // console.log(data);
