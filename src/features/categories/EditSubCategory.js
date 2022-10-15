@@ -100,26 +100,9 @@ function EditSubCategory({ onClose, category, subCategory }) {
         itemKey={editingItem}
         category={key || category}
         subCategory={sub || subCategory}
-        update={(vals) => {
-          console.log(vals);
-          const newItems = items.map((i) => {
-            if (i.key === vals.item) {
-              console.log('matched');
-              const newVals = {
-                ...i,
-                ...vals,
-                key: i.key
-              };
-              console.log(newVals);
-              return newVals;
-            }
-            return i;
-          });
-          console.log(newItems);
-          dispatch(setItems(newItems));
-          doUpdate();
-          // refetchAll();
-        }}
+        // onSubmit={() => {
+        //   setTimeout(() => refetchAll(), 400);
+        // }}
         onClose={() => setEditingItem(false)}
       />
     ) : ''
@@ -186,24 +169,27 @@ function EditSubCategory({ onClose, category, subCategory }) {
                   subCategory={sub || subCategory}
                   category={key || category}
                   onClose={() => setShowNewItemForm(false)}
-                  onSubmit={async ({
-                    title, media, thumbnail: tb, body
-                  }) => {
-                    // console.log(item);
-                    await Promise.resolve(dispatch(addItem({
-                      title,
-                      thumbnail: tb,
-                      media,
-                      body
-                    })))
-                      .then(doUpdate)
-                      .then(() => {
-                        setShowNewItemForm(false);
-                      });
-                    if ((!thumbnail || !thumbnail.src) && tb && tb.src) {
-                      dispatch(setThumbnail({ src: tb.src }));
-                    }
-                  }}
+                  // onCreated={() => {
+                  //   setTimeout(() => refetchAll(), 400);
+                  // }}
+                  // onSubmit={async ({
+                  //   title, media, thumbnail: tb, body
+                  // }) => {
+                  //   // console.log(item);
+                  //   await Promise.resolve(dispatch(addItem({
+                  //     title,
+                  //     thumbnail: tb,
+                  //     media,
+                  //     body
+                  //   })))
+                  //     .then(doUpdate)
+                  //     .then(() => {
+                  //       setShowNewItemForm(false);
+                  //     });
+                  //   if ((!thumbnail || !thumbnail.src) && tb && tb.src) {
+                  //     dispatch(setThumbnail({ src: tb.src }));
+                  //   }
+                  // }}
                 />
               ) : (
                 <StdButton

@@ -8,7 +8,7 @@ function ThumbnailRow({ items = [], categoryKey, onItemClick }) {
   const [showTooltip, setShowTooltip] = useState(false);
   const navigate = useNavigate();
   return (
-    <div className="flex flex-row justify-start items-center rounded p-1 m-1">
+    <div className="flex flex-row justify-start items-center rounded px-1 pt-1 pb-3 m-1 overflow-x-scroll w-full">
       {items.map((i, index) => {
         const clickHandler = onItemClick
           ? () => onItemClick(i)
@@ -22,8 +22,9 @@ function ThumbnailRow({ items = [], categoryKey, onItemClick }) {
               role="presentation"
               onClick={clickHandler}
               style={{
-                width: '70px',
-                height: '70px'
+                // width: '70px',
+                height: '70px',
+                flex: '1 0 70px'
               }}
             >
               {i.title}
@@ -37,7 +38,8 @@ function ThumbnailRow({ items = [], categoryKey, onItemClick }) {
             key={`${categoryKey}-summary-${i.key}-thumbnail-${index}`}
             style={{
               height: '70px',
-              width: '70px'
+              width: '70px',
+              flex: '1 0 70px'
             }}
             className="mx-2 bg-blue-500 bg-opacity-30"
             role="presentation"
@@ -47,8 +49,11 @@ function ThumbnailRow({ items = [], categoryKey, onItemClick }) {
               data-tip={i.title}
               id={`${categoryKey}-summary-${i.key}-thumbnail`}
               className="rounded p-0.5"
-              height="auto"
-              width={70}
+              style={{
+                width: '70px',
+                height: '70px',
+                objectFit: 'cover'
+              }}
               src={`${MEDIA_BASE_URI}thumbs/${thumbsrc(src)}`}
               alt={i.thumbnail.alt || i.title}
               onMouseEnter={() => setShowTooltip(true)}

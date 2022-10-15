@@ -11,7 +11,8 @@ function NewItem({
   onClose,
   setCategoryThumb,
   category,
-  subCategory
+  subCategory,
+  onCreated
 }) {
   const { key, sub } = useParams();
   const navigate = useNavigate();
@@ -31,10 +32,11 @@ function NewItem({
             if (onSubmit) {
               onSubmit({ key: key || category, sub: sub || subCategory, ...vals });
             } else {
-              await addItemTo({
+              const res = await addItemTo({
                 key: key || category, sub: sub || subCategory, ...vals
               }).unwrap();
               refetchAll();
+              if (onCreated) onCreated(res);
             }
           }}
           onClose={() => {
