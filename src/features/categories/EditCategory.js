@@ -148,7 +148,7 @@ function EditCategory() {
     <CategoryForm
       onSubmit={async () => {
         await updateData({
-          key, ...values, thumbnail, items, categories: subCategories
+          key, ...values, thumbnail, categories: subCategories
         }).unwrap();
         refetchAll();
         console.log('updated');

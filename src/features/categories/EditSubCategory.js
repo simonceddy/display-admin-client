@@ -66,21 +66,15 @@ function EditSubCategory({ onClose, category, subCategory }) {
 
   const doUpdate = async (e) => {
     if (e && e.preventDefault) e.preventDefault();
-    // console.log(key, sub);
-    // console.log({
-    //   key: key || category,
-    //   sub: sub || subCategory,
-    //   ...values,
-    //   items,
-    //   thumbnail
-    // });
-    const res = await updateSub({
+    console.log(key, sub);
+    const updatedData = {
+      title: values.title,
+      thumbnail,
       key: key || category,
       sub: sub || subCategory,
-      ...values,
-      items,
-      thumbnail
-    }).unwrap();
+    };
+    console.log(updatedData);
+    const res = await updateSub(updatedData).unwrap();
     console.log(res);
     setTimeout(refetchAll, 200);
   };
@@ -120,7 +114,7 @@ function EditSubCategory({ onClose, category, subCategory }) {
 
   if (fetching) return <div>Loading Data</div>;
   if (error) return <div>{error.message}</div>;
-  console.log(items);
+  // console.log(items);
   return (
     <div className="w-11/12">
       {isUpdated ? (

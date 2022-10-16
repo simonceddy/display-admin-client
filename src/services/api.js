@@ -115,16 +115,11 @@ export const displayApi = createApi({
       // transformResponse: (r) => r.data
     }),
     updateSubCategory: builder.mutation({
-      query: (args) => {
-        // TODO fix this brittle hack
-        const { key, sub, ...body } = args;
-        console.log(args);
-        return ({
-          url: `/category/${body.parent}/subCategory/update/${sub}`,
-          body,
-          method: 'PUT'
-        });
-      }
+      query: ({ key, sub, ...body }) => ({
+        url: `/category/${key}/subCategory/update/${sub}`,
+        body,
+        method: 'PUT'
+      })
     })
   })
 

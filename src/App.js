@@ -6,6 +6,7 @@ import { useFetchDataQuery } from './services/api';
 import AppRoutes from './AppRoutes';
 import Notifications from './features/notifications/Notifications';
 import { addNotification } from './features/notifications/notificationsSlice';
+import NavbarAnchor from './components/Navbar/NavbarAnchor';
 
 // const worker = new Worker('./worker.js');
 // console.log(worker);
@@ -28,6 +29,9 @@ function App() {
               <NavbarLink to="/">Dashboard</NavbarLink>
               <NavbarLink to="/create">Create New Category</NavbarLink>
               {/* <NavbarLink to="/settings">Settings</NavbarLink> */}
+              <NavbarAnchor to="http://localhost:3030/">
+                Client
+              </NavbarAnchor>
             </div>
             <div>
               <Notifications />
