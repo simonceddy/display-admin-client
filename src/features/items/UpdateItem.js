@@ -18,6 +18,7 @@ import Modal from '../../components/Modal';
 import ItemMedia from '../media/ItemMedia';
 import uploadThumbnails from '../../util/uploads/uploadThumbnail';
 import { setThumbnail } from './itemFormSlice';
+import ChangeCategory from './ChangeCategory';
 
 function UpdateItem({
   category,
@@ -158,6 +159,12 @@ function UpdateItem({
         Editing <span className="font-bold">{data.title}</span>
       </h2>
       )}
+      <ChangeCategory
+        onChange={(v) => {
+          console.log(v);
+        }}
+        value={key || category}
+      />
       <ItemFormComponent />
       {children}
       <StdButton onClick={() => confirmAlert({
