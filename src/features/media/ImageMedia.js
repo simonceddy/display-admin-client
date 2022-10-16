@@ -10,7 +10,7 @@ function ImageMedia({
 }) {
   if (!src) return null;
   const [crop, setCrop] = useState(null);
-  console.log(src);
+  // console.log(src);
   return (
     <>
       {/* <ImgCrop src={src} crop={crop} setCrop={setCrop} />

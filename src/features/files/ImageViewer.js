@@ -11,7 +11,7 @@ function ImageViewer({
   const src = URL.createObjectURL(file);
   const [showModal, setShowModal] = useState(false);
   const [crop, setCrop] = useState(null);
-  console.log(thumbnail);
+  // console.log(thumbnail);
   return (
     <>
       {showModal && (
