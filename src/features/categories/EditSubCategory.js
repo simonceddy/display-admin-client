@@ -20,6 +20,7 @@ import NewItem from '../items/NewItem';
 import UpdateItem from '../items/UpdateItem';
 import { MEDIA_BASE_URI } from '../../support/consts';
 import thumbsrc from '../../util/thumbsrc';
+import { pushNotification } from '../notifications/notificationsSlice';
 
 function EditSubCategory({ onClose, category, subCategory }) {
   const { key, sub } = useParams();
@@ -78,6 +79,12 @@ function EditSubCategory({ onClose, category, subCategory }) {
     console.log(res);
     setTimeout(refetchAll, 200);
   };
+
+  useEffect(() => {
+    if (isUpdated) {
+      dispatch(pushNotification(`Sub category ${data.title} updated!`));
+    }
+  }, [isUpdated]);
 
   const UpdateComponent = useCallback(() => (
     editingItem ? (
@@ -193,6 +200,9 @@ function EditSubCategory({ onClose, category, subCategory }) {
                 </StdButton>
               )}
               {/* <ItemsRow /> */}
+              <div className="p-2">
+                {items.length} items in category
+              </div>
               <ThumbnailRow
                 items={items}
                 onItemClick={(i) => {

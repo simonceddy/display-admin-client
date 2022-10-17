@@ -120,6 +120,16 @@ export const displayApi = createApi({
         body,
         method: 'PUT'
       })
+    }),
+    fetchDisplayConfig: builder.query({
+      query: () => '/display-conf'
+    }),
+    updateDisplayConfig: builder.mutation({
+      query: (body) => ({
+        url: '/display-conf/update',
+        method: 'PUT',
+        body
+      })
     })
   })
 
@@ -142,5 +152,7 @@ export const {
   useRemoveSubCategoryFromCategoryMutation,
   useUpdateSubCategoryMutation,
   usePublishCategoryMutation,
-  useUnpublishCategoryMutation
+  useUnpublishCategoryMutation,
+  useFetchDisplayConfigQuery,
+  useUpdateDisplayConfigMutation
 } = displayApi;

@@ -5,7 +5,7 @@ import NavbarLink from './components/Navbar/NavbarLink';
 import { useFetchDataQuery } from './services/api';
 import AppRoutes from './AppRoutes';
 import Notifications from './features/notifications/Notifications';
-import { addNotification } from './features/notifications/notificationsSlice';
+import { pushNotification } from './features/notifications/notificationsSlice';
 import NavbarAnchor from './components/Navbar/NavbarAnchor';
 
 // const worker = new Worker('./worker.js');
@@ -17,7 +17,7 @@ function App() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (error) dispatch(addNotification(error.message));
+    if (error) dispatch(pushNotification(error.message));
   }, [error]);
 
   return (
@@ -28,7 +28,7 @@ function App() {
             <div className="flex flex-row justify-start items-center">
               <NavbarLink to="/">Dashboard</NavbarLink>
               <NavbarLink to="/create">Create New Category</NavbarLink>
-              {/* <NavbarLink to="/settings">Settings</NavbarLink> */}
+              <NavbarLink to="/settings">Settings</NavbarLink>
               <NavbarAnchor to="http://localhost:3030/">
                 Client
               </NavbarAnchor>

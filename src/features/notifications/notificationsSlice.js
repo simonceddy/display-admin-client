@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { pushKey, removeKey } from '../../support/store';
 
 export const notificationsSlice = createSlice({
   name: 'notifications',
@@ -7,14 +6,18 @@ export const notificationsSlice = createSlice({
     current: []
   },
   reducers: {
-    addNotification: pushKey('current'),
-    removeNotification: removeKey('current')
+    pushNotification: (state, action) => {
+      state.current.push(action.payload);
+    },
+    shiftNotification: (state) => {
+      state.current.shift();
+    }
   },
 });
 
 export const {
-  addNotification,
-  removeNotification
+  pushNotification,
+  shiftNotification
 } = notificationsSlice.actions;
 
 export default notificationsSlice.reducer;

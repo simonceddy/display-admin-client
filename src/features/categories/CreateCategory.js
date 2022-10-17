@@ -74,6 +74,9 @@ function CreateCategory() {
               Add Item
             </StdButton>
           )}
+          <div className="p-2">
+            {items.length} items in category
+          </div>
           <ThumbnailRow
             items={items}
             onItemClick={(i) => {

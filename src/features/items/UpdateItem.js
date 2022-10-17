@@ -131,6 +131,12 @@ function UpdateItem({
         <Modal onClose={() => setShowMedia(false)}>
           <ItemMedia
             media={showMedia}
+            onRemove={async (src) => {
+              console.log('delete media');
+              const newMedia = data.media.filter((m) => m.src !== src);
+              await doUpdate({ media: newMedia });
+              refetchAll();
+            }}
             setThumbnail={async (th) => {
               const src = `${key || category}-${item || itemKey}.png`;
               const file = new File(

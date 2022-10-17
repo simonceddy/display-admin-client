@@ -25,7 +25,7 @@ import {
 } from './categoryFormSlice';
 import NewItem from '../items/NewItem';
 import UpdateItem from '../items/UpdateItem';
-import { addNotification } from '../notifications/notificationsSlice';
+import { pushNotification } from '../notifications/notificationsSlice';
 import { MEDIA_BASE_URI } from '../../support/consts';
 
 function archiveButtonLabel({ isWorking, archived }) {
@@ -90,6 +90,12 @@ function EditCategory() {
       }));
     }
   }, [isSuccess]);
+
+  useEffect(() => {
+    if (updated) {
+      dispatch(pushNotification(`Category ${data.title} updated!`));
+    }
+  }, [updated]);
 
   const UpdateComponent = useCallback(() => (
     editingItem ? (
@@ -157,7 +163,7 @@ function EditCategory() {
       setValues={(vals) => dispatch(setFormValues(vals))}
     >
       {itemAdded && <div>New item added</div>}
-      {updated && <div>Category updated</div>}
+      {/* {updated && <div>Category updated</div>} */}
       {/* items and subcategories */}
       {thumbnail && thumbnail.src && (
         <img
@@ -189,7 +195,7 @@ function EditCategory() {
                 setShowItemForm(false);
               } else {
                 console.log(res);
-                dispatch(addNotification(
+                dispatch(pushNotification(
                   'There was an error adding the new item to category'
                 ));
               }
@@ -203,6 +209,9 @@ function EditCategory() {
           </StdButton>
         )}
         {/* <ItemRow /> */}
+        <div className="p-2">
+          {items.length} items in category
+        </div>
         <ThumbnailRow
           onItemClick={(i) => {
             // navigate(`/category/${key}/item/${i.key}`);
