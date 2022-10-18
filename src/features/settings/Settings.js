@@ -4,7 +4,8 @@ import { useDispatch } from 'react-redux';
 import StdButton from '../../components/Interactive/StdButton';
 import { useFetchDisplayConfigQuery, useUpdateDisplayConfigMutation } from '../../services/api';
 import { MEDIA_BASE_URI } from '../../support/consts';
-import { pushNotification } from '../notifications/notificationsSlice';
+import { addNotification } from '../notifications/notificationsSlice';
+import { NOTIFY_INFO } from '../notifications/support';
 import SelectBgImg from './SelectBgImg';
 
 function SettingRow({ children, onClick }) {
@@ -29,7 +30,10 @@ function Settings() {
   const dispatch = useDispatch();
   useEffect(() => {
     if (isSuccess) {
-      dispatch(pushNotification('Updated display settings'));
+      dispatch(addNotification({
+        message: 'Updated display settings',
+        type: NOTIFY_INFO
+      }));
     }
   }, [isSuccess]);
   if (isLoading) return <div>Loading...</div>;

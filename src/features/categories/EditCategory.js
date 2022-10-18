@@ -25,8 +25,9 @@ import {
 } from './categoryFormSlice';
 import NewItem from '../items/NewItem';
 import UpdateItem from '../items/UpdateItem';
-import { pushNotification } from '../notifications/notificationsSlice';
+import { addNotification } from '../notifications/notificationsSlice';
 import { MEDIA_BASE_URI } from '../../support/consts';
+import { NOTIFY_ERROR } from '../notifications/support';
 
 function archiveButtonLabel({ isWorking, archived }) {
   if (isWorking) return 'Working...';
@@ -93,9 +94,25 @@ function EditCategory() {
 
   useEffect(() => {
     if (updated) {
-      dispatch(pushNotification(`Category ${data.title} updated!`));
+      dispatch(addNotification({
+        message: `Category ${data.title} updated`
+      }));
     }
   }, [updated]);
+  useEffect(() => {
+    if (itemAdded) {
+      dispatch(addNotification({
+        message: `Item added to ${data.title}`
+      }));
+    }
+  }, [itemAdded]);
+  useEffect(() => {
+    if (deleted) {
+      dispatch(addNotification({
+        message: `Category ${data.title} deleted`
+      }));
+    }
+  }, [deleted]);
 
   const UpdateComponent = useCallback(() => (
     editingItem ? (
@@ -195,9 +212,10 @@ function EditCategory() {
                 setShowItemForm(false);
               } else {
                 console.log(res);
-                dispatch(pushNotification(
-                  'There was an error adding the new item to category'
-                ));
+                dispatch(addNotification({
+                  message: 'There was an error adding the new item to category',
+                  type: NOTIFY_ERROR
+                }));
               }
             }}
           />

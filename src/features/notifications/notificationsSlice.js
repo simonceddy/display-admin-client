@@ -6,8 +6,8 @@ export const notificationsSlice = createSlice({
     current: []
   },
   reducers: {
-    pushNotification: (state, action) => {
-      state.current.push(action.payload);
+    addNotification: (state, action) => {
+      state.current.unshift(action.payload);
     },
     shiftNotification: (state) => {
       state.current.shift();
@@ -16,7 +16,7 @@ export const notificationsSlice = createSlice({
 });
 
 export const {
-  pushNotification,
+  addNotification,
   shiftNotification
 } = notificationsSlice.actions;
 

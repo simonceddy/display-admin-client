@@ -1,11 +1,14 @@
 /* eslint-disable no-unused-vars */
 // import { useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import ItemForm from './ItemForm';
 import getUrl from '../../util/getUrl';
-import { useAddItemToCategoryMutation } from '../../services/api';
+import { useAddItemToCategoryMutation, useFetchCategoryQuery } from '../../services/api';
 import useRefetchAll from '../../hooks/useRefetchAll';
 import StdButton from '../../components/Interactive/StdButton';
+import { addNotification } from '../notifications/notificationsSlice';
 
 function NewItem({
   onSubmit,
@@ -18,7 +21,18 @@ function NewItem({
   const { key, sub } = useParams();
   const navigate = useNavigate();
   const [addItemTo, { isSuccess }] = useAddItemToCategoryMutation();
-  const refetchAll = useRefetchAll({ category: key });
+  const { data: parent } = useFetchCategoryQuery(key || category);
+  const refetchAll = useRefetchAll({ category: key || category });
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (isSuccess) {
+      dispatch(addNotification({
+        message: `Item added to ${parent.title}`,
+      }));
+    }
+  }, [isSuccess]);
+
   return (
     <div className="w-11/12">
       {key && (<h2>New Item for {key}{sub ? `/${sub}` : ''}</h2>)}

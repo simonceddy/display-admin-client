@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import StdButton from '../../components/Interactive/StdButton';
 import {
   useFetchCategoryQuery,
@@ -17,8 +17,10 @@ import ItemForm from './ItemForm';
 import Modal from '../../components/Modal';
 import ItemMedia from '../media/ItemMedia';
 import uploadThumbnails from '../../util/uploads/uploadThumbnail';
-import { setThumbnail } from './itemFormSlice';
 import ChangeCategory from './ChangeCategory';
+import { addNotification } from '../notifications/notificationsSlice';
+import { NOTIFY_INFO } from '../notifications/support';
+import ChangeSubCategory from './ChangeSubCategory';
 
 function UpdateItem({
   category,
@@ -52,8 +54,29 @@ function UpdateItem({
     refetchDataList();
   };
   const [showMedia, setShowMedia] = useState(false);
+  const [updatingItemCategories, setUpdatingItemCategories] = useState(false);
+  const [updatedCategory, setUpdatedCategory] = useState(null);
+  const [updatedSubCategory, setUpdatedSubCategory] = useState(null);
   const [removeItem, { isSuccess: isRemoved }] = useRemoveItemFromCategoryMutation();
   const [updateItem, { isSuccess: isUpdated }] = useUpdateItemMutation();
+
+  useEffect(() => {
+    if (isUpdated) {
+      dispatch(addNotification({
+        message: `Item ${data.title} updated`,
+        type: NOTIFY_INFO
+      }));
+    }
+  }, [isUpdated]);
+
+  useEffect(() => {
+    if (isRemoved) {
+      dispatch(addNotification({
+        message: `Deleted item ${data.title}`,
+        type: NOTIFY_INFO
+      }));
+    }
+  }, [isRemoved]);
 
   const doUpdate = async (vals) => {
     if (update) {
@@ -94,26 +117,27 @@ function UpdateItem({
       }}
     />
   ), [data, isUpdated]);
-  // const [initialized, setInitialized] = useState(false);
-  // const [showMedia, setShowMedia] = useState(null);
-  // console.log(data);
-  // useEffect(() => {
-  //   let formInit = false;
-  //   if (!initialized && dataLoaded && !formInit) {
-  //     dispatch(initForm({
-  //       values: {
-  //         title: data.title || '',
-  //         body: data.body || ''
-  //       },
-  //       media: data.media || [],
-  //       thumbnail: data.thumbnail || { src: '', alt: '', type: 'image' }
-  //     }));
-  //     setInitialized(true);
-  //   }
-  //   return () => {
-  //     formInit = true;
-  //   };
-  // }, [initialized, dataLoaded]);
+
+  const getUpdatedUrl = () => {
+    const oldC = key || category;
+    const oldS = sub || subCategory || null;
+    // TODO remove sub from updated url where applicable
+    let url = '/category';
+    if (!updatedCategory || oldC === updatedCategory) {
+      url += `/${oldC}`;
+      if ((!updatedSubCategory && oldS) || oldS === updatedSubCategory) {
+        url += `/${oldS}`;
+      }
+    } else {
+      url += `/${updatedCategory}`;
+      if (updatedSubCategory) {
+        url += `/${updatedSubCategory}`;
+      }
+    }
+    url += `/item/${data.key}`;
+    return url;
+  };
+
   if (isLoading) return <div>Loading Data</div>;
   if (error) return <div>{error.message}</div>;
 
@@ -127,78 +151,122 @@ function UpdateItem({
   }
   return (
     <div className="w-11/12">
-      {showMedia && (
-        <Modal onClose={() => setShowMedia(false)}>
-          <ItemMedia
-            media={showMedia}
-            onRemove={async (src) => {
-              console.log('delete media');
-              const newMedia = data.media.filter((m) => m.src !== src);
-              await doUpdate({ media: newMedia });
-              refetchAll();
-            }}
-            setThumbnail={async (th) => {
-              const src = `${key || category}-${item || itemKey}.png`;
-              const file = new File(
-                [th],
-                src,
-                { type: th.type }
-              );
-              const res = await uploadThumbnails([file]);
-              if (res.data.results[src]) {
-                await doUpdate({
-                  thumbnail: {
-                    src
+      {updatingItemCategories ? (
+        <div>Updating category...</div>
+      ) : (
+        <>
+          {showMedia && (
+            <Modal onClose={() => setShowMedia(false)}>
+              <ItemMedia
+                media={showMedia}
+                onRemove={async (src) => {
+                  console.log('delete media');
+                  const newMedia = data.media.filter((m) => m.src !== src);
+                  await doUpdate({ media: newMedia });
+                  refetchAll();
+                }}
+                setThumbnail={async (th) => {
+                  const src = `${key || category}-${item || itemKey}.png`;
+                  const file = new File(
+                    [th],
+                    src,
+                    { type: th.type }
+                  );
+                  const res = await uploadThumbnails([file]);
+                  if (res.data.results[src]) {
+                    await doUpdate({
+                      thumbnail: {
+                        src
+                      }
+                    });
+                    if (onSetThumb) onSetThumb();
                   }
-                });
-                if (onSetThumb) onSetThumb();
+                }}
+              />
+            </Modal>
+          )}
+          {isUpdated && (
+            <div className="p-2 text-lg font-bold">Updated item!</div>
+          )}
+          {data.title && (
+          <h2 className="text-xl p-2">
+            Editing <span className="font-bold">{data.title}</span>
+          </h2>
+          )}
+          <div className="flex flex-row justify-start items-center">
+            <div className="mx-2">
+              <span>
+                Category
+              </span>
+              <ChangeCategory
+                onChange={(e) => {
+                  setUpdatedCategory(e.target.value);
+                  if (updatedSubCategory) setUpdatedSubCategory(null);
+                }}
+                value={updatedCategory || key || category}
+              />
+            </div>
+            <div className="mx-2">
+              <span>
+                Sub-Category
+              </span>
+              <ChangeSubCategory
+                parent={updatedCategory || key || category}
+                value={updatedSubCategory || sub || subCategory || ''}
+                onChange={(e) => {
+                  setUpdatedSubCategory(e.target.value);
+                }}
+              />
+            </div>
+            <div className="mx-2">
+              <StdButton
+                onClick={async () => {
+                  setUpdatingItemCategories(true);
+                  await doUpdate({
+                    category: updatedCategory,
+                    subCategory: updatedSubCategory || null
+                  });
+                  dispatch(addNotification({ message: `Moved '${data.title}' to ${updatedCategory}` }));
+                  setTimeout(() => {
+                    setUpdatingItemCategories(false);
+                    navigate(getUpdatedUrl());
+                  }, 400);
+                }}
+              >
+                Update Category
+              </StdButton>
+            </div>
+          </div>
+          <ItemFormComponent />
+          {children}
+          <StdButton onClick={() => confirmAlert({
+            title: 'Confirm delete item',
+            message: 'This action cannot be undone.',
+            buttons: [
+              {
+                label: 'Delete the item!',
+                onClick: async () => {
+                  if (onDelete) {
+                    onDelete(data);
+                  } else {
+                    await removeItem({
+                      key: key || category, sub: sub || subCategory, item: item || itemKey
+                    }).unwrap();
+                    refetchAll();
+                  }
+                }
+              },
+              {
+                label: 'Cancel!',
+                onClick: () => console.log('cancelled delete!')
               }
-            }}
-          />
-        </Modal>
+            ]
+          })}
+          >
+            Delete Item
+          </StdButton>
+        </>
       )}
-      {isUpdated && (
-        <div className="p-2 text-lg font-bold">Updated item!</div>
-      )}
-      {data.title && (
-      <h2 className="text-xl p-2">
-        Editing <span className="font-bold">{data.title}</span>
-      </h2>
-      )}
-      <ChangeCategory
-        onChange={(v) => {
-          console.log(v);
-        }}
-        value={key || category}
-      />
-      <ItemFormComponent />
-      {children}
-      <StdButton onClick={() => confirmAlert({
-        title: 'Confirm delete item',
-        message: 'This action cannot be undone.',
-        buttons: [
-          {
-            label: 'Delete the item!',
-            onClick: async () => {
-              if (onDelete) {
-                onDelete(data);
-              } else {
-                await removeItem({
-                  key: key || category, sub: sub || subCategory, item: item || itemKey
-                }).unwrap();
-                refetchAll();
-              }
-            }
-          },
-          {
-            label: 'Cancel!',
-            onClick: () => console.log('cancelled delete!')
-          }
-        ]
-      })}
-      >
-        Delete Item
-      </StdButton>
 
     </div>
   );

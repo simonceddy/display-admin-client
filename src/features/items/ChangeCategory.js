@@ -13,7 +13,11 @@ function ChangeCategory({ value, onChange }) {
   }
   if (error) return <div>{error.message}</div>;
   return (
-    <select value={value} onChange={onChange}>
+    <select
+      className="border-2 rounded-md border-slate-400 focus:border-blue-400 p-1 text-lg"
+      value={value}
+      onChange={onChange}
+    >
       {data.map((c) => (
         <option
           label={c.title}

@@ -12,6 +12,7 @@ import CategorySummary from '../../containers/CategorySummary';
 import {
   FILTER_ARCHIVED, FILTER_CURRENT, FILTER_NONE, FILTER_UNPUBLISHED, setFilter
 } from './dashboardSlice';
+import { addNotification } from '../notifications/notificationsSlice';
 
 function filterData(filterBy = FILTER_NONE, data = []) {
   switch (filterBy) {
@@ -88,16 +89,28 @@ function Dashboard({ filter }) {
             handlePublish={async () => {
               if (c.published) {
                 await unpublishCategory(c.key).unwrap();
+                dispatch(addNotification({
+                  message: `${c.title} unpublished`
+                }));
               } else {
                 await publishCategory(c.key).unwrap();
+                dispatch(addNotification({
+                  message: `${c.title} published`
+                }));
               }
               refetch();
             }}
             handleArchive={async () => {
               if (c.archived) {
                 await unarchiveCategory(c.key).unwrap();
+                dispatch(addNotification({
+                  message: `${c.title} unarchived`
+                }));
               } else {
                 await archiveCategory(c.key).unwrap();
+                dispatch(addNotification({
+                  message: `${c.title} archived`
+                }));
               }
               refetch();
             }}

@@ -19,6 +19,7 @@ import {
 } from '../../services/api';
 import NewItem from '../items/NewItem';
 import EditUnsavedItem from '../items/EditUnsavedItem';
+import { addNotification } from '../notifications/notificationsSlice';
 
 function CreateSubCategory({ onClose }) {
   const { key } = useParams();
@@ -29,6 +30,7 @@ function CreateSubCategory({ onClose }) {
     thumbnail
   } = useSelector((state) => state.subCategoryForm);
   const dispatch = useDispatch();
+  const { data: parent } = useFetchCategoryQuery(key);
   const [addSub, { isSuccess }] = useAddSubCategoryToCategoryMutation();
   const [showItemForm, setShowItemForm] = useState(false);
   const { refetch } = useFetchCategoryQuery(key);
@@ -46,6 +48,14 @@ function CreateSubCategory({ onClose }) {
       isInit = true;
     };
   }, [initialized]);
+
+  useEffect(() => {
+    if (isSuccess) {
+      dispatch(addNotification({
+        message: `Sub-Category added to ${parent.title}`
+      }));
+    }
+  }, [isSuccess]);
 
   const refetchAll = () => {
     refetch();

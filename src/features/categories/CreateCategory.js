@@ -6,6 +6,7 @@ import StdButton from '../../components/Interactive/StdButton';
 import { useFetchDataQuery, useSaveNewCategoryMutation } from '../../services/api';
 import EditUnsavedItem from '../items/EditUnsavedItem';
 import NewItem from '../items/NewItem';
+import { addNotification } from '../notifications/notificationsSlice';
 import {
   addItem, setFormValues, initForm, setThumbnail, removeItem, setItems
 } from './categoryFormSlice';
@@ -33,6 +34,10 @@ function CreateCategory() {
       isInit = true;
     };
   }, [initialized]);
+
+  useEffect(() => {
+    if (isSuccess) dispatch(addNotification({ message: `Category ${values.title} created` }));
+  }, [isSuccess]);
 
   return (
     <div className="flex flex-col justify-start items-center w-full p-2">

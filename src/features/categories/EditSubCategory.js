@@ -20,7 +20,7 @@ import NewItem from '../items/NewItem';
 import UpdateItem from '../items/UpdateItem';
 import { MEDIA_BASE_URI } from '../../support/consts';
 import thumbsrc from '../../util/thumbsrc';
-import { pushNotification } from '../notifications/notificationsSlice';
+import { addNotification } from '../notifications/notificationsSlice';
 
 function EditSubCategory({ onClose, category, subCategory }) {
   const { key, sub } = useParams();
@@ -82,9 +82,15 @@ function EditSubCategory({ onClose, category, subCategory }) {
 
   useEffect(() => {
     if (isUpdated) {
-      dispatch(pushNotification(`Sub category ${data.title} updated!`));
+      dispatch(addNotification({ message: `Sub category ${data.title} updated!` }));
     }
   }, [isUpdated]);
+
+  useEffect(() => {
+    if (isRemoved) {
+      dispatch(addNotification({ message: `Sub category ${data.title} deleted` }));
+    }
+  }, [isRemoved]);
 
   const UpdateComponent = useCallback(() => (
     editingItem ? (

@@ -5,8 +5,9 @@ import NavbarLink from './components/Navbar/NavbarLink';
 import { useFetchDataQuery } from './services/api';
 import AppRoutes from './AppRoutes';
 import Notifications from './features/notifications/Notifications';
-import { pushNotification } from './features/notifications/notificationsSlice';
+import { addNotification } from './features/notifications/notificationsSlice';
 import NavbarAnchor from './components/Navbar/NavbarAnchor';
+import { NOTIFY_ERROR } from './features/notifications/support';
 
 // const worker = new Worker('./worker.js');
 // console.log(worker);
@@ -17,13 +18,19 @@ function App() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (error) dispatch(pushNotification(error.message));
+    if (error) {
+      dispatch(addNotification({
+        message: error.message,
+        type: NOTIFY_ERROR
+      }));
+    }
   }, [error]);
 
   return (
     <OuterContainer>
       {!isLoading ? (
         <>
+          <Notifications />
           <div className="border-b-2 border-blue-600 dark:border-blue-200 py-2 px-3 w-full flex flex-row justify-between items-center">
             <div className="flex flex-row justify-start items-center">
               <NavbarLink to="/">Dashboard</NavbarLink>
@@ -33,11 +40,8 @@ function App() {
                 Client
               </NavbarAnchor>
             </div>
-            <div>
-              <Notifications />
-            </div>
           </div>
-          <div className="w-full flex-1 flex flex-col justify-start items-center overflow-y-scroll">
+          <div className="w-full flex-1 flex flex-col justify-start items-center overflow-y-scroll relative">
             <AppRoutes />
           </div>
         </>
