@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 // import { useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import ItemForm from './ItemForm';
 import getUrl from '../../util/getUrl';
@@ -9,6 +9,8 @@ import { useAddItemToCategoryMutation, useFetchCategoryQuery } from '../../servi
 import useRefetchAll from '../../hooks/useRefetchAll';
 import StdButton from '../../components/Interactive/StdButton';
 import { addNotification } from '../notifications/notificationsSlice';
+import Modal from '../../components/Modal';
+import ItemMedia from '../media/ItemMedia';
 
 function NewItem({
   onSubmit,
@@ -19,6 +21,7 @@ function NewItem({
   onCreated
 }) {
   const { key, sub } = useParams();
+  const [showMedia, setShowMedia] = useState(false);
   const navigate = useNavigate();
   const [addItemTo, { isSuccess }] = useAddItemToCategoryMutation();
   const { data: parent } = useFetchCategoryQuery(key || category);
@@ -48,29 +51,62 @@ function NewItem({
           </StdButton>
         </div>
       ) : (
-        <ItemForm
-          setCategoryThumb={setCategoryThumb}
-          cancelLabel="Cancel new item"
-          submitLabel="Save New Item"
-          onSubmit={async (vals) => {
-            if (onSubmit) {
-              onSubmit({ key: key || category, sub: sub || subCategory, ...vals });
-            } else {
-              const res = await addItemTo({
-                key: key || category, sub: sub || subCategory, ...vals
-              }).unwrap();
-              refetchAll();
-              if (onCreated) onCreated(res);
-            }
-          }}
-          onClose={() => {
-            if (onClose) {
-              onClose();
-            } else {
-              navigate(getUrl(key, sub));
-            }
-          }}
-        />
+        <>
+          {showMedia && (
+          <Modal onClose={() => setShowMedia(false)}>
+            <ItemMedia
+              media={showMedia}
+              // onRemove={async (src) => {
+              //   console.log('delete media');
+              //   const newMedia = data.media.filter((m) => m.src !== src);
+              //   await doUpdate({ media: newMedia });
+              //   refetchAll();
+              // }}
+              // setThumbnail={async (th) => {
+              //   const src = `${key || category}-${item || itemKey}.png`;
+              //   const file = new File(
+              //     [th],
+              //     src,
+              //     { type: th.type }
+              //   );
+              //   const res = await uploadThumbnails([file]);
+              //   if (res.data.results[src]) {
+              //     await doUpdate({
+              //       thumbnail: {
+              //         src
+              //       }
+              //     });
+              //     if (onSetThumb) onSetThumb();
+              //   }
+              // }}
+            />
+          </Modal>
+          )}
+          <ItemForm
+            setCategoryThumb={setCategoryThumb}
+            cancelLabel="Cancel new item"
+            submitLabel="Save New Item"
+            onThumbClick={(a) => setShowMedia(a)}
+            onSubmit={async (vals) => {
+              if (onSubmit) {
+                onSubmit({ key: key || category, sub: sub || subCategory, ...vals });
+              } else {
+                const res = await addItemTo({
+                  key: key || category, sub: sub || subCategory, ...vals
+                }).unwrap();
+                refetchAll();
+                if (onCreated) onCreated(res);
+              }
+            }}
+            onClose={() => {
+              if (onClose) {
+                onClose();
+              } else {
+                navigate(getUrl(key, sub));
+              }
+            }}
+          />
+        </>
       )}
     </div>
   );

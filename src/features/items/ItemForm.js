@@ -1,14 +1,16 @@
 /* eslint-disable no-unused-vars */
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import LgTextInput from '../../components/Forms/LgTextInput';
-import StdButton from '../../components/Interactive/StdButton';
+import { useDispatch } from 'react-redux';
 import ErrorBoundary from '../../containers/ErrorBoundary';
-import { MEDIA_BASE_URI } from '../../support/consts';
 import Files from '../files/Files';
-import Tiptap from '../tiptap/Tiptap';
 import getMediaType from '../../util/getMediaType';
-import thumbsrc from '../../util/thumbsrc';
+import { addNotification } from '../notifications/notificationsSlice';
+import { NOTIFY_ERROR } from '../notifications/support';
+import ItemFormButtonRow from '../../components/Forms/ItemFormButtonRow';
+import SetCategoryThumb from '../../components/Forms/SetCategoryThumb';
+import ItemMediaRow from '../../components/Media/ItemMediaRow';
+import ItemFormFields from '../../components/Forms/ItemFormFields';
 
 function ItemForm({
   onSubmit,
@@ -31,179 +33,104 @@ function ItemForm({
   const [title, setTitle] = useState(values.title || '');
   const [thumbnail, setThumbnail] = useState(values.thumbnail || null);
   const [media, setMedia] = useState(values.media || []);
+  const dispatch = useDispatch();
   // console.log(thumbnail);
   return (
     <ErrorBoundary>
-      <div className="flex flex-col w-11/12 p-1 border-2 border-slate-500 m-1">
-        <div className="flex flex-row justify-between items-start">
-          {thumbnail && thumbnail.src && (
-            <img
-              src={`${MEDIA_BASE_URI}thumbs/${thumbsrc(thumbnail.src)}`}
-              alt={title}
-              className="mr-2"
-              style={{
-                width: '150px',
-                height: '150px',
-                objectFit: 'cover'
-              }}
-            />
-          )}
-          <LgTextInput
-            label="Title"
-            labelClassName="flex-1"
-            className="w-11/12"
-            id="item-title-input"
-            value={title}
-            onChange={(e) => {
-              setTitle(e.target.value);
+      <ItemFormFields
+        title={title}
+        setTitle={(e) => {
+          setTitle(e.target.value);
+          if (onChange) {
+            onChange({
+              title: e.target.value, body, media, thumbnail
+            });
+          }
+        }}
+        body={body}
+        setBody={(html) => {
+          // console.log(html);
+          setBody(html);
+          if (onChange) {
+            onChange({
+              title, body: html, media, thumbnail
+            });
+          }
+        }}
+        thumbnail={thumbnail}
+      />
+      <Files
+        onUploaded={(res, files, thumbs) => {
+          console.log(thumbs);
+          if (res.data && res.data.filepaths) {
+            const uploadedFiles = Object.keys(res.data.filepaths);
+            // console.log(uploadedFiles);
+            const fls = Object.fromEntries(files.map((f) => [f.name, f]));
+            console.log(fls);
+            const mediaItems = uploadedFiles
+              .map((file) => ({
+                src: res.data.filepaths[file],
+                alt: file,
+                type: getMediaType(fls[file]),
+                // thumbnail: thumbs && thumbs[file]
+                //   ? thumbs[file]
+                //   : thumbsrc(res.data.filepaths[file])
+              }));
+            console.log(mediaItems);
+            setTimeout(() => {
+              setMedia([...media, ...mediaItems]);
+              if (!thumbnail) setThumbnail(mediaItems[0]);
+
               if (onChange) {
                 onChange({
-                  title: e.target.value, body, media, thumbnail
-                });
-              }
-            }}
-          />
-        </div>
-        <Tiptap
-          label="Content:"
-          id="item-body-input"
-          content={body}
-          setContent={(html) => {
-            // console.log(html);
-            setBody(html);
-            if (onChange) {
-              onChange({
-                title, body: html, media, thumbnail
-              });
-            }
-          }}
-        />
-        {/* TODO media - uploads and displaying for admin */}
-        {/* <DropzoneMediaUploadForm handleFiles={handleFiles} /> */}
-        {/* TODO layout of thumbnails */}
-        {/* <div className="w-full flex flex-col justify-start items-start">
-          {media.length === 0 ? 'No media uploaded yet' : (
-            <>
-              <span className="text-lg font-bold mb-2 p-2">
-                Thumbnails
-              </span>
-              <div className="flex flex-row justify-start items-center">
-                {media.map((m, key) => {
-                  if (!m.src) return null;
-                  const bgfill = thumbnail && thumbnail.src === m.src
-                    ? 'bg-yellow-300'
-                    : 'bg-green-500';
-                  return (
-                    <img
-                      className={`m-1 p-1 ${bgfill} bg-opacity-20 hover:bg-opacity-90 rounded-md`}
-                      role="presentation"
-                      onClick={() => {
-                        if (onThumbClick) onThumbClick(m);
-                      }}
-                      width={80}
-                      key={`item-media-thumb-${key}`}
-                      src={`${MEDIA_BASE_URI}thumbs/${m.src}`}
-                      alt={m.alt || ''}
-                    />
-                  );
-                })}
-              </div>
-            </>
-          )}
-        </div> */}
-        <Files
-          onUploaded={(res, files, thumbs) => {
-            console.log(thumbs);
-            if (res.data && res.data.filepaths) {
-              const uploadedFiles = Object.keys(res.data.filepaths);
-              // console.log(uploadedFiles);
-              const fls = Object.fromEntries(files.map((f) => [f.name, f]));
-              console.log(fls);
-              const mediaItems = uploadedFiles
-                .map((file) => ({
-                  src: res.data.filepaths[file],
-                  alt: file,
-                  type: getMediaType(fls[file]),
-                  // thumbnail: thumbs && thumbs[file]
-                  //   ? thumbs[file]
-                  //   : thumbsrc(res.data.filepaths[file])
-                }));
-              console.log(mediaItems);
-              setTimeout(() => {
-                setMedia([...media, ...mediaItems]);
-                if (!thumbnail) setThumbnail(mediaItems[0]);
-
-                if (onChange) {
-                  onChange({
-                    title, body, media, thumbnail
-                  });
-                }
-              }, 300);
-            }
-            // if (onUpload) onUpload(media);
-          // Check file type
-          // If video: upload in background - use object url during upload
-          // Once uploaded, allow selecting frame for thumbnail
-          }}
-        />
-        {/* TODO media list */}
-        <div className="flex flex-row justify-start items-center flex-wrap p-2">
-          <div className="text-xl mr-2">Media</div>
-          {media.map(({ src, type = 'image', alt }, idx) => {
-            const bgfill = thumbnail && thumbnail.src === src
-              ? 'bg-yellow-300'
-              : 'bg-green-500';
-            return (
-              <div key={`media-${idx}`}>
-                <img
-                  src={`${MEDIA_BASE_URI}thumbs/${thumbsrc(src)}`}
-                  alt={alt || ''}
-                  className={`m-1 p-1 ${bgfill} bg-opacity-20 hover:bg-opacity-90 rounded-md`}
-                  role="presentation"
-                  onClick={() => {
-                    if (onThumbClick) onThumbClick(media[idx]);
-                  }}
-                  height="auto"
-                  width={110}
-                />
-              </div>
-            );
-          })}
-        </div>
-        {setCategoryThumb && media[0] && (
-        <div className="w-full flex flex-row justify-around items-center">
-          <StdButton
-            onClick={() => {
-              // TODO
-              setCategoryThumb(
-                thumbnail.src ? thumbnail.src : media[0].src
-              );
-            }}
-          >
-            Set Category Thumbnail
-          </StdButton>
-        </div>
-        )}
-        <div className="w-full flex flex-row justify-around items-center">
-          <StdButton
-            onClick={() => {
-              if (onSubmit) {
-                onSubmit({
                   title, body, media, thumbnail
                 });
               }
-            }}
-          >
-            {submitLabel}
-          </StdButton>
-          <StdButton onClick={() => {
-            if (onClose) { onClose(); } else { navigate('/'); }
-          }}
-          >
-            {cancelLabel}
-          </StdButton>
-        </div>
-      </div>
+            }, 300);
+          } else {
+            dispatch(addNotification({
+              message: 'An error has occurred when attempting upload',
+              type: NOTIFY_ERROR,
+            }));
+          }
+        }}
+      />
+      <ItemMediaRow
+        media={media}
+        thumbnail={thumbnail}
+        onThumbClick={onThumbClick}
+      />
+      {setCategoryThumb && media[0] && (
+      <SetCategoryThumb
+        onClick={() => {
+          // TODO
+          setCategoryThumb(
+            thumbnail.src ? thumbnail.src : media[0].src
+          );
+        }}
+      />
+      )}
+      <ItemFormButtonRow
+        submitLabel={submitLabel}
+        cancelLabel={cancelLabel}
+        onSubmit={() => {
+          if (title && title.trim && title.trim().length > 0) {
+            if (onSubmit) {
+              onSubmit({
+                title, body, media, thumbnail
+              });
+            }
+          } else {
+            dispatch(addNotification({
+              message: 'Title is required!',
+              type: NOTIFY_ERROR
+            }));
+          }
+        }}
+        onCancel={() => {
+          if (onClose) { onClose(); } else { navigate('/'); }
+        }}
+      />
     </ErrorBoundary>
   );
 }

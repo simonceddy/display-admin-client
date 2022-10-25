@@ -198,10 +198,9 @@ function EditCategory() {
           <NewItem
             onClose={() => setShowItemForm(false)}
             onSubmit={async (item) => {
-              console.log(item);
               const res = await addItemTo(item).unwrap();
               if (res.key) {
-                dispatch(addItem(item));
+                dispatch(addItem(res));
                 refetchAll();
                 if ((!thumbnail || !thumbnail.src)
                   && item.thumbnail

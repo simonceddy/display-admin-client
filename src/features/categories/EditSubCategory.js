@@ -176,9 +176,9 @@ function EditSubCategory({ onClose, category, subCategory }) {
                   subCategory={sub || subCategory}
                   category={key || category}
                   onClose={() => setShowNewItemForm(false)}
-                  // onCreated={() => {
-                  //   setTimeout(() => refetchAll(), 400);
-                  // }}
+                  onCreated={() => {
+                    setTimeout(() => refetchAll(), 400);
+                  }}
                   // onSubmit={async ({
                   //   title, media, thumbnail: tb, body
                   // }) => {
