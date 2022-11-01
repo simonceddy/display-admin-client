@@ -56,6 +56,7 @@ function NewItem({
           <Modal onClose={() => setShowMedia(false)}>
             <ItemMedia
               media={showMedia}
+              onClose={() => setShowMedia(false)}
               // onRemove={async (src) => {
               //   console.log('delete media');
               //   const newMedia = data.media.filter((m) => m.src !== src);

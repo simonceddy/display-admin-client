@@ -135,6 +135,7 @@ function UpdateItem({
       }
     }
     url += `/item/${data.key}`;
+    console.log(url);
     return url;
   };
 
@@ -158,6 +159,7 @@ function UpdateItem({
           {showMedia && (
             <Modal onClose={() => setShowMedia(false)}>
               <ItemMedia
+                onClose={() => setShowMedia(false)}
                 media={showMedia}
                 onRemove={async (src) => {
                   console.log('delete media');

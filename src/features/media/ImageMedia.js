@@ -6,7 +6,7 @@ import StdButton from '../../components/Interactive/StdButton';
 import { MEDIA_BASE_URI } from '../../support/consts';
 
 function ImageMedia({
-  src, alt = '', onRemove, thumbnail = null, setThumbnail, removeThumbnail
+  src, alt = '', onRemove, thumbnail = null, setThumbnail, removeThumbnail, onClose
 }) {
   if (!src) return null;
   const [crop, setCrop] = useState(null);
@@ -36,6 +36,9 @@ function ImageMedia({
       >
         Remove File
       </StdButton>
+      <StdButton onClick={onClose}>
+        Done
+      </StdButton>
       {thumbnail ? (
         <Canvas
           width={thumbnail.width}
@@ -47,8 +50,8 @@ function ImageMedia({
       ) : (
         <img
           style={{
-            height: '400px',
-            width: '400px',
+            maxHeight: '600px',
+            width: 'auto',
             objectFit: 'cover',
           }}
           src={`${MEDIA_BASE_URI}${src}`}

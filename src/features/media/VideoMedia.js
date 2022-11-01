@@ -12,7 +12,8 @@ function VideoMedia({
   src,
   onRemove,
   thumbnail,
-  setThumbnail
+  setThumbnail,
+  onClose
 }) {
   if (!src) return null;
 
@@ -95,6 +96,9 @@ function VideoMedia({
         }}
         >
           Remove File
+        </StdButton>
+        <StdButton onClick={onClose}>
+          Done
         </StdButton>
       </div>
       <div
