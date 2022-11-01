@@ -223,7 +223,7 @@ function UpdateItem({
                 onClick={async () => {
                   setUpdatingItemCategories(true);
                   await doUpdate({
-                    category: updatedCategory,
+                    category: updatedCategory || category || key,
                     subCategory: updatedSubCategory || null
                   });
                   dispatch(addNotification({ message: `Moved '${data.title}' to ${updatedCategory}` }));
