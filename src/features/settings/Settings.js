@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import LgTextInput from '../../components/Forms/LgTextInput';
 import StdButton from '../../components/Interactive/StdButton';
 import { useFetchDisplayConfigQuery, useUpdateDisplayConfigMutation } from '../../services/api';
 import { MEDIA_BASE_URI } from '../../support/consts';
@@ -53,6 +54,22 @@ function Settings() {
             Current database:
           </span>
           <span className="flex-1">{data.collection}</span>
+        </SettingRow>
+        <SettingRow>
+          <span
+            className="mr-2 text-lg font-bold w-1/3"
+          >
+            Display title:
+          </span>
+          <LgTextInput
+            value={updatedValues['display-title'] || data['display-title'] || ''}
+            onChange={(e) => {
+              setUpdatedValues({
+                ...updatedValues,
+                'display-title': e.target.value,
+              });
+            }}
+          />
         </SettingRow>
         <SettingRow
           onClick={() => {

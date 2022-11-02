@@ -14,7 +14,7 @@ function ChangeSubCategory({ parent, value, onChange }) {
   if (error) return <div>{error.message}</div>;
   return (
     <select
-      className="border-2 rounded-md border-slate-400 focus:border-blue-400 p-1 text-lg"
+      className="border-2 rounded-md border-slate-400 focus:border-blue-400 p-1 text-lg dark:bg-black dark:text-white"
       disabled={!data.categories || data.categories.length === 0}
       value={value}
       onChange={onChange}

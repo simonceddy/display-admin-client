@@ -8,9 +8,14 @@ import Notifications from './features/notifications/Notifications';
 import { addNotification } from './features/notifications/notificationsSlice';
 import NavbarAnchor from './components/Navbar/NavbarAnchor';
 import { NOTIFY_ERROR } from './features/notifications/support';
+import getManifest from './util/getManifest';
 
 // const worker = new Worker('./worker.js');
 // console.log(worker);
+getManifest()
+  .then((data) => {
+    document.getElementsByTagName('title')[0].innerHTML = data.title || 'Wonthaggi & District Historical Society';
+  });
 
 function App() {
   // TODO this isn't used here beyond preloading

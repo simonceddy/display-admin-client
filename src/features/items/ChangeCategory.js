@@ -14,7 +14,7 @@ function ChangeCategory({ value, onChange }) {
   if (error) return <div>{error.message}</div>;
   return (
     <select
-      className="border-2 rounded-md border-slate-400 focus:border-blue-400 p-1 text-lg"
+      className="border-2 rounded-md border-slate-400 focus:border-blue-400 p-1 text-lg dark:bg-black dark:text-white"
       value={value}
       onChange={onChange}
     >

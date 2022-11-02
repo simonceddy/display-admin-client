@@ -127,6 +127,8 @@ function UpdateItem({
       url += `/${oldC}`;
       if ((!updatedSubCategory && oldS) || oldS === updatedSubCategory) {
         url += `/${oldS}`;
+      } else {
+        url += `/${updatedSubCategory}`;
       }
     } else {
       url += `/${updatedCategory}`;

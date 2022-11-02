@@ -11,7 +11,7 @@ import { addNotification } from '../notifications/notificationsSlice';
 import {
   addItem, setFormValues, initForm, setThumbnail, removeItem, setItems
 } from './categoryFormSlice';
-import CreateSubCategory from './CreateSubCategory';
+// import CreateSubCategory from './CreateSubCategory';
 
 function CreateCategory() {
   const { refetch } = useFetchDataQuery();
@@ -20,7 +20,7 @@ function CreateCategory() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [showItemForm, setShowItemForm] = useState(false);
-  const [showSubForm, setShowSubForm] = useState(false);
+  // const [showSubForm, setShowSubForm] = useState(false);
   const [editingItem, setEditingItem] = useState(false);
 
   const [initialized, setInitialized] = useState(false);
@@ -126,18 +126,18 @@ function CreateCategory() {
             {/* media */}
 
             {/* subcategories */}
-            <div className="border-2 rounded-md border-slate-400 my-2 w-full">
-              {/* {values.categories.length} total sub-categories */}
-              {showSubForm ? (
-                <CreateSubCategory onClose={() => setShowSubForm(false)} />
-              ) : (
-                <StdButton
+            {/* <div className="border-2 rounded-md border-slate-400 my-2 w-full"> */}
+            {/* {values.categories.length} total sub-categories */}
+            {/* {showSubForm ? ( */}
+            {/* <CreateSubCategory onClose={() => setShowSubForm(false)} /> */}
+            {/* ) : ( */}
+            {/* <StdButton
                   onClick={() => setShowSubForm(true)}
-                >
-                  Add Sub-Category
-                </StdButton>
-              )}
-            </div>
+                > */}
+            {/* Add Sub-Category */}
+            {/* </StdButton> */}
+            {/* )} */}
+            {/* </div> */}
           </CategoryForm>
         </>
       )}
