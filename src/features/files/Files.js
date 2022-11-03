@@ -90,7 +90,7 @@ function Files({ onUploaded }) {
           setUploadState(fileStates.UPLOADED);
           setTempFiles([]);
           setThumbnails({});
-        }, 300);
+        }, 500);
       } else {
         setUploadState(fileStates.UNSAVED);
       }

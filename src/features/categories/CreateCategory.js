@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import ThumbnailRow from '../../components/Category/ThumbnailRow';
 import CategoryForm from '../../components/Forms/CategoryForm';
+import CloseFormButton from '../../components/Interactive/CloseFormButton';
 import StdButton from '../../components/Interactive/StdButton';
 import { useFetchDataQuery, useSaveNewCategoryMutation } from '../../services/api';
 import EditUnsavedItem from '../items/EditUnsavedItem';
@@ -43,7 +44,7 @@ function CreateCategory() {
   return (
     <div className="flex flex-col justify-start items-center w-full p-2">
       {isSuccess ? (
-        <>
+        <div>
           <div>Category created</div>
           <StdButton onClick={() => navigate('/')}>
             Done
@@ -51,7 +52,8 @@ function CreateCategory() {
           <StdButton onClick={() => navigate(0)}>
             Create Another Category
           </StdButton>
-        </>
+          <CloseFormButton />
+        </div>
       ) : (
         <>
           <h2 className="mx-2 mt-2 mb-4 text-xl font-bold p-1 border-b-2 border-slate-500">

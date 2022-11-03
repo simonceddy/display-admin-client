@@ -11,6 +11,7 @@ import StdButton from '../../components/Interactive/StdButton';
 import { addNotification } from '../notifications/notificationsSlice';
 import Modal from '../../components/Modal';
 import ItemMedia from '../media/ItemMedia';
+import CloseFormButton from '../../components/Interactive/CloseFormButton';
 
 function NewItem({
   onSubmit,
@@ -37,7 +38,7 @@ function NewItem({
   }, [isSuccess]);
 
   return (
-    <div className="w-11/12">
+    <div className="w-11/12 border-slate-500 border-2 p-2">
       {key && (<h2>New Item for {key}{sub ? `/${sub}` : ''}</h2>)}
       {isSuccess ? (
         <div className="flex flex-col justify-start items-center">
@@ -49,6 +50,7 @@ function NewItem({
           >
             Add Another Item
           </StdButton>
+          <CloseFormButton label="Done" />
         </div>
       ) : (
         <>

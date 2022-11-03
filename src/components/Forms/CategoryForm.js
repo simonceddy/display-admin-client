@@ -2,6 +2,7 @@ import { debounce } from 'lodash';
 import LgTextInput from './LgTextInput';
 // import TextEditor from '../../containers/TextEditor';
 import StdButton from '../Interactive/StdButton';
+import CloseFormButton from '../Interactive/CloseFormButton';
 
 function CategoryForm({
   values = {},
@@ -44,8 +45,9 @@ function CategoryForm({
         }}
       /> */}
       {children}
-      <div className="flex p-2 flex-row">
+      <div className="flex p-2 flex-row border-2 border-slate-500">
         <StdButton submits>Save</StdButton>
+        <CloseFormButton />
       </div>
     </form>
   );

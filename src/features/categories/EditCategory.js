@@ -168,21 +168,22 @@ function EditCategory() {
   }
   // console.log(thumbnail, data.thumbnail);
   return (
-    <CategoryForm
-      onSubmit={async () => {
-        await updateData({
-          key, ...values, thumbnail, categories: subCategories
-        }).unwrap();
-        refetchAll();
-        console.log('updated');
-      }}
-      values={values}
-      setValues={(vals) => dispatch(setFormValues(vals))}
-    >
-      {itemAdded && <div>New item added</div>}
-      {/* {updated && <div>Category updated</div>} */}
-      {/* items and subcategories */}
-      {thumbnail && thumbnail.src && (
+    <>
+      <CategoryForm
+        onSubmit={async () => {
+          await updateData({
+            key, ...values, thumbnail, categories: subCategories
+          }).unwrap();
+          refetchAll();
+          console.log('updated');
+        }}
+        values={values}
+        setValues={(vals) => dispatch(setFormValues(vals))}
+      >
+        {itemAdded && <div>New item added</div>}
+        {/* {updated && <div>Category updated</div>} */}
+        {/* items and subcategories */}
+        {thumbnail && thumbnail.src && (
         <img
           id={`${key}-thumbnail`}
           className="rounded p-0.5"
@@ -191,75 +192,77 @@ function EditCategory() {
           src={`${MEDIA_BASE_URI}thumbs/${thumbsrc(thumbnail.src)}`}
           alt={thumbnail.alt || values.title}
         />
-      )}
-      <div className="border-2 rounded-md border-slate-400 my-2 w-full">
-        {/* TODO bring up item form inline or as modal */}
-        {showItemForm ? (
-          <NewItem
-            onClose={() => setShowItemForm(false)}
-            onSubmit={async (item) => {
-              const res = await addItemTo(item).unwrap();
-              if (res.key) {
-                dispatch(addItem(res));
-                refetchAll();
-                if ((!thumbnail || !thumbnail.src)
+        )}
+        <div className="border-2 rounded-md border-slate-400 my-2 w-full">
+          {/* TODO bring up item form inline or as modal */}
+          {showItemForm ? (
+            <NewItem
+              onClose={() => setShowItemForm(false)}
+              onSubmit={async (item) => {
+                const res = await addItemTo(item).unwrap();
+                if (res.key) {
+                  dispatch(addItem(res));
+                  refetchAll();
+                  if ((!thumbnail || !thumbnail.src)
                   && item.thumbnail
                   && item.thumbnail.src
-                ) {
-                  dispatch(setThumbnail({ src: item.thumbnail.src }));
+                  ) {
+                    dispatch(setThumbnail({ src: item.thumbnail.src }));
+                  }
+                  setShowItemForm(false);
+                } else {
+                  console.log(res);
+                  dispatch(addNotification({
+                    message: 'There was an error adding the new item to category',
+                    type: NOTIFY_ERROR
+                  }));
                 }
-                setShowItemForm(false);
-              } else {
-                console.log(res);
-                dispatch(addNotification({
-                  message: 'There was an error adding the new item to category',
-                  type: NOTIFY_ERROR
-                }));
-              }
-            }}
-          />
-        ) : (
-          <StdButton
-            onClick={() => setShowItemForm(true)}
-          >
-            Add Item
-          </StdButton>
-        )}
-        {/* <ItemRow /> */}
-        <div className="p-2">
-          {items.length} items in category
-        </div>
-        <ThumbnailRow
-          onItemClick={(i) => {
+              }}
+            />
+          ) : (
+            <StdButton
+              onClick={() => setShowItemForm(true)}
+            >
+              Add Item
+            </StdButton>
+          )}
+          {/* <ItemRow /> */}
+          <div className="p-2">
+            {items.length} items in category
+          </div>
+          <ThumbnailRow
+            onItemClick={(i) => {
             // navigate(`/category/${key}/item/${i.key}`);
             // console.log('handle item edit');
-            if (editingItem !== i.key) {
-              setEditingItem(i.key);
-            } else {
-              setEditingItem(false);
-            }
-          }}
-          categoryKey={key}
-          items={items}
-        />
-        {editingItem && (
+              if (editingItem !== i.key) {
+                setEditingItem(i.key);
+              } else {
+                setEditingItem(false);
+              }
+            }}
+            categoryKey={key}
+            items={items}
+          />
+          {editingItem && (
           <UpdateComponent />
-        )}
-      </div>
-      {/* subcategories */}
+          )}
+        </div>
+        {/* subcategories */}
 
-      <div className="border-2 rounded-md border-slate-400 my-2 w-full">
-        {/* {values.categories.length} total sub-categories */}
-        {showSubForm ? (
-          <CreateSubCategory onClose={() => setShowSubForm(false)} />
-        ) : (
-          <StdButton
-            onClick={() => setShowSubForm(true)}
-          >
-            Add Sub-Category
-          </StdButton>
-        )}
-      </div>
+        <div className="border-2 rounded-md border-slate-400 my-2 w-full">
+          {/* {values.categories.length} total sub-categories */}
+          {showSubForm ? (
+            <CreateSubCategory onClose={() => setShowSubForm(false)} />
+          ) : (
+            <StdButton
+              onClick={() => setShowSubForm(true)}
+            >
+              Add Sub-Category
+            </StdButton>
+          )}
+        </div>
+
+      </CategoryForm>
       <div className="flex flex-row p-2">
         <DebouncedButton
           wait={300}
@@ -320,7 +323,7 @@ function EditCategory() {
           Delete
         </DebouncedButton>
       </div>
-    </CategoryForm>
+    </>
   );
 }
 

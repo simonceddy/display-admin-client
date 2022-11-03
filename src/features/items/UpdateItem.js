@@ -153,7 +153,7 @@ function UpdateItem({
     );
   }
   return (
-    <div className="w-11/12">
+    <div className="w-11/12 border-2 border-slate-500 p-2">
       {updatingItemCategories ? (
         <div>Updating category...</div>
       ) : (
@@ -237,7 +237,7 @@ function UpdateItem({
                   }, 400);
                 }}
               >
-                Update Category
+                Change Category
               </StdButton>
             </div>
           </div>
