@@ -169,7 +169,7 @@ function UpdateItem({
                   await doUpdate({ media: newMedia });
                   refetchAll();
                 }}
-                setThumbnail={async (th) => {
+                setThumbnailFromVideo={async (th) => {
                   const src = `${key || category}-${item || itemKey}.png`;
                   const file = new File(
                     [th],
@@ -185,6 +185,13 @@ function UpdateItem({
                     });
                     if (onSetThumb) onSetThumb();
                   }
+                }}
+                setThumbnailFromImage={async (th) => {
+                  await doUpdate({
+                    thumbnail: {
+                      src: th.src
+                    }
+                  });
                 }}
               />
             </Modal>

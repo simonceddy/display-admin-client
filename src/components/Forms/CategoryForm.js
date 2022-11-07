@@ -45,7 +45,7 @@ function CategoryForm({
         }}
       /> */}
       {children}
-      <div className="flex p-2 flex-row border-2 border-slate-500">
+      <div className="flex p-2 flex-row border-2 w-full justify-around items-center border-slate-500">
         <StdButton submits>Save</StdButton>
         <CloseFormButton />
       </div>

@@ -41,7 +41,7 @@ function ThumbnailRow({ items = [], categoryKey, onItemClick }) {
               width: '70px',
               flex: '1 0 70px'
             }}
-            className="mx-2 bg-blue-500 bg-opacity-30"
+            className="mx-2 bg-blue-500 bg-opacity-30 overflow-hidden overflow-ellipsis whitespace-normal"
             role="presentation"
             onClick={clickHandler}
           >

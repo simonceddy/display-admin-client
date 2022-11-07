@@ -213,7 +213,11 @@ function EditSubCategory({ onClose, category, subCategory }) {
                 items={items}
                 onItemClick={(i) => {
                   // console.log(i);
-                  setEditingItem(i.key);
+                  if (editingItem !== i.key) {
+                    setEditingItem(i.key);
+                  } else {
+                    setEditingItem(false);
+                  }
                 }}
               />
               {editingItem && (

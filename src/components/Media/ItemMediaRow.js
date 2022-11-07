@@ -10,7 +10,7 @@ function ItemMediaRow({ media, thumbnail, onThumbClick }) {
           ? 'bg-yellow-300'
           : 'bg-green-500';
         return (
-          <div key={`media-${idx}`}>
+          <div key={`media-${idx}`} className="flex flex-col justify-center items-center overflow-hidden overflow-ellipsis">
             <img
               src={`${MEDIA_BASE_URI}thumbs/${thumbsrc(src)}`}
               alt={alt || ''}
@@ -19,8 +19,11 @@ function ItemMediaRow({ media, thumbnail, onThumbClick }) {
               onClick={() => {
                 if (onThumbClick) onThumbClick(media[idx]);
               }}
-              height="auto"
-              width={110}
+              style={{
+                objectFit: 'cover',
+                height: '110px',
+                width: '110px',
+              }}
             />
           </div>
         );

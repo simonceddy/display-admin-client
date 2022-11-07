@@ -2,7 +2,7 @@ import ImageMedia from './ImageMedia';
 import VideoMedia from './VideoMedia';
 
 function ItemMedia({
-  media = {}, setThumbnail, onRemove, onClose
+  media = {}, setThumbnailFromVideo, setThumbnailFromImage, onRemove, onClose
 }) {
   const MediaEl = media.type === 'video' ? VideoMedia : ImageMedia;
   return (
@@ -11,7 +11,7 @@ function ItemMedia({
         onClose={onClose}
         onRemove={onRemove}
         src={media.src}
-        setThumbnail={setThumbnail}
+        setThumbnail={media.type === 'video' ? setThumbnailFromVideo : setThumbnailFromImage}
       />
     </div>
   );
