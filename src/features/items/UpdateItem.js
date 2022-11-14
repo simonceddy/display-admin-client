@@ -37,7 +37,7 @@ function UpdateItem({
   const { key, sub, item } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { refetch } = useFetchCategoryQuery(key || category);
+  const { refetch, data: parent } = useFetchCategoryQuery(key || category);
   const { refetch: refetchDataList } = useFetchDataQuery();
 
   const {
@@ -201,7 +201,7 @@ function UpdateItem({
           )}
           {data.title && (
           <h2 className="text-xl p-2">
-            Editing <span className="font-bold">{data.title}</span>
+            Editing <span className="font-bold">{parent.title}{data.title}</span>
           </h2>
           )}
           <div className="flex flex-row justify-start items-center">

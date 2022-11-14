@@ -39,7 +39,7 @@ function NewItem({
 
   return (
     <div className="w-11/12 border-slate-500 border-2 p-2">
-      {key && (<h2>New Item for {key}{sub ? `/${sub}` : ''}</h2>)}
+      {key && (<h2>New Item for {parent.title}{sub ? `/${sub}` : ''}</h2>)}
       {isSuccess ? (
         <div className="flex flex-col justify-start items-center">
           <div className="text-2xl font-bold">Item created!</div>
