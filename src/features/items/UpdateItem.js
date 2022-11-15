@@ -32,12 +32,16 @@ function UpdateItem({
   setCategoryThumb,
   onDelete,
   update,
-  onSetThumb
+  onSetThumb,
+  onDeleted
 }) {
   const { key, sub, item } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { refetch, data: parent } = useFetchCategoryQuery(key || category);
+  const {
+    data: parent,
+    isLoading: fetchingParentData
+  } = useFetchCategoryQuery(key || category);
   const { refetch: refetchDataList } = useFetchDataQuery();
 
   const {
@@ -50,7 +54,7 @@ function UpdateItem({
 
   const refetchAll = () => {
     refresh();
-    refetch();
+    // refetch();
     refetchDataList();
   };
   const [showMedia, setShowMedia] = useState(false);
@@ -141,7 +145,7 @@ function UpdateItem({
     return url;
   };
 
-  if (isLoading) return <div>Loading Data</div>;
+  if (isLoading || fetchingParentData) return <div>Loading Data</div>;
   if (error) return <div>{error.message}</div>;
 
   if (isRemoved) {
@@ -201,7 +205,7 @@ function UpdateItem({
           )}
           {data.title && (
           <h2 className="text-xl p-2">
-            Editing <span className="font-bold">{parent.title}{data.title}</span>
+            Editing <span className="font-bold">{parent.title} / {} {data.title}</span>
           </h2>
           )}
           <div className="flex flex-row justify-start items-center">
@@ -237,7 +241,9 @@ function UpdateItem({
                     category: updatedCategory || category || key,
                     subCategory: updatedSubCategory || null
                   });
-                  dispatch(addNotification({ message: `Moved '${data.title}' to ${updatedCategory}` }));
+                  dispatch(addNotification({
+                    message: `Moved '${data.title}' to ${updatedCategory || category || key}${updatedSubCategory ? `/${updatedSubCategory}` : ''}`
+                  }));
                   setTimeout(() => {
                     setUpdatingItemCategories(false);
                     navigate(getUpdatedUrl());
@@ -263,7 +269,12 @@ function UpdateItem({
                     await removeItem({
                       key: key || category, sub: sub || subCategory, item: item || itemKey
                     }).unwrap();
-                    refetchAll();
+                    // refetchAll();
+                  }
+                  if (onDeleted) {
+                    await onDeleted({
+                      key: key || category, sub: sub || subCategory, item: item || itemKey
+                    });
                   }
                 }
               },

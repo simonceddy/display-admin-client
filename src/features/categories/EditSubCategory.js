@@ -77,7 +77,7 @@ function EditSubCategory({ onClose, category, subCategory }) {
     console.log(updatedData);
     const res = await updateSub(updatedData).unwrap();
     console.log(res);
-    setTimeout(refetchAll, 200);
+    // setTimeout(refetchAll, 200);
   };
 
   useEffect(() => {
@@ -95,13 +95,9 @@ function EditSubCategory({ onClose, category, subCategory }) {
   const UpdateComponent = useCallback(() => (
     editingItem ? (
       <UpdateItem
-        onDelete={async (d) => {
-          // console.log(d);
+        onDeleted={() => {
           setEditingItem(null);
-          await Promise.resolve(
-            dispatch(setItems(items.filter((i) => i.title !== d.title)))
-          );
-          await doUpdate();
+          refetchAll();
         }}
         setCategoryThumb={(src) => dispatch(setThumbnail({ src }))}
         itemKey={editingItem}
@@ -176,9 +172,9 @@ function EditSubCategory({ onClose, category, subCategory }) {
                   subCategory={sub || subCategory}
                   category={key || category}
                   onClose={() => setShowNewItemForm(false)}
-                  onCreated={() => {
-                    setTimeout(() => refetchAll(), 400);
-                  }}
+                  // onCreated={() => {
+                  //   setTimeout(() => refetchAll(), 400);
+                  // }}
                   // onSubmit={async ({
                   //   title, media, thumbnail: tb, body
                   // }) => {

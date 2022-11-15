@@ -25,7 +25,7 @@ function NewItem({
   const [showMedia, setShowMedia] = useState(false);
   const navigate = useNavigate();
   const [addItemTo, { isSuccess }] = useAddItemToCategoryMutation();
-  const { data: parent } = useFetchCategoryQuery(key || category);
+  const { data: parent, isLoading } = useFetchCategoryQuery(key || category);
   const refetchAll = useRefetchAll({ category: key || category });
   const dispatch = useDispatch();
 
@@ -37,6 +37,7 @@ function NewItem({
     }
   }, [isSuccess]);
 
+  if (isLoading) return <div>Loading...</div>;
   return (
     <div className="w-11/12 border-slate-500 border-2 p-2">
       {key && (<h2>New Item for {parent.title}{sub ? `/${sub}` : ''}</h2>)}
@@ -97,7 +98,7 @@ function NewItem({
                 const res = await addItemTo({
                   key: key || category, sub: sub || subCategory, ...vals
                 }).unwrap();
-                refetchAll();
+                // refetchAll();
                 if (onCreated) onCreated(res);
               }
             }}

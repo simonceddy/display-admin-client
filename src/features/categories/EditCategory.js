@@ -77,10 +77,10 @@ function EditCategory() {
   const [showItemForm, setShowItemForm] = useState(false);
   const [showSubForm, setShowSubForm] = useState(false);
 
-  const refetchAll = () => {
-    refetch();
-    refetchDataList();
-  };
+  // const refetchAll = () => {
+  //   refetch();
+  //   refetchDataList();
+  // };
   useEffect(() => {
     if (isSuccess) {
       dispatch(initForm({
@@ -102,14 +102,14 @@ function EditCategory() {
   useEffect(() => {
     if (itemAdded) {
       dispatch(addNotification({
-        message: `Item added to ${data.title}`
+        message: `Item added to ${values.title}`
       }));
     }
   }, [itemAdded]);
   useEffect(() => {
     if (deleted) {
       dispatch(addNotification({
-        message: `Category ${data.title} deleted`
+        message: `Category ${values.title} deleted`
       }));
     }
   }, [deleted]);
@@ -121,16 +121,16 @@ function EditCategory() {
           dispatch(setThumbnail({
             src
           }));
-          refetchAll();
+          // refetchAll();
         }}
         itemKey={editingItem}
         category={key}
         onSetThumb={() => {
-          refetchAll();
+          // refetchAll();
         }}
               // subCategory={sub}
         onSubmit={() => {
-          refetchAll();
+          // refetchAll();
         }}
         onClose={() => setEditingItem(false)}
       />
@@ -174,7 +174,7 @@ function EditCategory() {
           await updateData({
             key, ...values, thumbnail, categories: subCategories
           }).unwrap();
-          refetchAll();
+          // refetchAll();
           console.log('updated');
         }}
         values={values}
@@ -202,7 +202,7 @@ function EditCategory() {
                 const res = await addItemTo(item).unwrap();
                 if (res.key) {
                   dispatch(addItem(res));
-                  refetchAll();
+                  // refetchAll();
                   if ((!thumbnail || !thumbnail.src)
                   && item.thumbnail
                   && item.thumbnail.src
@@ -274,7 +274,7 @@ function EditCategory() {
             } else {
               await archiveCategory(key).unwrap();
             }
-            refetchAll();
+            // refetchAll();
           }}
         >
           {archiveButtonLabel({
@@ -292,7 +292,7 @@ function EditCategory() {
             } else {
               await publishCategory(key).unwrap();
             }
-            refetchAll();
+            // refetchAll();
           }}
         >
           {publisheButtonLabel({
@@ -308,7 +308,7 @@ function EditCategory() {
                 label: 'Delete Category!',
                 onClick: async () => {
                   await deleteCategory(key).unwrap();
-                  refetchDataList();
+                  // refetchDataList();
                 }
               },
               {
