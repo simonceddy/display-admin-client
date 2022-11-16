@@ -36,7 +36,7 @@ function ImageMedia({
       >
         Remove File
       </StdButton>
-      <StdButton onClick={onClose}>
+      <StdButton onClick={() => setThumbnail({ src })}>
         Use As Thumbnail
       </StdButton>
       <StdButton onClick={onClose}>

@@ -191,6 +191,7 @@ function UpdateItem({
                   }
                 }}
                 setThumbnailFromImage={async (th) => {
+                  console.log(th);
                   await doUpdate({
                     thumbnail: {
                       src: th.src

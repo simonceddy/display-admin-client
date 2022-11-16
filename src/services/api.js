@@ -89,7 +89,7 @@ export const displayApi = createApi({
       transformResponse: (r) => r.data,
       invalidatesTags: (result, error, { key }) => {
         console.log(key);
-        return [{ type: 'Category', key }];
+        return [{ type: 'Category', key }, 'Category'];
       }
     }),
     deleteCategory: builder.mutation({
@@ -104,28 +104,28 @@ export const displayApi = createApi({
         url: `/category/archive/${key}`,
         method: 'PUT'
       }),
-      invalidatesTags: ['Category']
+      invalidatesTags: (result, error, key) => [{ type: 'Category', key }]
     }),
     unarchiveCategory: builder.mutation({
       query: (key) => ({
         url: `/category/unarchive/${key}`,
         method: 'PUT'
       }),
-      invalidatesTags: ['Category']
+      invalidatesTags: (result, error, key) => [{ type: 'Category', key }]
     }),
     publishCategory: builder.mutation({
       query: (key) => ({
         url: `/category/publish/${key}`,
         method: 'PUT'
       }),
-      invalidatesTags: ['Category']
+      invalidatesTags: (result, error, key) => [{ type: 'Category', key }]
     }),
     unpublishCategory: builder.mutation({
       query: (key) => ({
         url: `/category/unpublish/${key}`,
         method: 'PUT'
       }),
-      invalidatesTags: ['Category']
+      invalidatesTags: (result, error, key) => [{ type: 'Category', key }]
     }),
     addItemToCategory: builder.mutation({
       query: ({ key, sub, ...body }) => ({
@@ -156,7 +156,16 @@ export const displayApi = createApi({
         body,
         method: 'PUT'
       }),
-      invalidatesTags: ['Category', 'SubCategory', 'Item']
+      invalidatesTags: (result, error, { key, sub, item }) => {
+        if (error) {
+          console.error(error);
+        }
+        return [
+          { type: 'Category', key },
+          { type: 'SubCategory', key: sub },
+          { type: 'Item', key: item }
+        ];
+      }
     }),
     addSubCategoryToCategory: builder.mutation({
       query: ({ key, ...body }) => ({
@@ -164,7 +173,7 @@ export const displayApi = createApi({
         body,
         method: 'PUT'
       }),
-      invalidatesTags: ['Category', 'SubCategory']
+      invalidatesTags: (result, error, key) => [{ type: 'Category', key }, 'Category', 'SubCategory']
       // transformResponse: (r) => r.data
     }),
     removeSubCategoryFromCategory: builder.mutation({
@@ -181,7 +190,10 @@ export const displayApi = createApi({
         body,
         method: 'PUT'
       }),
-      invalidatesTags: ['Category', 'SubCategory']
+      invalidatesTags: (result, error, { key, sub }) => [
+        { type: 'Category', key },
+        { type: 'SubCategory', key: sub },
+      ]
     }),
     fetchDisplayConfig: builder.query({
       query: () => '/display-conf'
